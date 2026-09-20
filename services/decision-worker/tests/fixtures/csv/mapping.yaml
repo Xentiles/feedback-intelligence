@@ -1,0 +1,19 @@
+version: 1
+dataset_name: Test customer export
+dataset_version: test/1.0.0
+license: Test fixture
+attribution: Feedback Intelligence tests
+language: en-GB
+channel: customer_export
+timezone: UTC
+rating_scale: [1, 5]
+columns:
+  id: review_id
+  text: comment
+  title: subject
+  timestamp: created_at
+  rating: stars
+  product_id: sku
+  product_name: product
+  category: category
+  order_id: order_reference

@@ -1,0 +1,1488 @@
+{
+  "fixture_format": "decision-fixture-set/1.0.0",
+  "generated_at": "2026-09-20T18:32:58.570131Z",
+  "recorded_provider": "semif",
+  "records": {
+    "sha256:4cf1fedf3142c4b49008bd4803591f64827fd528d2e707e883d650e69c315bcf": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.9971990730328789,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.9247351467062843,
+          "probabilities": {
+            "compatibility": 0.0009555266434660798,
+            "missing_component": 0.00039832276645189604,
+            "noise": 0.05216998704062775,
+            "other": 0.006230816406698468,
+            "physical_damage": 0.000744164898176974,
+            "stability": 0.0015753971018032235,
+            "thermal": 0.013190638436491183,
+            "unclear": 0.9247351467062843
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.6865833918889007,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.07236535710214474,
+            "1": 0.6865833918889007,
+            "2": 0.17359546729144149,
+            "3": 0.05635819677839218,
+            "4": 0.011097586939120815
+          },
+          "score": 1.2472392645634436,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.04742587317756679,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.957865940961058,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.019879873376415128,
+            "1": 0.957865940961058,
+            "2": 0.019879873376415128,
+            "3": 0.002374312286111792
+          },
+          "score": 1.0047486245722237,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.9975273768433653,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.6224593312018546,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.007577241267860811,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.4641565683246285,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.09139784742583255,
+            "1": 0.4641565683246285,
+            "2": 0.029672536678038527,
+            "3": 0.4096167338607798,
+            "4": 0.005156313710720726
+          },
+          "score": 1.7729770981059276,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "delivery",
+          "confidence": 0.8401067288712265,
+          "probabilities": {
+            "compatibility": 0.04739557841406117,
+            "delivery": 0.8401067288712265,
+            "other": 0.03257447290608107,
+            "price_value": 8.074404561970777e-05,
+            "product_information": 5.549451688063431e-05,
+            "product_quality": 0.0781420982683985,
+            "returns_refunds": 0.00024870916976763003,
+            "support": 0.001263049382469185,
+            "website_checkout": 0.0001331244254955937
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.8118891534031573,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.058813053011268816,
+            "1": 0.045803651739996204,
+            "2": 0.8118891534031573,
+            "3": 0.06664392003985652,
+            "4": 0.016850221805721165
+          },
+          "score": 1.936914605888765,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.009708476481474066,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "unresolved",
+          "confidence": 0.5554330215191877,
+          "probabilities": {
+            "not_applicable": 0.04559271880707048,
+            "partially_resolved": 0.20433238956464447,
+            "resolved": 0.03550764510930085,
+            "unclear": 0.15913422499979646,
+            "unresolved": 0.5554330215191877
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.7584891580362486,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.07994416909560197,
+            "1": 0.13180565205636682,
+            "2": 0.7584891580362486,
+            "3": 0.02021305140107831,
+            "4": 0.009547969410704299
+          },
+          "score": 1.7476149999749162,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:54b537b412dac6e69f05c5343b4f55e0359d9b47d469265b03e20e1a1a315f8b": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.9940889311437562,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.9672072439097191,
+          "probabilities": {
+            "compatibility": 0.00047208925525372536,
+            "missing_component": 0.00025269116915557527,
+            "noise": 0.017715018610018254,
+            "other": 0.002397467061128686,
+            "physical_damage": 0.0006061746026909703,
+            "stability": 0.0018671492245949202,
+            "thermal": 0.009482166167438869,
+            "unclear": 0.9672072439097191
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.9917881413541777,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.005897387860063411,
+            "1": 0.0014910931628422514,
+            "2": 0.9917881413541777,
+            "3": 0.00020179751552543276,
+            "4": 0.0006215801073912359
+          },
+          "score": 1.9881590888473388,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.053403329799824234,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.46323576537301625,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.06269214351208623,
+            "1": 0.2809666943741822,
+            "2": 0.46323576537301625,
+            "3": 0.1931053967407152
+          },
+          "score": 1.7867544153423602,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.004609572179374208,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.04742587317756679,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.0675466911396291,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.9637806720339441,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.017652258756915267,
+            "1": 0.9637806720339441,
+            "2": 0.015578063676599524,
+            "3": 0.0018605343847442487,
+            "4": 0.0011284711477969676
+          },
+          "score": 1.0050322871325639,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "returns_refunds",
+          "confidence": 0.9954051392329549,
+          "probabilities": {
+            "compatibility": 0.0005505430244745755,
+            "delivery": 0.0001577332173898829,
+            "other": 0.0010285497798671348,
+            "price_value": 1.8838546347133474e-05,
+            "product_information": 1.2163079689070276e-05,
+            "product_quality": 0.002467362655538567,
+            "returns_refunds": 0.9954051392329549,
+            "support": 0.00033392122383475275,
+            "website_checkout": 2.5749239903823058e-05
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.9948391718040579,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.002794298490249807,
+            "1": 0.0011648369122301413,
+            "2": 0.9948391718040579,
+            "3": 0.0002945168940667179,
+            "4": 0.0009071758993953115
+          },
+          "score": 1.9953554348001274,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.22270013882530884,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "unresolved",
+          "confidence": 0.8683560846071874,
+          "probabilities": {
+            "not_applicable": 0.006629980521496209,
+            "partially_resolved": 0.08076969766270924,
+            "resolved": 0.018022155574620568,
+            "unclear": 0.026222081633986483,
+            "unresolved": 0.8683560846071874
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.9695947803379835,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.01383052674368575,
+            "1": 0.01383052674368575,
+            "2": 0.9695947803379835,
+            "3": 0.0014577267940666045,
+            "4": 0.0012864393805783509
+          },
+          "score": 1.962539025324166,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:5f903deaaebc760048b49e89899df0a38373ab28e668fac66a58c9dbd85410f7": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.998498817743263,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.48733285566220513,
+          "probabilities": {
+            "compatibility": 0.0017575967122005838,
+            "missing_component": 0.00039217283586967,
+            "noise": 0.3795352096061493,
+            "other": 0.02426287420276058,
+            "physical_damage": 0.0008302299000511312,
+            "stability": 0.07473491392252178,
+            "thermal": 0.031154147158241902,
+            "unclear": 0.48733285566220513
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.8118891534031573,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.058813053011268816,
+            "1": 0.016850221805721165,
+            "2": 0.045803651739996204,
+            "3": 0.8118891534031573,
+            "4": 0.06664392003985652
+          },
+          "score": 2.8107006656546116,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.02595735719779685,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.6722494619424644,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.24730675638719657,
+            "1": 0.6722494619424644,
+            "2": 0.06252894032472169,
+            "3": 0.017914841345617334
+          },
+          "score": 0.8510518666287598,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.0013250224172131609,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.8175744761936437,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.9993736658418905,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.4909304423566471,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.05863327994314806,
+            "1": 0.010188936273154729,
+            "2": 0.007002746662823691,
+            "3": 0.4909304423566471,
+            "4": 0.4332445947642264
+          },
+          "score": 3.2299641357256488,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "support",
+          "confidence": 0.9929401385600383,
+          "probabilities": {
+            "compatibility": 0.0009054442052281014,
+            "delivery": 8.4219430258047e-05,
+            "other": 0.0007990517065769702,
+            "price_value": 1.070729899297526e-05,
+            "product_information": 8.87666264224017e-06,
+            "product_quality": 0.0052104716463795145,
+            "returns_refunds": 2.7342045832789417e-05,
+            "support": 0.9929401385600383,
+            "website_checkout": 1.3748444051055293e-05
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.44113246094834885,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.08686413187228809,
+            "1": 0.0362103574499023,
+            "2": 0.44113246094834885,
+            "3": 0.38929803041643785,
+            "4": 0.04649501931302286
+          },
+          "score": 2.272349447848005,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.8670357598021706,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "resolved",
+          "confidence": 0.997526233510021,
+          "probabilities": {
+            "not_applicable": 0.00017911601540671678,
+            "partially_resolved": 0.0016994054382400527,
+            "resolved": 0.997526233510021,
+            "unclear": 0.00026061226463739443,
+            "unresolved": 0.0003346327716949663
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.7412470170403126,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.0536957538167639,
+            "1": 0.005659490814551683,
+            "2": 0.01198114214842519,
+            "3": 0.18741659617994666,
+            "4": 0.7412470170403126
+          },
+          "score": 3.5568596318124923,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:6143af112ddc238978f857070638b9f9e1f5898d95fa02c71f1cfa4cba0613b0": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.998498817743263,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.2879844090887837,
+          "probabilities": {
+            "compatibility": 0.2541453490135066,
+            "missing_component": 0.004107876973387341,
+            "noise": 0.10594354348166977,
+            "other": 0.050044186419604154,
+            "physical_damage": 0.2541453490135066,
+            "stability": 0.0046548344377827025,
+            "thermal": 0.03897445157175908,
+            "unclear": 0.2879844090887837
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.6318471213973511,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.09689689435295427,
+            "1": 0.18102723116264396,
+            "2": 0.6318471213973511,
+            "3": 0.0587709372560027,
+            "4": 0.03145781583104795
+          },
+          "score": 1.7468655490495462,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.02595735719779685,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.9362085698432774,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.015132402152056327,
+            "1": 0.9362085698432774,
+            "2": 0.04661108007336738,
+            "3": 0.0020479479312988705
+          },
+          "score": 1.0355745737839088,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.24508501313237172,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.9669140216112958,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.0015011822567369915,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.8410644644125723,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.015404633012327293,
+            "1": 0.8410644644125723,
+            "2": 0.053767452346860756,
+            "3": 0.08864754235562486,
+            "4": 0.0011159078726147983
+          },
+          "score": 1.2190056276636276,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "product_quality",
+          "confidence": 0.8557592884485589,
+          "probabilities": {
+            "compatibility": 0.11581442568454786,
+            "delivery": 0.010772419648274564,
+            "other": 0.015673778102903914,
+            "price_value": 0.00015366031362888788,
+            "product_information": 0.00011967077258117555,
+            "product_quality": 0.8557592884485589,
+            "returns_refunds": 0.00041769203829272365,
+            "support": 0.0011354046775831305,
+            "website_checkout": 0.00015366031362888788
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.8106122936682854,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.04035800968469393,
+            "1": 0.10970444435867767,
+            "2": 0.8106122936682854,
+            "3": 0.024478370238746255,
+            "4": 0.014846882049596858
+          },
+          "score": 1.8637516706098747,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.20181322226037882,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "unresolved",
+          "confidence": 0.4113142701864309,
+          "probabilities": {
+            "not_applicable": 0.033762731302243124,
+            "partially_resolved": 0.36298356942836874,
+            "resolved": 0.0204781316904499,
+            "unclear": 0.1714612973925073,
+            "unresolved": 0.4113142701864309
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.9627962466506409,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.010695700171074655,
+            "1": 0.01556215192224405,
+            "2": 0.9627962466506409,
+            "3": 0.004458631175189949,
+            "4": 0.006487270080850436
+          },
+          "score": 1.9804796190724974,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:69f5af548dcece9ac25e978429ecf5f936e2dbc66439a4d18ced9329f12f3954": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.998498817743263,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "noise",
+          "confidence": 0.9946242620694099,
+          "probabilities": {
+            "compatibility": 6.570140555291269e-05,
+            "missing_component": 2.1330123421664684e-05,
+            "noise": 0.9946242620694099,
+            "other": 0.001319648007138355,
+            "physical_damage": 9.559498100783658e-05,
+            "stability": 0.00020237457638167834,
+            "thermal": 0.0014953570978815472,
+            "unclear": 0.0021757317392060403
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.978410036456471,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.0065924749690169804,
+            "1": 0.003528697569391715,
+            "2": 0.978410036456471,
+            "3": 0.003998538192096892,
+            "4": 0.007470252813023366
+          },
+          "score": 2.0022253963107177,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.06008665017400762,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.8402561041697029,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.047404005591738435,
+            "1": 0.8402561041697029,
+            "2": 0.10035428062521758,
+            "3": 0.011985609613341087
+          },
+          "score": 1.0769214942601613,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.0011695102650555148,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.9669140216112958,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.0013250224172131609,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.8136385298461559,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.0315481894561516,
+            "1": 0.01688652895548745,
+            "2": 0.013151241973891578,
+            "3": 0.8136385298461559,
+            "4": 0.12477550976831357
+          },
+          "score": 2.9832066415149927,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "product_quality",
+          "confidence": 0.9746315450967437,
+          "probabilities": {
+            "compatibility": 0.020227832389303847,
+            "delivery": 0.0005390534742460423,
+            "other": 0.0031020385654064613,
+            "price_value": 0.00032695245935483914,
+            "product_information": 0.00012027908803708693,
+            "product_quality": 0.9746315450967437,
+            "returns_refunds": 0.0002885345326730614,
+            "support": 0.0005390534742460423,
+            "website_checkout": 0.00022471091998892202
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.4956993553040393,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.16093001876739962,
+            "1": 0.14202024309511097,
+            "2": 0.1253324246357467,
+            "3": 0.4956993553040393,
+            "4": 0.07601795819770336
+          },
+          "score": 2.183854991069536,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.46879062662624377,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "unresolved",
+          "confidence": 0.3777848694544611,
+          "probabilities": {
+            "not_applicable": 0.10823717727990381,
+            "partially_resolved": 0.3333939771368877,
+            "resolved": 0.05793518612970451,
+            "unclear": 0.12264878999904286,
+            "unresolved": 0.3777848694544611
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.9843779106240449,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.004558574107185204,
+            "1": 0.0031330591104425194,
+            "2": 0.9843779106240449,
+            "3": 0.0027649149605799713,
+            "4": 0.0051655411977474044
+          },
+          "score": 2.0008457900312617,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:755a086f2bc6bdd8492c47f7025294dacbfed0f5122ced999deabfcc5905d724": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.995929862284104,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "stability",
+          "confidence": 0.6707089593949692,
+          "probabilities": {
+            "compatibility": 0.03783881021965992,
+            "missing_component": 0.0002249977900763955,
+            "noise": 0.05505514400897265,
+            "other": 0.01084100063541495,
+            "physical_damage": 0.0010083701366356,
+            "stability": 0.6707089593949692,
+            "thermal": 0.006575399267343308,
+            "unclear": 0.21774731854692797
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.859461161951006,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.09058654001067493,
+            "1": 0.0333249257167816,
+            "2": 0.859461161951006,
+            "3": 0.0027354764816035467,
+            "4": 0.013891895839933839
+          },
+          "score": 1.8160212624233396,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.18242552380635632,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.6616658010904157,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.07902471062480523,
+            "1": 0.6616658010904157,
+            "2": 0.1895704259307445,
+            "3": 0.06973906235403458
+          },
+          "score": 1.2500238400140085,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.005911068856243796,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.6513548646660542,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.033085978388704126,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.9380394132579705,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.05292056239840311,
+            "1": 0.9380394132579705,
+            "2": 0.005577786240169443,
+            "3": 0.002051952885007295,
+            "4": 0.0014102852184497187
+          },
+          "score": 0.9609919852671301,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "support",
+          "confidence": 0.5740356998059293,
+          "probabilities": {
+            "compatibility": 0.07768728402116261,
+            "delivery": 0.003413341041420621,
+            "other": 0.06855878751888574,
+            "price_value": 0.0011081495910327237,
+            "product_information": 0.0008630277692565422,
+            "product_quality": 0.27115526466760276,
+            "returns_refunds": 0.0020702959936770566,
+            "support": 0.5740356998059293,
+            "website_checkout": 0.0011081495910327237
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.8653743182902565,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.06268750536062716,
+            "1": 0.043084450348510654,
+            "2": 0.8653743182902565,
+            "3": 0.010893455011587101,
+            "4": 0.017960270989018565
+          },
+          "score": 1.8783545359198592,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.9933071490757153,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "unresolved",
+          "confidence": 0.9456971589302327,
+          "probabilities": {
+            "not_applicable": 0.0020687041356506723,
+            "partially_resolved": 0.015285770910412659,
+            "resolved": 0.01962731836263597,
+            "unclear": 0.017321047661067998,
+            "unresolved": 0.9456971589302327
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.8080701270691979,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.0965102138435396,
+            "1": 0.08516996478470062,
+            "2": 0.8080701270691979,
+            "3": 0.005444733687736514,
+            "4": 0.004804960614825475
+          },
+          "score": 1.7368642624456079,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:a460f1fc711332753c434bb96c814145a20a058b710ea96176c01d839cf22270": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.9986749775827868,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.9935934471870077,
+          "probabilities": {
+            "compatibility": 6.563331352135719e-05,
+            "missing_component": 1.4644771757092536e-05,
+            "noise": 0.004601250508094189,
+            "other": 0.00020216483815880406,
+            "physical_damage": 6.563331352135719e-05,
+            "stability": 0.00013894572581505809,
+            "thermal": 0.0013182803421243725,
+            "unclear": 0.9935934471870077
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.692763846181688,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.09375539133908393,
+            "1": 0.008720609836150755,
+            "2": 0.05018364469951503,
+            "3": 0.692763846181688,
+            "4": 0.15457650794356226
+          },
+          "score": 2.8056854695544935,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.04742587317756679,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.6790190971043141,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.3207459101444811,
+            "1": 0.6790190971043141,
+            "2": 0.000177399549689754,
+            "3": 5.759320151503879e-05
+          },
+          "score": 0.6795466758082387,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.13296424019782924,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.9149009549929797,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.34864513533394575,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.8430068828260535,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.07841185460713902,
+            "1": 0.007293438604343846,
+            "2": 0.002089605145749802,
+            "3": 0.06919821881671381,
+            "4": 0.8430068828260535
+          },
+          "score": 3.591094836650199,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "website_checkout",
+          "confidence": 0.7931228062079025,
+          "probabilities": {
+            "compatibility": 0.014526550912923441,
+            "delivery": 0.018652460589002214,
+            "other": 0.014526550912923441,
+            "price_value": 0.00020721012011292665,
+            "product_information": 0.00023479982706575413,
+            "product_quality": 0.15617514041304945,
+            "returns_refunds": 0.0008195319228122131,
+            "support": 0.0017349490942080723,
+            "website_checkout": 0.7931228062079025
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.9029947339875389,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.05094347688381731,
+            "1": 0.006084330658061317,
+            "2": 0.021236400663233488,
+            "3": 0.9029947339875389,
+            "4": 0.018741057807349002
+          },
+          "score": 2.8325055651765414,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.7057850278370112,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "resolved",
+          "confidence": 0.998962075615043,
+          "probabilities": {
+            "not_applicable": 0.00026098739067426547,
+            "partially_resolved": 0.0005525103103931186,
+            "resolved": 0.998962075615043,
+            "unclear": 8.473020033181782e-05,
+            "unresolved": 0.00013969648355775113
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.7155076692321322,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.08545520475399576,
+            "1": 0.007948572220585577,
+            "2": 0.031437212970091145,
+            "3": 0.1596513408231954,
+            "4": 0.7155076692321322
+          },
+          "score": 3.4118076975588827,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:c7e97bb296c5f124d7c5a04a9cfa574ef5f5045ee81e6c56f130d49a1a59f309": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.007577241267860811,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.9025710230772753,
+          "probabilities": {
+            "compatibility": 0.0008230382385762565,
+            "missing_component": 0.0004991979258123806,
+            "noise": 0.07408754118726908,
+            "other": 0.002872685719736435,
+            "physical_damage": 0.0006409828247008982,
+            "stability": 0.00197436609651078,
+            "thermal": 0.016531164930118736,
+            "unclear": 0.9025710230772753
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.9864585191813134,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.007531703736946406,
+            "1": 0.0031396812314036476,
+            "2": 0.9864585191813134,
+            "3": 0.0004249096487246896,
+            "4": 0.0024451862016117536
+          },
+          "score": 1.9871121933466516,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.1645164628965632,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.7733556282033455,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.7733556282033455,
+            "1": 0.22157009715908418,
+            "2": 0.003581347066330244,
+            "3": 0.0014929275712401268
+          },
+          "score": 0.23321157400546505,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.01098694263059318,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.18242552380635632,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.07585818002124356,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.8431604397240716,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.05390144356566697,
+            "1": 0.06921082353447633,
+            "2": 0.8431604397240716,
+            "3": 0.008266054090906642,
+            "4": 0.02546123908487846
+          },
+          "score": 1.8821748215948533,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "other",
+          "confidence": 0.853979364497582,
+          "probabilities": {
+            "compatibility": 0.022757779207735064,
+            "delivery": 0.003954709037102669,
+            "other": 0.853979364497582,
+            "price_value": 0.0027180291219384336,
+            "product_information": 0.0003678452410628996,
+            "product_quality": 0.09000876280987885,
+            "returns_refunds": 0.001648567996447468,
+            "support": 0.020083669660530303,
+            "website_checkout": 0.004481272427722288
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.9798752032002892,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.009606358470331451,
+            "1": 0.007481439499158758,
+            "2": 0.9798752032002892,
+            "3": 0.0008935305262924107,
+            "4": 0.0021434683039282822
+          },
+          "score": 1.9784863106943276,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.22270013882530884,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "not_applicable",
+          "confidence": 0.38639093887924036,
+          "probabilities": {
+            "not_applicable": 0.38639093887924036,
+            "partially_resolved": 0.08621547207202707,
+            "resolved": 0.08621547207202707,
+            "unclear": 0.23435795106540946,
+            "unresolved": 0.20682016591129607
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.9808053810395687,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.009615477612989714,
+            "1": 0.007488541494601953,
+            "2": 0.9808053810395687,
+            "3": 0.0007892864666303904,
+            "4": 0.0013013133862092715
+          },
+          "score": 1.9766724165184677,
+          "type": "score"
+        }
+      }
+    },
+    "sha256:ee022c7c5221e46491a143ea9c20b2dbc1bd894574f3291c1a07ba73efd97908": {
+      "answers": {
+        "actionable_feedback": {
+          "noul": 0.9975273768433653,
+          "type": "noul"
+        },
+        "defect_type": {
+          "choice": "unclear",
+          "confidence": 0.9875323370809785,
+          "probabilities": {
+            "compatibility": 0.00020093159397113639,
+            "missing_component": 5.408000486166626e-05,
+            "noise": 0.008543828783650011,
+            "other": 0.00042537218777490693,
+            "physical_damage": 0.00017732150931091344,
+            "stability": 0.0002923537441535538,
+            "thermal": 0.002773775095299264,
+            "unclear": 0.9875323370809785
+          },
+          "type": "choice"
+        },
+        "delivery_experience": {
+          "confidence": 0.9137927924818277,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.018965164361719446,
+            "1": 0.006976894067113903,
+            "2": 0.9137927924818277,
+            "3": 0.014770084855985003,
+            "4": 0.04549506423335406
+          },
+          "score": 2.0608529905321404,
+          "type": "score"
+        },
+        "explicit_repurchase_risk": {
+          "noul": 0.04208772791561884,
+          "type": "noul"
+        },
+        "issue_severity": {
+          "confidence": 0.9997989933881728,
+          "legend": {
+            "0": "none",
+            "1": "minor_inconvenience",
+            "2": "materially_impaired",
+            "3": "unusable_serious"
+          },
+          "probabilities": {
+            "0": 0.9997989933881728,
+            "1": 0.00017952411263732132,
+            "2": 1.669834363795806e-05,
+            "3": 4.784155551894822e-06
+          },
+          "score": 0.0002272732665689219,
+          "type": "score"
+        },
+        "mentions_delivery": {
+          "noul": 0.0011695102650555148,
+          "type": "noul"
+        },
+        "mentions_product": {
+          "noul": 0.9820137900379085,
+          "type": "noul"
+        },
+        "mentions_support": {
+          "noul": 0.0009110511944006454,
+          "type": "noul"
+        },
+        "overall_experience": {
+          "confidence": 0.9877024347436519,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.010972382928380726,
+            "1": 0.0007014409729523707,
+            "2": 0.0003313372543448147,
+            "3": 0.00029240410067018325,
+            "4": 0.9877024347436519
+          },
+          "score": 3.95305106675826,
+          "type": "score"
+        },
+        "primary_topic": {
+          "choice": "product_quality",
+          "confidence": 0.9854218879702026,
+          "probabilities": {
+            "compatibility": 0.008525569821201881,
+            "delivery": 0.0004244631275631756,
+            "other": 0.004563408681434911,
+            "price_value": 0.00015615125816582367,
+            "product_information": 0.00020050218433268684,
+            "product_quality": 0.9854218879702026,
+            "returns_refunds": 0.00017694255663504174,
+            "support": 0.0003305722161311388,
+            "website_checkout": 0.00020050218433268684
+          },
+          "type": "choice"
+        },
+        "product_experience": {
+          "confidence": 0.9576664640485383,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.032769544369927746,
+            "1": 0.0018487311866490655,
+            "2": 0.00268988800451131,
+            "3": 0.005025372390373682,
+            "4": 0.9576664640485383
+          },
+          "score": 3.8529704805609457,
+          "type": "score"
+        },
+        "reports_product_defect": {
+          "noul": 0.005911068856243796,
+          "type": "noul"
+        },
+        "resolution_status": {
+          "choice": "resolved",
+          "confidence": 0.5763049395233399,
+          "probabilities": {
+            "not_applicable": 0.3960882062486712,
+            "partially_resolved": 0.022345767499525968,
+            "resolved": 0.5763049395233399,
+            "unclear": 0.0018342522944485512,
+            "unresolved": 0.0034268344340142847
+          },
+          "type": "choice"
+        },
+        "support_experience": {
+          "confidence": 0.8090832845110629,
+          "legend": {
+            "0": "strongly_negative",
+            "1": "negative",
+            "2": "neutral_mixed_unclear",
+            "3": "positive",
+            "4": "strongly_positive"
+          },
+          "probabilities": {
+            "0": 0.06641360029571013,
+            "1": 0.021561339202153515,
+            "2": 0.8090832845110629,
+            "3": 0.027685307553390902,
+            "4": 0.07525646843768245
+          },
+          "score": 2.0238097046351817,
+          "type": "score"
+        }
+      }
+    }
+  },
+  "requested_model": "semif-qwen3.5-4b-mlx-q4-851bf6e8",
+  "resolved_model": "semif-qwen3.5-4b-mlx-q4-851bf6e8",
+  "schema_name": "feedback-decision",
+  "schema_sha256": "sha256:9314b38daf329f4c61fbea3d64f9a76a8d6334511888dcd61f7c75563c8f7094",
+  "schema_version": "1.0.0"
+}

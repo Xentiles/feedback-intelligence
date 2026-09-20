@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/data/dataset-metadata/1.0.0",
+  "title": "DatasetMetadata 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provider_id",
+    "dataset_name",
+    "dataset_version",
+    "source_uri",
+    "license",
+    "attribution",
+    "default_language",
+    "record_count",
+    "date_range",
+    "imported_at",
+    "checksum_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": "dataset-metadata/1.0.0" },
+    "provider_id": { "type": "string", "minLength": 1 },
+    "dataset_name": { "type": "string", "minLength": 1 },
+    "dataset_version": { "type": "string", "minLength": 1 },
+    "source_uri": { "type": "string", "minLength": 1 },
+    "license": { "type": "string", "minLength": 1 },
+    "attribution": { "type": "string", "minLength": 1 },
+    "default_language": { "type": ["string", "null"] },
+    "record_count": { "type": "integer", "minimum": 0 },
+    "date_range": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {
+            "start": { "type": "string", "format": "date-time" },
+            "end": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    },
+    "imported_at": { "type": ["string", "null"], "format": "date-time" },
+    "checksum_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

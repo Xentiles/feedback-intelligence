@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/data/feedback-record/1.0.0",
+  "title": "FeedbackRecord 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "feedback_id",
+    "source",
+    "original_text",
+    "title",
+    "occurred_at",
+    "rating",
+    "related_products",
+    "order_id",
+    "channel",
+    "language",
+    "metadata",
+    "operational_context",
+    "privacy_status"
+  ],
+  "properties": {
+    "schema_version": { "const": "feedback-record/1.0.0" },
+    "feedback_id": { "type": "string", "format": "uuid" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "dataset_name", "dataset_version", "source_record_id"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 1 },
+        "dataset_name": { "type": "string", "minLength": 1 },
+        "dataset_version": { "type": "string", "minLength": 1 },
+        "source_record_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "original_text": { "type": "string", "minLength": 1 },
+    "title": { "type": ["string", "null"] },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "rating": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "scale_min", "scale_max"],
+          "properties": {
+            "value": { "type": "number" },
+            "scale_min": { "type": "number" },
+            "scale_max": { "type": "number" }
+          }
+        }
+      ]
+    },
+    "related_products": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/related_product" }
+    },
+    "order_id": { "type": ["string", "null"] },
+    "channel": { "type": ["string", "null"] },
+    "language": { "type": ["string", "null"] },
+    "metadata": { "type": "object" },
+    "operational_context": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/operational_context" }
+      ]
+    },
+    "privacy_status": { "const": "uninspected" }
+  },
+  "$defs": {
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": { "type": "string", "pattern": "^-?[0-9]+(\\.[0-9]+)?$" },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" }
+      }
+    },
+    "related_product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_id",
+        "product_name",
+        "category",
+        "category_language",
+        "quantity",
+        "seller_ids",
+        "price",
+        "freight_cost"
+      ],
+      "properties": {
+        "product_id": { "type": "string", "minLength": 1 },
+        "product_name": { "type": ["string", "null"] },
+        "category": { "type": ["string", "null"] },
+        "category_language": { "type": ["string", "null"] },
+        "quantity": { "type": "integer", "minimum": 1 },
+        "seller_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "price": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }]
+        },
+        "freight_cost": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }]
+        }
+      }
+    },
+    "operational_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purchased_at",
+        "delivered_at",
+        "expected_delivery_at",
+        "delivery_delta_days",
+        "order_status",
+        "total_price",
+        "total_freight_cost",
+        "seller_count"
+      ],
+      "properties": {
+        "purchased_at": { "type": ["string", "null"], "format": "date-time" },
+        "delivered_at": { "type": ["string", "null"], "format": "date-time" },
+        "expected_delivery_at": { "type": ["string", "null"], "format": "date-time" },
+        "delivery_delta_days": { "type": ["number", "null"] },
+        "order_status": { "type": ["string", "null"] },
+        "total_price": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }]
+        },
+        "total_freight_cost": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }]
+        },
+        "seller_count": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    }
+  }
+}

@@ -1,0 +1,1596 @@
+{
+  "checks_passed": [
+    "API/web health and compiled SPA HTML: HTTP 200",
+    "Nginx API proxy, three demo sources, exact fixture range and 480 records",
+    "Overview \u2192 signal \u2192 paginated evidence \u2192 immutable decision detail agrees",
+    "Invalid paging, overflowing paging, changed-product invalid page and source/context errors",
+    "No-database live metadata/overview unavailable; trends/evaluation withheld",
+    "Frozen demo trends remain explicitly synthetic"
+  ],
+  "environment": {
+    "built_image_ids": {
+      "api": "sha256:a3d89ae64960cb849b2c226517eaa443df5bd24673ba589ba12198b822fdf619",
+      "web": "sha256:392ecc7f883afe73f1fd34168ebb3b2b5f09acab34b1af78768fe0d93b877e5b"
+    },
+    "connections": "one new HTTP connection per request; sequential, no concurrency",
+    "databases": "none configured; no model/provider calls",
+    "host_logical_cpu_count": 10,
+    "host_machine": "arm64",
+    "host_os": "Darwin",
+    "python_version": "3.13.3",
+    "transport": "host loopback HTTP/1.1 \u2192 isolated Docker Nginx \u2192 isolated ASP.NET API"
+  },
+  "fixture": {
+    "dashboard_fixture_sha256": "805429b134c4b1864ffcd3dd477c6485c4aee5a250f7b616bffed5d192b79b64",
+    "overview_evidence_record_count": 480,
+    "selected_signal": "checkout_friction",
+    "selected_signal_numerator": 25,
+    "source_count": 3,
+    "source_key": "synthetic/feedback-decision-ai-reference/1.0.0",
+    "trend_source_key": "synthetic/trend-backtest/seed-20260919"
+  },
+  "generated_at_utc": "2026-09-20T20:31:40.814652+00:00",
+  "limitations": [
+    "One local host with synthetic fixtures; not an SLA or production capacity test.",
+    "Overview/evidence use 480 records; trends use a separate frozen backtest fixture.",
+    "First request is the first measured call to that route after health/metadata discovery, not a cold process.",
+    "Warm samples include host networking, new connections, proxying and body reads.",
+    "No browser, database/provider latency, concurrency or deployment network measured.",
+    "p95 uses nearest-rank: sorted sample at ceil(0.95 * 100), separate from median.",
+    "Runtime resources and unique image tags removed; shared build cache retained."
+  ],
+  "routes": {
+    "evidence": {
+      "first_request": {
+        "duration_ms": 4.152584,
+        "response_bytes": 5651,
+        "status": 200
+      },
+      "path": "/api/v1/dashboard/signals/checkout_friction/evidence?context=demo&sourceKey=synthetic%2Ffeedback-decision-ai-reference%2F1.0.0&from=2025-01-01T11%3A34%3A44%2B00%3A00&toExclusive=2026-03-24T17%3A34%3A59.001%2B00%3A00&page=1&pageSize=10",
+      "warm_request_count": 100,
+      "warm_samples": [
+        {
+          "duration_ms": 1.097584,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.045417,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.815333,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.973042,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.85875,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.778625,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.886291,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.869791,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.944333,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.835792,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.806375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.762417,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.816166,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.781584,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.988667,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.957125,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.812459,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.902083,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.086375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.932584,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.936,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.825208,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.792958,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.792166,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.881875,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.950167,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.992208,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.890084,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.873708,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.822375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.827917,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.120708,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.076125,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.037458,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.841666,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.328541,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.124042,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.0235,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.874125,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.827875,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.8395,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.944583,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.04175,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.879375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.858916,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.844458,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.920334,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.823,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.848833,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.858625,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.846667,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.77825,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.833417,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.825625,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.869875,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.85975,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.915,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.827084,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.753125,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.100583,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.806208,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.785375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.874541,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.847291,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.808416,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.746334,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.796625,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.72175,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.7195,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.914791,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.802542,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.818042,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.786791,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.911209,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.999625,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.812583,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.811667,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.8825,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.878083,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.825875,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.764833,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.840042,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.884292,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.921958,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.788333,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.762042,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.869417,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.884833,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.844708,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.875042,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.873625,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.785125,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.763375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.887375,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.876458,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.803667,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.823667,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.763875,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.784166,
+          "response_bytes": 5651,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.744083,
+          "response_bytes": 5651,
+          "status": 200
+        }
+      ],
+      "warm_summary_ms": {
+        "max": 1.328541,
+        "median": 0.848062,
+        "min": 0.7195,
+        "p95_nearest_rank": 1.086375
+      }
+    },
+    "overview": {
+      "first_request": {
+        "duration_ms": 24.173042,
+        "response_bytes": 4481,
+        "status": 200
+      },
+      "path": "/api/v1/dashboard/overview?context=demo&sourceKey=synthetic%2Ffeedback-decision-ai-reference%2F1.0.0&from=2025-01-01T11%3A34%3A44%2B00%3A00&toExclusive=2026-03-24T17%3A34%3A59.001%2B00%3A00",
+      "warm_request_count": 100,
+      "warm_samples": [
+        {
+          "duration_ms": 1.290125,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.139208,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.059334,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.098834,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.047458,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.040333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.043541,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.993333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.003084,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.19525,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.117958,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.031917,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.048416,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.514834,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.284166,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.639042,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.079708,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.956458,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.029291,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.998,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.0155,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.238875,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.042541,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.070292,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.172667,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.018333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.017459,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.961083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.062667,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.044917,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.068833,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.080625,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.926958,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.97875,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.059417,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.091209,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.026,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.971792,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.056125,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.080584,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.027083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.973667,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.041791,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.01625,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.890292,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.196792,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.065167,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.930958,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.900625,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.887458,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.900541,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.918375,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.957333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.004084,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.040458,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.303916,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.642,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.327375,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.163083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.012083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.980333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.055458,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.028125,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.084208,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.99225,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.037083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.994375,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.045125,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.05425,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.064125,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.211917,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.102375,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.975167,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.968042,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.10875,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.244708,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.118625,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.06225,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.051791,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.141,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.939833,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.981875,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.075917,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.002709,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.008083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.135125,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.183958,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.068708,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.080333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.115875,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.099333,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.112667,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.120167,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.019291,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.001792,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.91725,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.041083,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.017916,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.588958,
+          "response_bytes": 4481,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.275,
+          "response_bytes": 4481,
+          "status": 200
+        }
+      ],
+      "warm_summary_ms": {
+        "max": 1.642,
+        "median": 1.0479370000000001,
+        "min": 0.887458,
+        "p95_nearest_rank": 1.303916
+      }
+    },
+    "trends": {
+      "first_request": {
+        "duration_ms": 2.097875,
+        "response_bytes": 12978,
+        "status": 200
+      },
+      "path": "/api/v1/dashboard/trends?context=demo",
+      "warm_request_count": 100,
+      "warm_samples": [
+        {
+          "duration_ms": 0.920875,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.874041,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.079458,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 2.614083,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.472791,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.26475,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.0845,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.032125,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.99275,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.359,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.017833,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.917625,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.901458,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.832667,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.802584,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.922583,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.900542,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.854834,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.77125,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.8295,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.722083,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.875542,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.876583,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.787875,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.812958,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.742667,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.022125,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.812542,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.875792,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.137375,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.922042,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.730875,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.708584,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.68825,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.722583,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.79,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.866375,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.796959,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.845208,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.805833,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.8405,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.791125,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.80775,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.804041,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.903042,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.756916,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.858,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.879916,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.922334,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.830708,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.867208,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.840125,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.903083,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.809417,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.880042,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.863083,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.844917,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.801833,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.826084,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.80275,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.093458,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.089375,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.922167,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.826,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.919333,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.973834,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.91975,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.816875,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.867292,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.947125,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.790166,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.83825,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.823,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.861708,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.878291,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 6.0785,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.1185,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.098792,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.126,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.98875,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.914917,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.99775,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.865041,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.017292,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.027208,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.123792,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.942292,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.950041,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.937833,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.910667,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.933083,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.9655,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.932041,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.900583,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 1.014,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.975083,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.968,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.920166,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.796417,
+          "response_bytes": 12978,
+          "status": 200
+        },
+        {
+          "duration_ms": 0.771125,
+          "response_bytes": 12978,
+          "status": 200
+        }
+      ],
+      "warm_summary_ms": {
+        "max": 6.0785,
+        "median": 0.8799790000000001,
+        "min": 0.68825,
+        "p95_nearest_rank": 1.137375
+      }
+    }
+  },
+  "schema_version": "quality-http-performance/1.0.0"
+}

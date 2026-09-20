@@ -1,0 +1,27 @@
+{
+  "kind": "trend-overview",
+  "contractVersion": "1.0",
+  "context": "live",
+  "availability": { "state": "unavailable", "reason": "awaiting_calibration" },
+  "source": null,
+  "method": {
+    "id": "simple_rate_change",
+    "version": "simple-rate/1.0.0",
+    "configurationChecksum": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+    "currentWindowDays": 7,
+    "baselineWindowDays": 28,
+    "minimumCurrentDenominator": 20,
+    "minimumBaselineDenominator": 50,
+    "minimumCurrentNumerator": 3,
+    "minimumAbsoluteDeltaPoints": 20.0,
+    "minimumRelativeChangePercent": 30.0,
+    "claim": "emerging_signal_not_statistical_significance",
+    "betaPriorAlpha": null,
+    "betaPriorBeta": null,
+    "minimumProbabilityOfDirection": null
+  },
+  "summary": null,
+  "series": [],
+  "results": [],
+  "incidents": []
+}

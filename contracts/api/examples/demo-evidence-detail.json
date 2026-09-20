@@ -1,0 +1,58 @@
+{
+  "kind": "evidence-detail",
+  "contractVersion": "1.0",
+  "context": "demo",
+  "source": {
+    "key": "synthetic/feedback-decision-ai-reference/1.0.0",
+    "providerId": "synthetic",
+    "datasetName": "feedback-decision-ai-reference",
+    "datasetVersion": "1.0.0+sol-medium",
+    "displayName": "Sol-medium reference feedback",
+    "synthetic": true
+  },
+  "record": {
+    "feedbackId": "11111111-1111-4111-8111-111111111111",
+    "decisionId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1",
+    "occurredAt": "2026-05-24T10:00:00Z",
+    "sourceRecordId": "illustrative-006",
+    "channel": "illustrative_survey",
+    "productLabel": "Sample parcel",
+    "excerpt": "The sample parcel arrived after the illustrated delivery date.",
+    "evidenceAccess": "permitted_synthetic",
+    "inclusionReason": "The curated illustrative answer assigns the delivery-delay topic and marks this record eligible."
+  },
+  "evidence": {
+    "access": "permitted_synthetic",
+    "title": "Illustrative late arrival",
+    "body": "The sample parcel arrived after the illustrated delivery date. This sentence was written only for the repository-owned demo journey."
+  },
+  "answers": [
+    {
+      "questionId": "primary_topic",
+      "label": "Primary topic",
+      "primitive": "choice",
+      "value": "delivery_delay",
+      "confidenceLabel": null,
+      "eligibility": "illustrative_eligible"
+    },
+    {
+      "questionId": "issue_severity",
+      "label": "Issue severity",
+      "primitive": "score",
+      "value": 2,
+      "confidenceLabel": null,
+      "eligibility": "illustrative_eligible"
+    }
+  ],
+  "provenance": {
+    "decisionId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1",
+    "schemaName": "feedback-decision",
+    "schemaVersion": "1.0.0",
+    "modelVersion": "illustrative-fixture/1.0",
+    "policyVersion": "illustrative-demo/1.0",
+    "policyStatus": "illustrative",
+    "traceId": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbb1",
+    "decidedAt": "2026-05-24T10:01:00Z"
+  },
+  "inclusionReason": "The curated illustrative answer assigns the delivery-delay topic and marks this record eligible."
+}

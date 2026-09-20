@@ -1,0 +1,128 @@
+{
+  "kind": "evaluation-comparison",
+  "contractVersion": "1.0",
+  "context": "demo",
+  "availability": {
+    "state": "available",
+    "reason": null
+  },
+  "status": "complete",
+  "reference": {
+    "kind": "ai_reviewed_not_human_gold",
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium"
+  },
+  "recordCount": 480,
+  "successCount": 480,
+  "errorCount": 0,
+  "semif": {
+    "requestedModel": "semif-qwen3.5-4b-mlx-q4-851bf6e8",
+    "resolvedModel": "semif-qwen3.5-4b-mlx-q4-851bf6e8"
+  },
+  "semifPrimaryTopic": {
+    "macroF1": 0.8333071569443776,
+    "accuracy": 0.88125
+  },
+  "semifLanguageSlices": [
+    {
+      "language": "en-GB",
+      "recordCount": 302,
+      "successCount": 302,
+      "errorCount": 0,
+      "primaryTopic": {
+        "macroF1": 0.8692667371910173,
+        "accuracy": 0.9006622516556292
+      }
+    },
+    {
+      "language": "sv-SE",
+      "recordCount": 178,
+      "successCount": 178,
+      "errorCount": 0,
+      "primaryTopic": {
+        "macroF1": 0.7407656570606828,
+        "accuracy": 0.848314606741573
+      }
+    }
+  ],
+  "rules": {
+    "requestedModel": "rules-1.0.0",
+    "resolvedModel": "rules-1.0.0"
+  },
+  "rulePrimaryTopic": {
+    "macroF1": 0.9987936390814087,
+    "accuracy": 0.9979166666666667
+  },
+  "ruleLanguageSlices": [
+    {
+      "language": "en-GB",
+      "recordCount": 302,
+      "successCount": 302,
+      "errorCount": 0,
+      "primaryTopic": {
+        "macroF1": 1.0,
+        "accuracy": 1.0
+      }
+    },
+    {
+      "language": "sv-SE",
+      "recordCount": 178,
+      "successCount": 178,
+      "errorCount": 0,
+      "primaryTopic": {
+        "macroF1": 0.9970136144049186,
+        "accuracy": 0.9943820224719101
+      }
+    }
+  ],
+  "llm": {
+    "requestedModel": "gpt-5.4-mini-2026-03-17",
+    "resolvedModel": "gpt-5.4-mini-2026-03-17"
+  },
+  "semifCost": {
+    "scope": "local_inference",
+    "status": "measured_complete",
+    "tokens": 1515670,
+    "costUsd": 0.0,
+    "successfulRecords": 480,
+    "targetRecords": 480,
+    "estimatedTargetCostUsd": 0.0,
+    "estimateMethod": "local_mlx_no_api_charge"
+  },
+  "llmCost": {
+    "scope": "partial_experiment",
+    "status": "closed_partial",
+    "tokens": 477777,
+    "costUsd": 0.39,
+    "successfulRecords": 192,
+    "targetRecords": 480,
+    "estimatedTargetCostUsd": 0.98,
+    "estimateMethod": "linear_extrapolation_from_owner_reported_partial_spend"
+  },
+  "llmPrimaryTopic": {
+    "macroF1": 0.782838358729344,
+    "accuracy": 0.8489583333333334
+  },
+  "llmLanguageSlices": [
+    {
+      "language": "en-GB",
+      "recordCount": 125,
+      "successCount": 125,
+      "errorCount": 0,
+      "primaryTopic": {
+        "macroF1": 0.758919348902371,
+        "accuracy": 0.832
+      }
+    },
+    {
+      "language": "sv-SE",
+      "recordCount": 67,
+      "successCount": 67,
+      "errorCount": 0,
+      "primaryTopic": {
+        "macroF1": 0.8400673400673401,
+        "accuracy": 0.8805970149253731
+      }
+    }
+  ]
+}

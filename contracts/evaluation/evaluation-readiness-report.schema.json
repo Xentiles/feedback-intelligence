@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/evaluation-readiness-1.0.0.json",
+  "title": "Evaluation readiness report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "sample_version", "status", "readiness", "inputs", "claims"],
+  "properties": {
+    "schema_version": { "const": "feedback-evaluation-readiness/1.0.0" },
+    "sample_version": { "const": "feedback-decision-1.0.0" },
+    "status": { "enum": ["ready", "awaiting_human_labels"] },
+    "readiness": { "type": "object" },
+    "inputs": { "type": "object" },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gold_dataset_complete", "calibration_allowed", "model_quality_measured"],
+      "properties": {
+        "gold_dataset_complete": { "type": "boolean" },
+        "calibration_allowed": { "type": "boolean" },
+        "model_quality_measured": { "const": false }
+      }
+    }
+  }
+}

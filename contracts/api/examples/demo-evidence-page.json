@@ -1,0 +1,43 @@
+{
+  "kind": "evidence-page",
+  "contractVersion": "1.0",
+  "context": "demo",
+  "filters": {
+    "sourceKey": "synthetic/feedback-decision-ai-reference/1.0.0",
+    "from": "2026-05-01T00:00:00Z",
+    "toExclusive": "2026-06-01T00:00:00Z",
+    "topic": "delivery_delay",
+    "product": null,
+    "category": null,
+    "language": "en",
+    "channel": null
+  },
+  "signalId": "delivery_delay",
+  "page": 1,
+  "pageSize": 2,
+  "total": 6,
+  "items": [
+    {
+      "feedbackId": "11111111-1111-4111-8111-111111111111",
+      "decisionId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1",
+      "occurredAt": "2026-05-24T10:00:00Z",
+      "sourceRecordId": "illustrative-006",
+      "channel": "illustrative_survey",
+      "productLabel": "Sample parcel",
+      "excerpt": "The sample parcel arrived after the illustrated delivery date.",
+      "evidenceAccess": "permitted_synthetic",
+      "inclusionReason": "The curated illustrative answer assigns the delivery-delay topic and marks this record eligible."
+    },
+    {
+      "feedbackId": "22222222-2222-4222-8222-222222222222",
+      "decisionId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa2",
+      "occurredAt": "2026-05-19T09:30:00Z",
+      "sourceRecordId": "illustrative-004",
+      "channel": "illustrative_survey",
+      "productLabel": "Sample parcel",
+      "excerpt": "The fictional delivery window passed before the sample order arrived.",
+      "evidenceAccess": "permitted_synthetic",
+      "inclusionReason": "The curated illustrative answer assigns the delivery-delay topic and marks this record eligible."
+    }
+  ]
+}

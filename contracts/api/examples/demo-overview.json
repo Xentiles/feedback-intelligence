@@ -1,0 +1,84 @@
+{
+  "kind": "overview",
+  "contractVersion": "1.0",
+  "context": "demo",
+  "filters": {
+    "sourceKey": "synthetic/feedback-decision-ai-reference/1.0.0",
+    "from": "2026-05-01T00:00:00Z",
+    "toExclusive": "2026-06-01T00:00:00Z",
+    "topic": "delivery_delay",
+    "product": null,
+    "category": null,
+    "language": "en",
+    "channel": null
+  },
+  "processing": {
+    "feedbackRecords": 12,
+    "decisionRuns": 12,
+    "typedAnswers": 168,
+    "jobsByStatus": {"completed": 12},
+    "projectionByDestination": {}
+  },
+  "metrics": [
+    {
+      "id": "imported_feedback",
+      "label": "Imported feedback",
+      "unit": "count",
+      "value": 12,
+      "numerator": 12,
+      "denominator": null,
+      "availability": {"state": "available", "reason": null}
+    },
+    {
+      "id": "classified_feedback",
+      "label": "Classified feedback",
+      "unit": "percent",
+      "value": 100,
+      "numerator": 12,
+      "denominator": 12,
+      "availability": {"state": "available", "reason": null}
+    },
+    {
+      "id": "analytical_coverage",
+      "label": "Illustrative analytical coverage",
+      "unit": "percent",
+      "value": 83.3,
+      "numerator": 10,
+      "denominator": 12,
+      "availability": {"state": "available", "reason": null}
+    },
+    {
+      "id": "topic_rate",
+      "label": "Illustrative delivery-delay rate",
+      "unit": "percent",
+      "value": 60,
+      "numerator": 6,
+      "denominator": 10,
+      "availability": {"state": "available", "reason": null}
+    }
+  ],
+  "series": [
+    {"periodStart": "2026-05-01T00:00:00Z", "importedCount": 3, "eligibleCount": 2, "topicNumerator": 1, "value": 50},
+    {"periodStart": "2026-05-08T00:00:00Z", "importedCount": 3, "eligibleCount": 3, "topicNumerator": 2, "value": 66.7},
+    {"periodStart": "2026-05-15T00:00:00Z", "importedCount": 3, "eligibleCount": 2, "topicNumerator": 1, "value": 50},
+    {"periodStart": "2026-05-22T00:00:00Z", "importedCount": 3, "eligibleCount": 3, "topicNumerator": 2, "value": 66.7}
+  ],
+  "signals": [
+    {
+      "id": "delivery_delay",
+      "label": "Illustrative delivery delay",
+      "definition": "Distinct illustrative records curated with the delivery-delay topic among records eligible for that topic.",
+      "numerator": 6,
+      "denominator": 10,
+      "rate": 60,
+      "comparison": {
+        "range": {"from": "2026-04-01T00:00:00Z", "toExclusive": "2026-05-01T00:00:00Z"},
+        "numerator": 3,
+        "denominator": 8,
+        "rate": 37.5
+      },
+      "deltaPoints": 22.5,
+      "availability": {"state": "available", "reason": null}
+    }
+  ]
+}

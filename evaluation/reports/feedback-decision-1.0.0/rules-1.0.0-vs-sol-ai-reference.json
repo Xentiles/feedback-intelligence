@@ -1,0 +1,1747 @@
+{
+  "engine": {
+    "provider": "rules",
+    "requested_model": "rules-1.0.0",
+    "resolved_model": "rules-1.0.0",
+    "run_id": "c6184ed5383784c87e05a44f",
+    "schema_sha256": "sha256:9314b38daf329f4c61fbea3d64f9a76a8d6334511888dcd61f7c75563c8f7094"
+  },
+  "inputs": {
+    "decision_schema_sha256": "sha256:9314b38daf329f4c61fbea3d64f9a76a8d6334511888dcd61f7c75563c8f7094",
+    "labels_sha256": "fd4d2489bb594ff433db5bb8cf174381212b365d69b2bbc9ce42bdab01dc7b73",
+    "predictions_sha256": "075f9fad1e0877faa9d4910cae85c032ce779b9095006b2fade5c6a8e106d8c7",
+    "records_sha256": "ac239a2fd52f3e8c474e708c426aafa21c785a8a9517644e59a32b3f8fc16450"
+  },
+  "locked_test_unlocked": false,
+  "operations": {
+    "cost_usd_per_1000_records": null,
+    "errors_by_type": {},
+    "input_tokens": 0,
+    "latency_ms": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "output_tokens": 0,
+    "total_cost_usd": null
+  },
+  "partial_evaluation": false,
+  "questions": {
+    "actionable_feedback": {
+      "accuracy": 1.0,
+      "auprc": 1.0,
+      "auroc": 1.0,
+      "brier": 0.009999999999999997,
+      "confusion": {
+        "fn": 0,
+        "fp": 0,
+        "tn": 17,
+        "tp": 463
+      },
+      "ece": 0.09999999999999998,
+      "evaluated_count": 480,
+      "f1": 1.0,
+      "precision": 1.0,
+      "primitive": "noul",
+      "recall": 1.0,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "defect_type": {
+      "accuracy": 0.9833333333333333,
+      "brier": 0.0166672619047619,
+      "confusion_matrix": {
+        "compatibility": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 0,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "missing_component": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 0,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "noise": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 21,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 0,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "other": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 4,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "physical_damage": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 17,
+          "stability": 4,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "stability": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 15,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "thermal": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 0,
+          "thermal": 0,
+          "unclear": 0
+        },
+        "unclear": {
+          "compatibility": 0,
+          "missing_component": 0,
+          "noise": 0,
+          "other": 0,
+          "physical_damage": 0,
+          "stability": 0,
+          "thermal": 0,
+          "unclear": 419
+        }
+      },
+      "ece": 0.2855416666666666,
+      "evaluated_count": 480,
+      "macro_f1": 0.4605263157894737,
+      "per_class": {
+        "compatibility": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "missing_component": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "noise": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 21
+        },
+        "other": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 4
+        },
+        "physical_damage": {
+          "f1": 0.8947368421052632,
+          "precision": 1.0,
+          "recall": 0.8095238095238095,
+          "support": 21
+        },
+        "stability": {
+          "f1": 0.7894736842105263,
+          "precision": 0.6521739130434783,
+          "recall": 1.0,
+          "support": 15
+        },
+        "thermal": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "unclear": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 419
+        }
+      },
+      "primitive": "choice",
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 61,
+          "accuracy": 0.8688524590163934,
+          "coverage": 0.12708333333333333,
+          "risk": 0.1311475409836066,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 61,
+          "accuracy": 0.8688524590163934,
+          "coverage": 0.12708333333333333,
+          "risk": 0.1311475409836066,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "delivery_experience": {
+      "accuracy": 0.9833333333333333,
+      "brier": 0.014999999999999994,
+      "ece": 0.18333333333333324,
+      "evaluated_count": 480,
+      "mae": 0.016666666666666666,
+      "primitive": "score",
+      "quadratic_weighted_kappa": 0.9731599916124973,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9833333333333333,
+          "coverage": 1.0,
+          "risk": 0.01666666666666672,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "explicit_repurchase_risk": {
+      "accuracy": 1.0,
+      "auprc": null,
+      "auroc": null,
+      "brier": 0.010000000000000002,
+      "confusion": {
+        "fn": 0,
+        "fp": 0,
+        "tn": 480,
+        "tp": 0
+      },
+      "ece": 0.09999999999999998,
+      "evaluated_count": 480,
+      "f1": 0.0,
+      "precision": 0.0,
+      "primitive": "noul",
+      "recall": 0.0,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "issue_severity": {
+      "accuracy": 0.9354166666666667,
+      "brier": 0.03701388888888889,
+      "ece": 0.13541666666666663,
+      "evaluated_count": 480,
+      "mae": 0.12291666666666666,
+      "primitive": "score",
+      "quadratic_weighted_kappa": 0.8973741159672489,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9354166666666667,
+          "coverage": 1.0,
+          "risk": 0.06458333333333333,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9354166666666667,
+          "coverage": 1.0,
+          "risk": 0.06458333333333333,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9354166666666667,
+          "coverage": 1.0,
+          "risk": 0.06458333333333333,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9354166666666667,
+          "coverage": 1.0,
+          "risk": 0.06458333333333333,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9354166666666667,
+          "coverage": 1.0,
+          "risk": 0.06458333333333333,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "mentions_delivery": {
+      "accuracy": 0.9645833333333333,
+      "auprc": 0.8905171663867507,
+      "auroc": 0.9105263157894737,
+      "brier": 0.03833333333333334,
+      "confusion": {
+        "fn": 17,
+        "fp": 0,
+        "tn": 385,
+        "tp": 78
+      },
+      "ece": 0.06458333333333333,
+      "evaluated_count": 480,
+      "f1": 0.9017341040462428,
+      "precision": 1.0,
+      "primitive": "noul",
+      "recall": 0.8210526315789474,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9645833333333333,
+          "coverage": 1.0,
+          "risk": 0.03541666666666665,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9645833333333333,
+          "coverage": 1.0,
+          "risk": 0.03541666666666665,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9645833333333333,
+          "coverage": 1.0,
+          "risk": 0.03541666666666665,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9645833333333333,
+          "coverage": 1.0,
+          "risk": 0.03541666666666665,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9645833333333333,
+          "coverage": 1.0,
+          "risk": 0.03541666666666665,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9645833333333333,
+          "coverage": 1.0,
+          "risk": 0.03541666666666665,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "mentions_product": {
+      "accuracy": 0.975,
+      "auprc": 0.9886008285252008,
+      "auroc": 0.9785714285714285,
+      "brier": 0.030000000000000002,
+      "confusion": {
+        "fn": 12,
+        "fp": 0,
+        "tn": 200,
+        "tp": 268
+      },
+      "ece": 0.07499999999999996,
+      "evaluated_count": 480,
+      "f1": 0.9781021897810219,
+      "precision": 1.0,
+      "primitive": "noul",
+      "recall": 0.9571428571428572,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.975,
+          "coverage": 1.0,
+          "risk": 0.025000000000000022,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.975,
+          "coverage": 1.0,
+          "risk": 0.025000000000000022,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.975,
+          "coverage": 1.0,
+          "risk": 0.025000000000000022,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.975,
+          "coverage": 1.0,
+          "risk": 0.025000000000000022,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.975,
+          "coverage": 1.0,
+          "risk": 0.025000000000000022,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.975,
+          "coverage": 1.0,
+          "risk": 0.025000000000000022,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "mentions_support": {
+      "accuracy": 1.0,
+      "auprc": 1.0,
+      "auroc": 1.0,
+      "brier": 0.010000000000000002,
+      "confusion": {
+        "fn": 0,
+        "fp": 0,
+        "tn": 387,
+        "tp": 93
+      },
+      "ece": 0.09999999999999998,
+      "evaluated_count": 480,
+      "f1": 1.0,
+      "precision": 1.0,
+      "primitive": "noul",
+      "recall": 1.0,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 480,
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "risk": 0.0,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "overall_experience": {
+      "accuracy": 0.9604166666666667,
+      "brier": 0.021874999999999995,
+      "ece": 0.16041666666666665,
+      "evaluated_count": 480,
+      "mae": 0.11458333333333333,
+      "primitive": "score",
+      "quadratic_weighted_kappa": 0.9053288804994918,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9604166666666667,
+          "coverage": 1.0,
+          "risk": 0.039583333333333304,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9604166666666667,
+          "coverage": 1.0,
+          "risk": 0.039583333333333304,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9604166666666667,
+          "coverage": 1.0,
+          "risk": 0.039583333333333304,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9604166666666667,
+          "coverage": 1.0,
+          "risk": 0.039583333333333304,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9604166666666667,
+          "coverage": 1.0,
+          "risk": 0.039583333333333304,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "primary_topic": {
+      "accuracy": 0.9979166666666667,
+      "brier": 0.004601504629629632,
+      "confusion_matrix": {
+        "compatibility": {
+          "compatibility": 34,
+          "delivery": 0,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "delivery": {
+          "compatibility": 0,
+          "delivery": 69,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "other": {
+          "compatibility": 0,
+          "delivery": 0,
+          "other": 10,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "price_value": {
+          "compatibility": 0,
+          "delivery": 0,
+          "other": 0,
+          "price_value": 21,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "product_information": {
+          "compatibility": 0,
+          "delivery": 0,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 32,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "product_quality": {
+          "compatibility": 0,
+          "delivery": 1,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 136,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "returns_refunds": {
+          "compatibility": 0,
+          "delivery": 0,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 59,
+          "support": 0,
+          "website_checkout": 0
+        },
+        "support": {
+          "compatibility": 0,
+          "delivery": 0,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 93,
+          "website_checkout": 0
+        },
+        "website_checkout": {
+          "compatibility": 0,
+          "delivery": 0,
+          "other": 0,
+          "price_value": 0,
+          "product_information": 0,
+          "product_quality": 0,
+          "returns_refunds": 0,
+          "support": 0,
+          "website_checkout": 25
+        }
+      },
+      "ece": 0.1808333333333334,
+      "evaluated_count": 480,
+      "macro_f1": 0.9987936390814087,
+      "per_class": {
+        "compatibility": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 34
+        },
+        "delivery": {
+          "f1": 0.9928057553956835,
+          "precision": 0.9857142857142858,
+          "recall": 1.0,
+          "support": 69
+        },
+        "other": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 10
+        },
+        "price_value": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 21
+        },
+        "product_information": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 32
+        },
+        "product_quality": {
+          "f1": 0.9963369963369964,
+          "precision": 1.0,
+          "recall": 0.9927007299270073,
+          "support": 137
+        },
+        "returns_refunds": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 59
+        },
+        "support": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 93
+        },
+        "website_checkout": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 25
+        }
+      },
+      "primitive": "choice",
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9979166666666667,
+          "coverage": 1.0,
+          "risk": 0.002083333333333326,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9979166666666667,
+          "coverage": 1.0,
+          "risk": 0.002083333333333326,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9979166666666667,
+          "coverage": 1.0,
+          "risk": 0.002083333333333326,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 470,
+          "accuracy": 0.997872340425532,
+          "coverage": 0.9791666666666666,
+          "risk": 0.0021276595744680327,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 470,
+          "accuracy": 0.997872340425532,
+          "coverage": 0.9791666666666666,
+          "risk": 0.0021276595744680327,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "product_experience": {
+      "accuracy": 0.9875,
+      "brier": 0.013749999999999995,
+      "ece": 0.1875,
+      "evaluated_count": 480,
+      "mae": 0.0125,
+      "primitive": "score",
+      "quadratic_weighted_kappa": 0.9927966864757789,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9875,
+          "coverage": 1.0,
+          "risk": 0.012499999999999956,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9875,
+          "coverage": 1.0,
+          "risk": 0.012499999999999956,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9875,
+          "coverage": 1.0,
+          "risk": 0.012499999999999956,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9875,
+          "coverage": 1.0,
+          "risk": 0.012499999999999956,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9875,
+          "coverage": 1.0,
+          "risk": 0.012499999999999956,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "reports_product_defect": {
+      "accuracy": 0.9729166666666667,
+      "auprc": 0.890075148879688,
+      "auroc": 0.9121621621621622,
+      "brier": 0.03166666666666667,
+      "confusion": {
+        "fn": 13,
+        "fp": 0,
+        "tn": 406,
+        "tp": 61
+      },
+      "ece": 0.07291666666666663,
+      "evaluated_count": 480,
+      "f1": 0.9037037037037037,
+      "precision": 1.0,
+      "primitive": "noul",
+      "recall": 0.8243243243243243,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9729166666666667,
+          "coverage": 1.0,
+          "risk": 0.027083333333333348,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9729166666666667,
+          "coverage": 1.0,
+          "risk": 0.027083333333333348,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9729166666666667,
+          "coverage": 1.0,
+          "risk": 0.027083333333333348,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9729166666666667,
+          "coverage": 1.0,
+          "risk": 0.027083333333333348,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9729166666666667,
+          "coverage": 1.0,
+          "risk": 0.027083333333333348,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9729166666666667,
+          "coverage": 1.0,
+          "risk": 0.027083333333333348,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "resolution_status": {
+      "accuracy": 0.875,
+      "brier": 0.04648541666666666,
+      "confusion_matrix": {
+        "not_applicable": {
+          "not_applicable": 90,
+          "partially_resolved": 0,
+          "resolved": 0,
+          "unclear": 20,
+          "unresolved": 0
+        },
+        "partially_resolved": {
+          "not_applicable": 0,
+          "partially_resolved": 0,
+          "resolved": 0,
+          "unclear": 0,
+          "unresolved": 0
+        },
+        "resolved": {
+          "not_applicable": 0,
+          "partially_resolved": 0,
+          "resolved": 88,
+          "unclear": 10,
+          "unresolved": 0
+        },
+        "unclear": {
+          "not_applicable": 3,
+          "partially_resolved": 0,
+          "resolved": 0,
+          "unclear": 95,
+          "unresolved": 12
+        },
+        "unresolved": {
+          "not_applicable": 0,
+          "partially_resolved": 0,
+          "resolved": 10,
+          "unclear": 5,
+          "unresolved": 147
+        }
+      },
+      "ece": 0.09291666666666669,
+      "evaluated_count": 480,
+      "macro_f1": 0.6984426416393177,
+      "per_class": {
+        "not_applicable": {
+          "f1": 0.8866995073891626,
+          "precision": 0.967741935483871,
+          "recall": 0.8181818181818182,
+          "support": 110
+        },
+        "partially_resolved": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "resolved": {
+          "f1": 0.8979591836734694,
+          "precision": 0.8979591836734694,
+          "recall": 0.8979591836734694,
+          "support": 98
+        },
+        "unclear": {
+          "f1": 0.7916666666666666,
+          "precision": 0.7307692307692307,
+          "recall": 0.8636363636363636,
+          "support": 110
+        },
+        "unresolved": {
+          "f1": 0.9158878504672897,
+          "precision": 0.9245283018867925,
+          "recall": 0.9074074074074074,
+          "support": 162
+        }
+      },
+      "primitive": "choice",
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.875,
+          "coverage": 1.0,
+          "risk": 0.125,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.875,
+          "coverage": 1.0,
+          "risk": 0.125,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.875,
+          "coverage": 1.0,
+          "risk": 0.125,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 350,
+          "accuracy": 0.9285714285714286,
+          "coverage": 0.7291666666666666,
+          "risk": 0.0714285714285714,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 350,
+          "accuracy": 0.9285714285714286,
+          "coverage": 0.7291666666666666,
+          "risk": 0.0714285714285714,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    },
+    "support_experience": {
+      "accuracy": 0.9625,
+      "brier": 0.021249999999999995,
+      "ece": 0.16249999999999998,
+      "evaluated_count": 480,
+      "mae": 0.1125,
+      "primitive": "score",
+      "quadratic_weighted_kappa": 0.713589050379745,
+      "selective": [
+        {
+          "accepted": 480,
+          "accuracy": 0.9625,
+          "coverage": 1.0,
+          "risk": 0.03749999999999998,
+          "threshold": 0.0
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9625,
+          "coverage": 1.0,
+          "risk": 0.03749999999999998,
+          "threshold": 0.5
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9625,
+          "coverage": 1.0,
+          "risk": 0.03749999999999998,
+          "threshold": 0.6
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9625,
+          "coverage": 1.0,
+          "risk": 0.03749999999999998,
+          "threshold": 0.7
+        },
+        {
+          "accepted": 480,
+          "accuracy": 0.9625,
+          "coverage": 1.0,
+          "risk": 0.03749999999999998,
+          "threshold": 0.8
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.9
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.95
+        },
+        {
+          "accepted": 0,
+          "accuracy": null,
+          "coverage": 0.0,
+          "risk": null,
+          "threshold": 0.99
+        }
+      ],
+      "total_count": 480
+    }
+  },
+  "reference": {
+    "kind": "ai_reference",
+    "model": "gpt-5.6-sol"
+  },
+  "report_sha256": "e54681e4d72d0d1f5b9ac561fa1fba7cbf3152f71ff9675e12ca833378eabd3c",
+  "sample_version": "feedback-decision-1.0.0",
+  "schema_version": "feedback-evaluation-report/1.0.0",
+  "slices": {
+    "language": {
+      "en-GB": {
+        "primary_topic": {
+          "accuracy": 1.0,
+          "confusion_matrix": {
+            "compatibility": {
+              "compatibility": 24,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "delivery": {
+              "compatibility": 0,
+              "delivery": 42,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "other": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 7,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "price_value": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 16,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "product_information": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 19,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "product_quality": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 79,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "returns_refunds": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 44,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "support": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 54,
+              "website_checkout": 0
+            },
+            "website_checkout": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 17
+            }
+          },
+          "evaluated_count": 302,
+          "macro_f1": 1.0,
+          "per_class": {
+            "compatibility": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 24
+            },
+            "delivery": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 42
+            },
+            "other": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 7
+            },
+            "price_value": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "product_information": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 19
+            },
+            "product_quality": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 79
+            },
+            "returns_refunds": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 44
+            },
+            "support": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 54
+            },
+            "website_checkout": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 17
+            }
+          },
+          "total_count": 302
+        },
+        "record_count": 302,
+        "success_count": 302
+      },
+      "sv-SE": {
+        "primary_topic": {
+          "accuracy": 0.9943820224719101,
+          "confusion_matrix": {
+            "compatibility": {
+              "compatibility": 10,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "delivery": {
+              "compatibility": 0,
+              "delivery": 27,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "other": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 3,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "price_value": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 5,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "product_information": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 13,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "product_quality": {
+              "compatibility": 0,
+              "delivery": 1,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 57,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "returns_refunds": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 15,
+              "support": 0,
+              "website_checkout": 0
+            },
+            "support": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 39,
+              "website_checkout": 0
+            },
+            "website_checkout": {
+              "compatibility": 0,
+              "delivery": 0,
+              "other": 0,
+              "price_value": 0,
+              "product_information": 0,
+              "product_quality": 0,
+              "returns_refunds": 0,
+              "support": 0,
+              "website_checkout": 8
+            }
+          },
+          "evaluated_count": 178,
+          "macro_f1": 0.9970136144049186,
+          "per_class": {
+            "compatibility": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 10
+            },
+            "delivery": {
+              "f1": 0.9818181818181818,
+              "precision": 0.9642857142857143,
+              "recall": 1.0,
+              "support": 27
+            },
+            "other": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 3
+            },
+            "price_value": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 5
+            },
+            "product_information": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 13
+            },
+            "product_quality": {
+              "f1": 0.991304347826087,
+              "precision": 1.0,
+              "recall": 0.9827586206896551,
+              "support": 58
+            },
+            "returns_refunds": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 15
+            },
+            "support": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 39
+            },
+            "website_checkout": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 8
+            }
+          },
+          "total_count": 178
+        },
+        "record_count": 178,
+        "success_count": 178
+      }
+    }
+  },
+  "split": "all",
+  "summary": {
+    "error_count": 0,
+    "error_rate": 0.0,
+    "primary_topic_accuracy": 0.9979166666666667,
+    "primary_topic_macro_f1": 0.9987936390814087,
+    "record_count": 480,
+    "success_count": 480,
+    "target_record_count": 480
+  }
+}

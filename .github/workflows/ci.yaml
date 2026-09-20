@@ -1,0 +1,266 @@
+name: Foundation CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foundation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Web · format, lint, types, test, build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.15.0'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  api:
+    name: API · format, build, test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      DOTNET_NOLOGO: 'true'
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+    defaults:
+      run:
+        working-directory: services/api
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: services/api/**/packages.lock.json
+      - run: dotnet restore --locked-mode
+      - run: dotnet format --verify-no-changes --no-restore
+      - run: dotnet build --configuration Release --no-restore
+      - run: dotnet test --configuration Release --no-build --no-restore
+
+  worker:
+    name: Python · lint, format, types, test, package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: services/decision-worker
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.8.16'
+      - run: uv sync --locked
+      - run: uv run --locked ruff check .
+      - run: uv run --locked ruff format --check .
+      - run: uv run --locked mypy src tests
+      - run: uv run --locked pytest
+      - run: uv run --locked decision-worker
+      - run: uv run --locked feedback-data validate synthetic
+      - run: uv run --locked feedback-data profile synthetic --json
+      - run: uv run --locked feedback-privacy synthetic --json
+      - run: uv run --locked feedback-decisions synthetic --output "${{ runner.temp }}/decisions.jsonl" --json
+      - name: Reproduce the frozen trend evaluation
+        run: |
+          uv run --locked feedback-trends evaluate --output "${{ runner.temp }}/trend-report.json"
+          cmp "${{ runner.temp }}/trend-report.json" ../../evaluation/trends/simple-rate-v1.report.json
+      - name: Reproduce the gold-set readiness report
+        run: |
+          uv run --locked feedback-evaluation report \
+            --output "${{ runner.temp }}/evaluation-readiness.json" \
+            --markdown "${{ runner.temp }}/evaluation-readiness.md"
+          cmp "${{ runner.temp }}/evaluation-readiness.json" ../../evaluation/reports/feedback-decision-1.0.0/readiness.json
+          cmp "${{ runner.temp }}/evaluation-readiness.md" ../../evaluation/reports/feedback-decision-1.0.0/readiness.md
+      - name: Reproduce the interim SemIf versus Sol AI-reference report
+        run: |
+          python ../../scripts/build_ai_reference_labels.py --check
+          uv run --locked feedback-evaluation score \
+            --dataset ../../evaluation/ai-reference/feedback-decision-1.0.0 \
+            --predictions ../../evaluation/benchmarks/feedback-decision-1.0.0/semif-qwen3.5-4b-mlx-q4-851bf6e8.predictions.jsonl \
+            --split all --reference-kind ai_reference --reference-model gpt-5.6-sol \
+            --output "${{ runner.temp }}/ai-reference-report.json" \
+            --markdown "${{ runner.temp }}/ai-reference-report.md"
+          cmp "${{ runner.temp }}/ai-reference-report.json" ../../evaluation/reports/feedback-decision-1.0.0/semif-qwen3.5-4b-mlx-q4-851bf6e8-vs-sol-ai-reference.json
+          cmp "${{ runner.temp }}/ai-reference-report.md" ../../evaluation/reports/feedback-decision-1.0.0/semif-qwen3.5-4b-mlx-q4-851bf6e8-vs-sol-ai-reference.md
+      - name: Reproduce the deterministic rule baseline
+        run: |
+          uv run --locked feedback-evaluation predict \
+            --engine rules \
+            --dataset ../../evaluation/ai-reference/feedback-decision-1.0.0 \
+            --output "${{ runner.temp }}/rule-predictions.jsonl"
+          cmp "${{ runner.temp }}/rule-predictions.jsonl" ../../evaluation/benchmarks/feedback-decision-1.0.0/rules-1.0.0.predictions.jsonl
+          uv run --locked feedback-evaluation score \
+            --dataset ../../evaluation/ai-reference/feedback-decision-1.0.0 \
+            --predictions "${{ runner.temp }}/rule-predictions.jsonl" \
+            --split all --reference-kind ai_reference --reference-model gpt-5.6-sol \
+            --output "${{ runner.temp }}/rule-report.json" \
+            --markdown "${{ runner.temp }}/rule-report.md"
+          cmp "${{ runner.temp }}/rule-report.json" ../../evaluation/reports/feedback-decision-1.0.0/rules-1.0.0-vs-sol-ai-reference.json
+          cmp "${{ runner.temp }}/rule-report.md" ../../evaluation/reports/feedback-decision-1.0.0/rules-1.0.0-vs-sol-ai-reference.md
+      - name: Generate and verify the full deterministic synthetic corpus
+        run: |
+          uv run --locked feedback-synthetic generate --output "${{ runner.temp }}/synthetic" --json
+          uv run --locked feedback-synthetic verify --output "${{ runner.temp }}/synthetic" --json
+          uv run --locked feedback-data validate synthetic --path "${{ runner.temp }}/synthetic/feedback.jsonl"
+          uv run --locked feedback-privacy synthetic --path "${{ runner.temp }}/synthetic/feedback.jsonl" --json
+          uv run --locked feedback-evaluation sample --source "${{ runner.temp }}/synthetic" --output "${{ runner.temp }}/evaluation" --json
+          cmp "${{ runner.temp }}/evaluation/records.jsonl" ../../evaluation/datasets/feedback-decision-1.0.0/records.jsonl
+          cmp "${{ runner.temp }}/evaluation/labels.jsonl" ../../evaluation/datasets/feedback-decision-1.0.0/labels.jsonl
+          cmp "${{ runner.temp }}/evaluation/selection-manifest.json" ../../evaluation/datasets/feedback-decision-1.0.0/selection-manifest.json
+          uv run --locked --script ../../scripts/validate_contracts.py --synthetic-manifest "${{ runner.temp }}/synthetic/seed-manifest.json"
+      - run: uv build
+
+  contracts:
+    name: Contracts · reservation metadata and JSON Schema
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.8.16'
+      - run: uv run --locked --script scripts/validate_contracts.py --decision-fixture data/fixtures/decisions/demo-semif-qwen3.5-4b-mlx-q4.json
+      - run: uv run --locked --script scripts/validate_dashboard_examples.py
+      - run: python scripts/build_trend_dashboard_fixture.py --check
+      - run: python scripts/build_evaluation_dashboard_fixture.py --check
+      - run: python scripts/build_public_benchmark.py --check
+      - run: python -m unittest discover -s scripts -p 'test_public*.py'
+      - run: python scripts/check_publication.py --staged
+      - name: Recreate the deterministic dashboard source
+        run: uv run --locked --project services/decision-worker feedback-synthetic generate --output data/synthetic/generated --json
+      - run: python scripts/build_ai_dashboard_fixture.py --check
+
+  storage-regression:
+    name: Isolated storage · leases, ingestion and projection replay
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.8.16'
+      - run: uv sync --locked --project services/decision-worker
+      - name: Prepare pinned integration runtimes
+        run: |
+          docker pull postgres:18-alpine
+          docker pull clickhouse/clickhouse-server:25.8
+          docker pull mcr.microsoft.com/dotnet/sdk:10.0.401
+          mkdir -p /tmp/feedback-intelligence-nuget-cache
+          docker run --rm -v "$PWD:/work" \
+            -v /tmp/feedback-intelligence-nuget-cache:/root/.nuget/packages -w /work \
+            mcr.microsoft.com/dotnet/sdk:10.0.401 \
+            dotnet restore services/api/FeedbackIntelligence.sln --locked-mode
+      - run: services/decision-worker/.venv/bin/python scripts/quality_storage_check.py
+      - run: services/decision-worker/.venv/bin/python scripts/quality_ingestion_check.py
+      - run: services/decision-worker/.venv/bin/python scripts/quality_projection_check.py
+
+  containers:
+    name: Containers · build and foundation smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate all Compose profiles
+        run: docker compose --profile '*' config --quiet
+      - name: Build all application images
+        run: docker compose --profile '*' build
+      - name: Start the web and API foundation
+        run: docker compose up --detach
+      - name: Check web and API liveness
+        run: |
+          curl --fail --retry 15 --retry-delay 1 --retry-all-errors --connect-timeout 5 --max-time 10 http://localhost:8080/health
+          curl --fail --retry 15 --retry-delay 1 --retry-all-errors --connect-timeout 5 --max-time 10 http://localhost:5080/health
+          curl --fail http://localhost:5080/api/v1/dashboard/trends?context=demo | grep -q '"plantedIncidentCount":4'
+          curl --fail http://localhost:8080/api/v1/dashboard/trends?context=live | grep -q '"reason":"awaiting_calibration"'
+          curl --fail 'http://localhost:5080/api/v1/dashboard/evaluation?context=demo' -o /tmp/evaluation-demo.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          actual = json.loads(Path('/tmp/evaluation-demo.json').read_text())
+          expected = json.loads(Path('contracts/api/examples/demo-evaluation.json').read_text())
+          assert actual == expected, 'Evaluation endpoint differs from the frozen public contract'
+          PY
+          curl --fail http://localhost:8080/api/v1/dashboard/evaluation?context=live | grep -q '"reason":"awaiting_human_labels"'
+      - name: Run the worker scaffold
+        run: docker compose --profile worker run --rm --no-deps decision-worker
+      - name: Validate zero-configuration demo data in the worker image
+        run: docker compose --profile worker run --rm --no-deps --entrypoint feedback-data decision-worker validate synthetic
+      - name: Check the local privacy boundary in the worker image
+        run: docker compose --profile worker run --rm --no-deps --entrypoint feedback-privacy decision-worker synthetic
+      - name: Replay recorded decisions in the worker image
+        run: docker compose --profile worker run --rm --no-deps --entrypoint feedback-decisions decision-worker synthetic --output /tmp/decisions.jsonl --json
+      - name: Confirm unreviewed labels block calibration in the worker image
+        run: |
+          set +e
+          docker compose --profile worker run --rm --no-deps \
+            --entrypoint feedback-evaluation decision-worker readiness --json
+          status=$?
+          test "$status" -eq 1
+      - name: Generate and verify deterministic data in the worker image
+        run: |
+          docker compose --profile worker run --rm --no-deps --entrypoint sh decision-worker -c \
+            'feedback-synthetic generate --count 100 --output /tmp/generated && feedback-synthetic verify --output /tmp/generated'
+      - name: Run persistent fixture pipeline twice
+        env:
+          POSTGRES_PASSWORD: ci-storage-password
+          CLICKHOUSE_PASSWORD: ci-storage-password
+        run: |
+          docker compose --profile pipeline up --abort-on-container-exit \
+            --exit-code-from pipeline-worker pipeline-worker
+          second_run=$(docker compose --profile pipeline run --rm --no-deps pipeline-worker)
+          echo "$second_run"
+          echo "$second_run" | grep -q '"processed": 0'
+          echo "$second_run" | grep -q '"projected": 0'
+          echo "$second_run" | grep -q '"decisions": 9'
+          echo "$second_run" | grep -q '"signal_facts": 0'
+          test "$(docker compose exec -T clickhouse clickhouse-client \
+            --user feedback_intelligence --password ci-storage-password \
+            --query 'SELECT count() FROM feedback_intelligence.daily_detector_inputs')" = "0"
+      - name: Verify storage permissions and immutable decisions
+        env:
+          POSTGRES_PASSWORD: ci-storage-password
+          CLICKHOUSE_PASSWORD: ci-storage-password
+        run: |
+          test "$(docker compose exec -T postgres psql -U feedback_intelligence \
+            -d feedback_intelligence -Atc "SELECT has_table_privilege('feedback_projector', 'feedback.restricted_feedback_text', 'SELECT')")" = "f"
+          if docker compose exec -T postgres psql -U feedback_intelligence \
+            -d feedback_intelligence -v ON_ERROR_STOP=1 \
+            -c "UPDATE feedback.decision_runs SET latency_ms = latency_ms"; then
+            exit 1
+          fi
+      - name: Validate the Collector configuration
+        run: docker compose run --rm --no-deps otel-collector validate --config=/etc/otelcol/config.yaml
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose --profile '*' logs --no-color
+      - name: Stop containers
+        if: always()
+        run: docker compose --profile '*' down --remove-orphans

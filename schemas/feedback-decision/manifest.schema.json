@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/schemas/feedback-decision/manifest.schema.json",
+  "title": "Feedback decision question manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_format", "name", "version", "status", "state", "questions"],
+  "properties": {
+    "manifest_format": { "const": "feedback-decision-manifest/1.0.0" },
+    "name": { "const": "feedback-decision" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+    "status": { "const": "active" },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_fields", "prohibited_fields"],
+      "properties": {
+        "allowed_fields": { "type": "array", "const": ["feedback_text", "language", "channel"] },
+        "prohibited_fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/question" }
+    }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "label", "description"],
+      "properties": {
+        "value": { "type": "integer", "minimum": 0 },
+        "label": { "$ref": "#/$defs/identifier" },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "question": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "primitive", "instructions", "options"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" },
+            "primitive": { "const": "choice" },
+            "instructions": { "type": "string", "minLength": 1 },
+            "options": {
+              "type": "array",
+              "minItems": 2,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/option" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "primitive", "instructions", "levels"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" },
+            "primitive": { "const": "score" },
+            "instructions": { "type": "string", "minLength": 1 },
+            "levels": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 10,
+              "items": { "$ref": "#/$defs/level" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "primitive", "instructions", "criteria"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" },
+            "primitive": { "const": "noul" },
+            "instructions": { "type": "string", "minLength": 1 },
+            "criteria": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["true", "false"],
+              "properties": {
+                "true": { "type": "string", "minLength": 1 },
+                "false": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

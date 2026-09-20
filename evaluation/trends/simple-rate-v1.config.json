@@ -1,0 +1,61 @@
+{
+  "schema_version": "trend-backtest-config/1.0.0",
+  "evaluation_version": "simple-rate-synthetic/1.0.0",
+  "synthetic_generator": {
+    "seed": 20260919,
+    "record_count": 10000
+  },
+  "detector": {
+    "version": "simple-rate/1.0.0",
+    "current_days": 7,
+    "baseline_days": 28,
+    "min_current_eligible": 20,
+    "min_baseline_eligible": 50,
+    "min_current_positive": 3,
+    "min_absolute_delta_pp": 20.0,
+    "min_relative_change_percent": 30.0
+  },
+  "match_grace_days": 7,
+  "series": [
+    {
+      "series_id": "product/GPU-A17/topic/product_defect_noise",
+      "source_type": "product_review",
+      "product_id": "GPU-A17",
+      "accepted_scenario_ids": ["product_defect_noise"],
+      "expected_direction": "increase",
+      "events": [
+        {"event_id": "gpu_a17_noise", "direction": "increase"}
+      ]
+    },
+    {
+      "series_id": "all/topic/delivery_late",
+      "source_type": "delivery_survey",
+      "product_id": null,
+      "accepted_scenario_ids": ["delivery_late"],
+      "expected_direction": "increase",
+      "events": [
+        {"event_id": "carrier_delay_winter", "direction": "increase"}
+      ]
+    },
+    {
+      "series_id": "all/topic/support_praise",
+      "source_type": "support_ticket",
+      "product_id": null,
+      "accepted_scenario_ids": ["support_praise"],
+      "expected_direction": "increase",
+      "events": [
+        {"event_id": "support_process_change", "direction": "increase"}
+      ]
+    },
+    {
+      "series_id": "all/topic/return_unresolved",
+      "source_type": "return_feedback",
+      "product_id": null,
+      "accepted_scenario_ids": ["return_unresolved"],
+      "expected_direction": "increase",
+      "events": [
+        {"event_id": "returns_backlog", "direction": "increase"}
+      ]
+    }
+  ]
+}

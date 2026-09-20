@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Feedback Intelligence architecture: recorded demo and optional processing runtime</title>
+  <desc id="desc">The no-key demo uses React, the ASP.NET Core read API, and frozen synthetic JSON fixtures. The optional runtime uses authenticated ingestion, PostgreSQL jobs, Python privacy transformation, replaceable decision engines, immutable PostgreSQL decisions and outbox, and text-free ClickHouse projection. Live eligibility requires calibration.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#d18a54"/></marker>
+    <style>
+      text {font-family: Arial, sans-serif; fill: #ededed;}
+      .eyebrow {font-size:14px; letter-spacing:1.8px; fill:#e3ad85;}
+      .label {font-size:19px; font-weight:600;}
+      .detail {font-size:15px; fill:#d0d0d0;}
+      .box {fill:#303943; stroke:#72808e; stroke-width:1; rx:8;}
+      .link {stroke:#d18a54; stroke-width:2; fill:none; marker-end:url(#arrow);}
+    </style>
+  </defs>
+  <rect width="1200" height="680" rx="12" fill="#202225"/>
+  <text x="40" y="51" font-size="28" font-weight="600">From feedback to inspectable decisions</text>
+  <text x="40" y="82" class="detail">Two execution paths share the same product contracts. The demo requires no model credentials.</text>
+  <text x="40" y="128" class="eyebrow">DEFAULT / RECORDED SYNTHETIC DEMO</text>
+  <rect class="box" x="40" y="151" width="300" height="105"/>
+  <text class="label" x="60" y="184">React dashboard</text>
+  <text class="detail" x="60" y="213">Overview → signal → evidence</text>
+  <text class="detail" x="60" y="236">Read-only presentation</text>
+  <rect class="box" x="450" y="151" width="300" height="105"/>
+  <text class="label" x="470" y="184">ASP.NET Core read API</text>
+  <text class="detail" x="470" y="213">Versioned dashboard contracts</text>
+  <text class="detail" x="470" y="236">Separate demo and live contexts</text>
+  <rect class="box" x="860" y="151" width="300" height="105"/>
+  <text class="label" x="880" y="184">Frozen JSON fixtures</text>
+  <text class="detail" x="880" y="213">SemIf / rules / Sol reference</text>
+  <text class="detail" x="880" y="236">480 synthetic records per source</text>
+  <path class="link" marker-start="url(#arrow)" d="M350 203H440"/>
+  <path class="link" marker-start="url(#arrow)" d="M760 203H850"/>
+  <text x="40" y="314" class="eyebrow">OPT-IN / LOCAL PROCESSING RUNTIME</text>
+  <rect class="box" x="40" y="337" width="200" height="135"/>
+  <text class="label" x="56" y="369">API + PostgreSQL</text>
+  <text class="detail" x="56" y="399">Authenticated ingestion</text>
+  <text class="detail" x="56" y="423">Canonical records</text>
+  <text class="detail" x="56" y="447">Leased processing jobs</text>
+  <rect class="box" x="270" y="337" width="200" height="135"/>
+  <text class="label" x="286" y="369">Python privacy</text>
+  <text class="detail" x="286" y="399">Local redaction</text>
+  <text class="detail" x="286" y="423">Allow-listed model state</text>
+  <text class="detail" x="286" y="447">Body-free diagnostics</text>
+  <rect class="box" x="500" y="337" width="200" height="135"/>
+  <text class="label" x="516" y="369">Decision engine</text>
+  <text class="detail" x="516" y="399">Fixture / SemIf / rules</text>
+  <text class="detail" x="516" y="423">Optional pinned LLM</text>
+  <text class="detail" x="516" y="447">Fourteen typed answers</text>
+  <rect class="box" x="730" y="337" width="200" height="135"/>
+  <text class="label" x="746" y="369">PostgreSQL</text>
+  <text class="detail" x="746" y="399">Immutable decisions</text>
+  <text class="detail" x="746" y="423">Model/schema provenance</text>
+  <text class="detail" x="746" y="447">Outbox + projection ledger</text>
+  <rect class="box" x="960" y="337" width="200" height="135"/>
+  <text class="label" x="976" y="369">ClickHouse</text>
+  <text class="detail" x="976" y="399">Accepted, text-free facts</text>
+  <text class="detail" x="976" y="423">Detector inputs</text>
+  <text class="detail" x="976" y="447">Live reads through API</text>
+  <path class="link" d="M242 404H266"/><path class="link" d="M472 404H496"/>
+  <path class="link" d="M702 404H726"/><path class="link" d="M932 404H956"/>
+  <rect x="40" y="502" width="1120" height="132" rx="8" fill="#2c2c2c" stroke="#d18a54"/>
+  <text x="60" y="533" class="label">Confidence policy is a gate, not a label on a chart</text>
+  <text x="60" y="560" class="detail">Projection eligibility remains blocked by unfinished human calibration. Demo eligibility is explicitly illustrative.</text>
+  <text x="60" y="586" class="detail">Deterministic code owns aggregation and trends; the planted-incident backtest is separate from model-quality evaluation.</text>
+  <text x="60" y="612" class="detail">Optional OpenTelemetry exports sanitized operational metadata. PostgreSQL retains the evidence and decision lineage.</text>
+</svg>

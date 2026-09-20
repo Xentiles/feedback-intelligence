@@ -1,0 +1,3 @@
+review_id,comment,subject,created_at,stars,sku,product,category,order_reference
+custom-1,Works exactly as expected,Happy,2026-03-01T10:00:00Z,5,SKU-1,Example product,examples,ORDER-1
+custom-2,Delivery was late,,2026-03-02T11:00:00Z,2,,,,ORDER-2

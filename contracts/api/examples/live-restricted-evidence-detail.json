@@ -1,0 +1,50 @@
+{
+  "kind": "evidence-detail",
+  "contractVersion": "1.0",
+  "context": "live",
+  "source": {
+    "key": "synthetic/Feedback Intelligence synthetic demo/demo-data-0.1.0",
+    "providerId": "synthetic",
+    "datasetName": "Feedback Intelligence synthetic demo",
+    "datasetVersion": "demo-data/0.1.0",
+    "displayName": "Connected synthetic demo",
+    "synthetic": true
+  },
+  "record": {
+    "feedbackId": "1c10e7d7-057b-5b2b-ac6d-fa0b943504c4",
+    "decisionId": "cccccccc-cccc-4ccc-8ccc-ccccccccccc1",
+    "occurredAt": "2026-01-05T10:00:00Z",
+    "sourceRecordId": "demo-001",
+    "channel": "product_review",
+    "productLabel": "Aster 27-inch display",
+    "excerpt": null,
+    "evidenceAccess": "restricted",
+    "inclusionReason": "The record is referenced by immutable decision metadata; live evidence text remains restricted."
+  },
+  "evidence": {
+    "access": "restricted",
+    "title": null,
+    "body": null
+  },
+  "answers": [
+    {
+      "questionId": "primary_topic",
+      "label": "Primary topic",
+      "primitive": "choice",
+      "value": "product_quality",
+      "confidenceLabel": null,
+      "eligibility": "withheld_uncalibrated"
+    }
+  ],
+  "provenance": {
+    "decisionId": "cccccccc-cccc-4ccc-8ccc-ccccccccccc1",
+    "schemaName": "feedback-decision",
+    "schemaVersion": "1.0.0",
+    "modelVersion": "decision-model/example-1",
+    "policyVersion": "1.0.0",
+    "policyStatus": "awaiting_calibration",
+    "traceId": "dddddddd-dddd-4ddd-8ddd-ddddddddddd1",
+    "decidedAt": "2026-01-05T10:01:00Z"
+  },
+  "inclusionReason": "The record is referenced by immutable decision metadata; live evidence text remains restricted."
+}

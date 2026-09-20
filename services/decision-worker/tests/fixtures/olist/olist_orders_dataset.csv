@@ -1,0 +1,4 @@
+order_id,customer_id,order_status,order_purchase_timestamp,order_approved_at,order_delivered_carrier_date,order_delivered_customer_date,order_estimated_delivery_date
+o-late,c-1,delivered,2025-12-28 10:00:00,2025-12-28 11:00:00,2026-01-01 10:00:00,2026-01-10 00:00:00,2026-01-04 00:00:00
+o-early,c-2,delivered,2026-01-01 10:00:00,2026-01-01 11:00:00,2026-01-02 10:00:00,2026-01-03 00:00:00,2026-01-05 00:00:00
+o-multi,c-3,shipped,2026-01-02 10:00:00,2026-01-02 11:00:00,2026-01-03 10:00:00,,2026-01-12 00:00:00

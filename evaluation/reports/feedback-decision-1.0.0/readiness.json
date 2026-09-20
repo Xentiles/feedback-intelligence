@@ -1,0 +1,49 @@
+{
+  "claims": {
+    "calibration_allowed": false,
+    "gold_dataset_complete": false,
+    "model_quality_measured": false
+  },
+  "inputs": {
+    "decision_schema_sha256": "sha256:9314b38daf329f4c61fbea3d64f9a76a8d6334511888dcd61f7c75563c8f7094",
+    "labels_sha256": "9035a00e058d1877ed9f20e6ca888e7a94876c68b5278af0d4752ff186364121",
+    "records_sha256": "ac239a2fd52f3e8c474e708c426aafa21c785a8a9517644e59a32b3f8fc16450"
+  },
+  "readiness": {
+    "adjudicated": 0,
+    "complete": 0,
+    "disagreements": 0,
+    "incomplete": 480,
+    "ready_for_calibration": false,
+    "splits": {
+      "calibration": {
+        "adjudicated": 0,
+        "complete": 0,
+        "disagreements": 0,
+        "incomplete": 80,
+        "ready": false,
+        "total": 80
+      },
+      "development": {
+        "adjudicated": 0,
+        "complete": 0,
+        "disagreements": 0,
+        "incomplete": 300,
+        "ready": false,
+        "total": 300
+      },
+      "locked_test": {
+        "adjudicated": 0,
+        "complete": 0,
+        "disagreements": 0,
+        "incomplete": 100,
+        "ready": false,
+        "total": 100
+      }
+    },
+    "total": 480
+  },
+  "sample_version": "feedback-decision-1.0.0",
+  "schema_version": "feedback-evaluation-readiness/1.0.0",
+  "status": "awaiting_human_labels"
+}

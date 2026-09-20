@@ -1,0 +1,278 @@
+version: 1
+generator_version: synthetic-generator/1.0.0
+default_seed: 20260919
+default_record_count: 10000
+start_date: 2025-01-01
+day_count: 450
+
+locales:
+  en-GB: 65
+  sv-SE: 35
+
+products:
+  - { id: GPU-A17, name: Aurora A17 Graphics Card, category: graphics_card, price: "649.00" }
+  - { id: GPU-B24, name: Borealis B24 Graphics Card, category: graphics_card, price: "429.00" }
+  - { id: SSD-C04, name: Cobalt C04 NVMe Drive, category: storage, price: "119.00" }
+  - { id: SSD-D08, name: Drift D08 SATA Drive, category: storage, price: "84.00" }
+  - { id: DSP-E27, name: Ember E27 Monitor, category: display, price: "349.00" }
+  - { id: DSP-F32, name: Fjord F32 Monitor, category: display, price: "599.00" }
+  - { id: KEY-G75, name: Grove G75 Keyboard, category: peripherals, price: "139.00" }
+  - { id: MSE-H20, name: Halo H20 Mouse, category: peripherals, price: "79.00" }
+  - { id: NET-J60, name: Juniper J60 Router, category: networking, price: "189.00" }
+  - { id: CPU-K12, name: Kestrel K12 Processor, category: processor, price: "379.00" }
+  - { id: PSU-L85, name: Lumen L85 Power Supply, category: power_supply, price: "129.00" }
+  - { id: CHR-M10, name: Mica M10 Office Chair, category: furniture, price: "269.00" }
+
+scenarios:
+  - id: product_positive
+    source: product_review
+    weight: 16
+    has_product: true
+    has_order: true
+    ratings: [4, 5]
+    templates:
+      en-GB:
+        - "The {product} works exactly as expected and was easy to set up."
+        - "Really pleased with the {product}; performance has been excellent so far."
+      sv-SE:
+        - "{product} fungerar precis som förväntat och var enkel att installera."
+        - "Mycket nöjd med {product}; prestandan har varit riktigt bra hittills."
+
+  - id: product_defect_noise
+    source: product_review
+    weight: 3
+    has_product: true
+    has_order: true
+    ratings: [1, 2, 3]
+    templates:
+      en-GB:
+        - "The {product} performs well, but it makes a sharp whining noise under load."
+        - "There is a persistent buzzing noise from the {product} whenever I start a game."
+      sv-SE:
+        - "{product} presterar bra men ger ifrån sig ett tydligt vinande ljud under belastning."
+        - "Det kommer ett konstant surrande ljud från {product} när jag startar ett spel."
+
+  - id: product_defect_general
+    source: product_review
+    weight: 7
+    has_product: true
+    has_order: true
+    ratings: [1, 2]
+    templates:
+      en-GB:
+        - "The {product} stopped working after a week and now disconnects at random."
+        - "The finish looked damaged when the {product} arrived and one part was loose."
+        - "The {product} arrived damged and now it wont start at all."
+      sv-SE:
+        - "{product} slutade fungera efter en vecka och kopplar nu ner slumpmässigt."
+        - "{product} var skadad vid leverans och en del satt löst."
+        - "Kom trasig. Funkar inte alls."
+
+  - id: compatibility_problem
+    source: product_review
+    weight: 7
+    has_product: true
+    has_order: true
+    ratings: [2, 3]
+    templates:
+      en-GB:
+        - "The {product} is probably fine, but it is not compatible with my current setup."
+        - "Installation failed because the supplied connector does not fit my system."
+      sv-SE:
+        - "{product} verkar bra men är inte kompatibel med min nuvarande dator."
+        - "Installationen misslyckades eftersom den medföljande kontakten inte passar."
+
+  - id: delivery_late
+    source: delivery_survey
+    weight: 9
+    has_product: true
+    has_order: true
+    ratings: [1, 2, 3]
+    templates:
+      en-GB:
+        - "The product is fine, but delivery was {days} days later than promised."
+        - "Tracking did not update and the parcel arrived {days} days late."
+      sv-SE:
+        - "Produkten är bra men leveransen kom {days} dagar senare än utlovat."
+        - "Spårningen uppdaterades inte och paketet kom {days} dagar för sent."
+
+  - id: delivery_positive
+    source: delivery_survey
+    weight: 6
+    has_product: true
+    has_order: true
+    ratings: [4, 5]
+    templates:
+      en-GB:
+        - "Delivery was quicker than expected and the package was in perfect condition."
+        - "Clear tracking and an early delivery made this order very easy."
+      sv-SE:
+        - "Leveransen gick snabbare än väntat och paketet var i perfekt skick."
+        - "Tydlig spårning och tidig leverans gjorde beställningen enkel."
+
+  - id: support_praise
+    source: support_ticket
+    weight: 8
+    has_product: true
+    has_order: true
+    ratings: [4, 5, null]
+    templates:
+      en-GB:
+        - "Support explained the checks clearly and solved the issue on the first contact."
+        - "The agent arranged a replacement immediately and kept me informed throughout."
+      sv-SE:
+        - "Supporten förklarade kontrollerna tydligt och löste problemet direkt."
+        - "Kundtjänsten ordnade en ersättningsprodukt direkt och höll mig uppdaterad."
+
+  - id: support_unresolved
+    source: support_ticket
+    weight: 7
+    has_product: true
+    has_order: true
+    ratings: [1, 2, null]
+    templates:
+      en-GB:
+        - "I have contacted support twice and still do not have an answer or a working product."
+        - "Support repeated the same steps, but the issue remains unresolved."
+      sv-SE:
+        - "Jag har kontaktat supporten två gånger men saknar fortfarande en lösning."
+        - "Supporten upprepade samma steg men problemet är fortfarande olöst."
+
+  - id: return_unresolved
+    source: return_feedback
+    weight: 6
+    has_product: true
+    has_order: true
+    ratings: [1, 2]
+    templates:
+      en-GB:
+        - "The return was received {days} days ago, but the refund is still missing."
+        - "I sent the item back and cannot get a clear update on the return."
+      sv-SE:
+        - "Returen togs emot för {days} dagar sedan men återbetalningen saknas fortfarande."
+        - "Jag skickade tillbaka varan men får inget tydligt besked om returen."
+
+  - id: return_resolved
+    source: return_feedback
+    weight: 5
+    has_product: true
+    has_order: true
+    ratings: [4, 5, null]
+    templates:
+      en-GB:
+        - "The return label arrived quickly and the refund was completed without trouble."
+        - "A replacement was sent as soon as the returned item was scanned."
+      sv-SE:
+        - "Returetiketten kom snabbt och återbetalningen gick igenom utan problem."
+        - "En ersättningsvara skickades så snart returen registrerades."
+
+  - id: price_value
+    source: product_review
+    weight: 6
+    has_product: true
+    has_order: true
+    ratings: [3, 4, 5]
+    templates:
+      en-GB:
+        - "The {product} is solid for the price, although the accessories feel basic."
+        - "Good value overall and the performance matches more expensive alternatives."
+      sv-SE:
+        - "{product} är prisvärd även om tillbehören känns enkla."
+        - "Bra värde för pengarna och prestandan matchar dyrare alternativ."
+
+  - id: website_checkout
+    source: site_feedback
+    weight: 6
+    has_product: false
+    has_order: false
+    ratings: [1, 2, 4, null]
+    templates:
+      en-GB:
+        - "Checkout lost my basket once, but the second attempt worked."
+        - "The product filters were useful, although payment took too many steps."
+      sv-SE:
+        - "Kassan tappade min varukorg en gång men det andra försöket fungerade."
+        - "Produktfiltren var bra men betalningen krävde för många steg."
+
+  - id: product_information
+    source: site_feedback
+    weight: 5
+    has_product: true
+    has_order: false
+    ratings: [3, 4, null]
+    templates:
+      en-GB:
+        - "The specifications were helpful, but the compatibility section needs more detail."
+        - "I found the right model, though the dimensions were difficult to locate."
+      sv-SE:
+        - "Specifikationerna var användbara men kompatibiliteten behöver beskrivas bättre."
+        - "Jag hittade rätt modell men måtten var svåra att hitta."
+
+  - id: mixed_experience
+    source: product_review
+    weight: 5
+    has_product: true
+    has_order: true
+    ratings: [3, 4]
+    templates:
+      en-GB:
+        - "The {product} is fast and quiet, but the setup guide was confusing and incomplete."
+        - "Great build quality, yet delivery and initial setup were both frustrating."
+        - "Great speed, men installationen tog hela kvällen."
+      sv-SE:
+        - "{product} är snabb och tyst men installationsguiden var otydlig."
+        - "Bra byggkvalitet men både leveransen och installationen var frustrerande."
+        - "Bra prestanda, but the setup guide made no sense."
+
+  - id: ambiguous
+    source: product_review
+    weight: 3
+    has_product: true
+    has_order: true
+    ratings: [3, null]
+    templates:
+      en-GB:
+        - "It is different from what I expected. I am still deciding whether that is good."
+        - "Fine, I suppose. Nothing stands out yet."
+        - "Perfect, another restart just when I needed it most."
+      sv-SE:
+        - "Det är annorlunda än jag väntade mig och jag vet inte ännu om det är bra."
+        - "Helt okej antar jag. Inget sticker ut än."
+        - "Perfekt, ännu en omstart precis när jag behövde den som mest."
+
+  - id: irrelevant_chatter
+    source: site_feedback
+    weight: 1
+    has_product: false
+    has_order: false
+    ratings: [null]
+    templates:
+      en-GB:
+        - "I was browsing during lunch and have not decided what I need yet."
+        - "The coffee near the shop was excellent, but I have no product feedback."
+      sv-SE:
+        - "Jag tittade runt på lunchen och har inte bestämt vad jag behöver ännu."
+        - "Kaffet nära butiken var gott men jag har ingen produktfeedback."
+
+events:
+  - id: gpu_a17_noise
+    start_day: 120
+    duration_days: 50
+    scenario_id: product_defect_noise
+    product_id: GPU-A17
+    record_share: 0.16
+  - id: carrier_delay_winter
+    start_day: 210
+    duration_days: 21
+    scenario_id: delivery_late
+    record_share: 0.20
+  - id: support_process_change
+    start_day: 275
+    duration_days: null
+    scenario_id: support_praise
+    record_share: 0.08
+  - id: returns_backlog
+    start_day: 330
+    duration_days: 14
+    scenario_id: return_unresolved
+    record_share: 0.18

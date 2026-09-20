@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/evaluation-sample-record-1.0.0.json",
+  "title": "Evaluation sample record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "feedback_id",
+    "feedback_text",
+    "language",
+    "channel",
+    "split",
+    "requires_second_pass"
+  ],
+  "properties": {
+    "schema_version": { "const": "feedback-evaluation-sample/1.0.0" },
+    "feedback_id": { "type": "string", "format": "uuid" },
+    "feedback_text": { "type": "string", "minLength": 1 },
+    "language": { "enum": ["en-GB", "sv-SE"] },
+    "channel": { "type": "string", "minLength": 1 },
+    "split": { "enum": ["development", "calibration", "locked_test"] },
+    "requires_second_pass": { "type": "boolean" }
+  }
+}

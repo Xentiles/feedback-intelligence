@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/data/synthetic-seed-manifest.schema.json",
+  "title": "Synthetic seed manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generator_version",
+    "seed",
+    "record_count",
+    "date_range",
+    "config_sha256",
+    "feedback_sha256",
+    "provenance_sha256",
+    "distributions",
+    "events",
+    "provenance_separation"
+  ],
+  "properties": {
+    "schema_version": { "const": "synthetic-seed-manifest/1.0.0" },
+    "generator_version": { "type": "string", "minLength": 1 },
+    "seed": { "type": "integer", "minimum": 0 },
+    "record_count": { "type": "integer", "minimum": 1 },
+    "date_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "configured_days"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" },
+        "configured_days": { "type": "integer", "minimum": 365 }
+      }
+    },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "feedback_sha256": { "$ref": "#/$defs/sha256" },
+    "provenance_sha256": { "$ref": "#/$defs/sha256" },
+    "distributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "locales", "scenarios", "events", "product_mentions"],
+      "properties": {
+        "sources": { "$ref": "#/$defs/counts" },
+        "locales": { "$ref": "#/$defs/counts" },
+        "scenarios": { "$ref": "#/$defs/counts" },
+        "events": { "$ref": "#/$defs/counts" },
+        "product_mentions": { "$ref": "#/$defs/counts" }
+      }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event_id", "start_date", "end_date", "scenario_id", "product_id", "affected_records"],
+        "properties": {
+          "event_id": { "type": "string", "minLength": 1 },
+          "start_date": { "type": "string", "format": "date" },
+          "end_date": { "type": ["string", "null"], "format": "date" },
+          "scenario_id": { "type": "string", "minLength": 1 },
+          "product_id": { "type": ["string", "null"], "minLength": 1 },
+          "affected_records": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "provenance_separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sidecar", "excluded_from_feedback_records"],
+      "properties": {
+        "sidecar": { "const": "provenance.jsonl" },
+        "excluded_from_feedback_records": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "allOf": [
+            { "contains": { "const": "scenario_id" } },
+            { "contains": { "const": "synthetic_event_id" } },
+            { "contains": { "const": "generator_expectations" } }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    }
+  }
+}

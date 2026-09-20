@@ -1,0 +1,83 @@
+{
+  "schema_version": "public-benchmark/1.0.0",
+  "reference_kind": "ai_reference",
+  "reference_model": "gpt-5.6-sol",
+  "shared_inputs": {
+    "decision_schema_sha256": "sha256:9314b38daf329f4c61fbea3d64f9a76a8d6334511888dcd61f7c75563c8f7094",
+    "labels_sha256": "fd4d2489bb594ff433db5bb8cf174381212b365d69b2bbc9ce42bdab01dc7b73",
+    "records_sha256": "ac239a2fd52f3e8c474e708c426aafa21c785a8a9517644e59a32b3f8fc16450"
+  },
+  "methods": [
+    {
+      "label": "SemIf · Qwen3.5-4B",
+      "model": "semif-qwen3.5-4b-mlx-q4-851bf6e8",
+      "status": "complete",
+      "successful_records": 480,
+      "target_records": 480,
+      "topic_accuracy": 0.88125,
+      "topic_macro_f1": 0.8333071569443776,
+      "recorded_latency_ms": {
+        "p50": 9577.0,
+        "p95": 11498.149999999996,
+        "p99": 12233.889999999996
+      },
+      "adapter_input_tokens": 1515670,
+      "adapter_output_tokens": 0,
+      "provider_cost_usd": 0,
+      "cost_basis": "local_execution_no_provider_charge_hardware_excluded",
+      "owner_reported_tokens": null,
+      "estimated_480_record_cost_usd": 0,
+      "source_report": "evaluation/reports/feedback-decision-1.0.0/semif-qwen3.5-4b-mlx-q4-851bf6e8-vs-sol-ai-reference.json"
+    },
+    {
+      "label": "GPT-5.4 Mini",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "status": "closed_partial",
+      "successful_records": 192,
+      "target_records": 480,
+      "topic_accuracy": 0.8489583333333334,
+      "topic_macro_f1": 0.782838358729344,
+      "recorded_latency_ms": {
+        "p50": 2239.5,
+        "p95": 4686.2,
+        "p99": 9075.62
+      },
+      "adapter_input_tokens": 475295,
+      "adapter_output_tokens": 72113,
+      "provider_cost_usd": 0.39,
+      "cost_basis": "project_owner_openai_usage_observation",
+      "owner_reported_tokens": 477777,
+      "estimated_480_record_cost_usd": 0.98,
+      "source_report": "evaluation/reports/feedback-decision-1.0.0/gpt-5.4-mini-2026-03-17-partial-vs-sol-ai-reference.json"
+    },
+    {
+      "label": "Rules baseline",
+      "model": "rules-1.0.0",
+      "status": "complete",
+      "successful_records": 480,
+      "target_records": 480,
+      "topic_accuracy": 0.9979166666666667,
+      "topic_macro_f1": 0.9987936390814087,
+      "recorded_latency_ms": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "adapter_input_tokens": 0,
+      "adapter_output_tokens": 0,
+      "provider_cost_usd": 0,
+      "cost_basis": "local_execution_no_provider_charge_hardware_excluded",
+      "owner_reported_tokens": null,
+      "estimated_480_record_cost_usd": 0,
+      "source_report": "evaluation/reports/feedback-decision-1.0.0/rules-1.0.0-vs-sol-ai-reference.json"
+    }
+  ],
+  "source_sha256": {
+    "evaluation/reports/feedback-decision-1.0.0/semif-qwen3.5-4b-mlx-q4-851bf6e8-vs-sol-ai-reference.json": "b2a523cf6a68dcb261465fe31a150796fead5df8c15aa8607e3db1a893df453a",
+    "evaluation/reports/feedback-decision-1.0.0/gpt-5.4-mini-2026-03-17-partial-vs-sol-ai-reference.json": "56e26a252e3be0752e5c112f5c60dc6818a532f80c4f5d7175f19e4aba1e687e",
+    "evaluation/reports/feedback-decision-1.0.0/rules-1.0.0-vs-sol-ai-reference.json": "91f2088b3d3594795d2eda3b80028882526a09f9fa58fcf4d66b1efa00e6e194",
+    "evaluation/benchmarks/feedback-decision-1.0.0/gpt-5.4-mini-2026-03-17.experiment.json": "4bd179ad9113c694871601b8ef121c6854061ade77d50a2a24b6069a445ab965"
+  },
+  "limitations": "Agreement with the Sol-medium AI reference on synthetic feedback; **not human gold**. The 192-record LLM subset is not directly comparable to the complete 480-record runs. Rules benefit from template repetition. Local costs exclude hardware and electricity; OpenAI spend is owner-reported. The estimated full LLM run is $0.98, not additional measured spend.",
+  "latency_note": "Recorded execution telemetry, not a controlled hardware comparison; zero rules latency is timer resolution, not zero execution time."
+}

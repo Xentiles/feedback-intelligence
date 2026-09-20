@@ -1,0 +1,1183 @@
+{
+  "alert_episodes": [
+    {
+      "alert_days": 5,
+      "direction": "increase",
+      "end": "2025-04-15",
+      "first_evaluation": {
+        "anchor": "2025-04-11",
+        "baseline": {
+          "accepted_count": 47,
+          "eligible_count": 88,
+          "end_exclusive": "2025-04-04",
+          "rate": 0.5340909090909091,
+          "start": "2025-03-07"
+        },
+        "current": {
+          "accepted_count": 16,
+          "eligible_count": 20,
+          "end_exclusive": "2025-04-11",
+          "rate": 0.8,
+          "start": "2025-04-04"
+        },
+        "delta_pp": 26.590909090909097,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "17c1957e6c686b042708d0d3b8af8b93f6146e65c13ee18745644fd57e3cd7d3",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "0eba5da1378a8b6a8849c892a08a53f24c945f233b32dc8f3126c30bc2d44221",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.497872340425532,
+        "reasons": [],
+        "relative_change_percent": 49.78723404255321,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-04-11"
+    },
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-05-12",
+      "first_evaluation": {
+        "anchor": "2025-05-09",
+        "baseline": {
+          "accepted_count": 46,
+          "eligible_count": 96,
+          "end_exclusive": "2025-05-02",
+          "rate": 0.4791666666666667,
+          "start": "2025-04-04"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 21,
+          "end_exclusive": "2025-05-09",
+          "rate": 0.7142857142857143,
+          "start": "2025-05-02"
+        },
+        "delta_pp": 23.511904761904763,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "7d1ab11ba3a57fb221232a8af8a5367dbb168f383878fb01ef0505a49ecc78a0",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "916b08d1becd91f1d376efff8f709895b2aa795873869360c1043bda7f9259a9",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4906832298136645,
+        "reasons": [],
+        "relative_change_percent": 49.06832298136646,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-05-09"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-05-16",
+      "first_evaluation": {
+        "anchor": "2025-05-16",
+        "baseline": {
+          "accepted_count": 33,
+          "eligible_count": 50,
+          "end_exclusive": "2025-05-09",
+          "rate": 0.66,
+          "start": "2025-04-11"
+        },
+        "current": {
+          "accepted_count": 24,
+          "eligible_count": 27,
+          "end_exclusive": "2025-05-16",
+          "rate": 0.8888888888888888,
+          "start": "2025-05-09"
+        },
+        "delta_pp": 22.888888888888882,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "70f742b8e89e41bd2a76a65e483d7b8f842ea2bcd504481a3f7d5e6191785ece",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "e7a1d75e79024546485e2e9ed5a246072a65f0ae1444b632583538d089263579",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.3468013468013467,
+        "reasons": [],
+        "relative_change_percent": 34.68013468013467,
+        "series_id": "product/GPU-A17/topic/product_defect_noise",
+        "status": "candidate"
+      },
+      "series_id": "product/GPU-A17/topic/product_defect_noise",
+      "start": "2025-05-16"
+    },
+    {
+      "alert_days": 10,
+      "direction": "increase",
+      "end": "2025-08-14",
+      "first_evaluation": {
+        "anchor": "2025-08-05",
+        "baseline": {
+          "accepted_count": 53,
+          "eligible_count": 93,
+          "end_exclusive": "2025-07-29",
+          "rate": 0.5698924731182796,
+          "start": "2025-07-01"
+        },
+        "current": {
+          "accepted_count": 40,
+          "eligible_count": 49,
+          "end_exclusive": "2025-08-05",
+          "rate": 0.8163265306122449,
+          "start": "2025-07-29"
+        },
+        "delta_pp": 24.64340574939653,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "76d63a4d38f9a686f64d842df972461baf5b7ed70a06ed9044072655c2b4db3f",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9311080606dc41a878ef927ade783edc9dd4c7f022ec53c9c9cf9c98fe956531",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.432422025413939,
+        "reasons": [],
+        "relative_change_percent": 43.2422025413939,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-08-05"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-08-29",
+      "first_evaluation": {
+        "anchor": "2025-08-29",
+        "baseline": {
+          "accepted_count": 27,
+          "eligible_count": 67,
+          "end_exclusive": "2025-08-22",
+          "rate": 0.40298507462686567,
+          "start": "2025-07-25"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 24,
+          "end_exclusive": "2025-08-29",
+          "rate": 0.625,
+          "start": "2025-08-22"
+        },
+        "delta_pp": 22.201492537313435,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "8755f3c8774a112e646eeafd0571508ddbd13083832dfca330ca2ba37becd508",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "08760a1918394a59d90008ae516f3ca16929dfb4fcd0e2cc72f12a33c4140be6",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.550925925925926,
+        "reasons": [],
+        "relative_change_percent": 55.092592592592595,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-08-29"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-09-02",
+      "first_evaluation": {
+        "anchor": "2025-09-02",
+        "baseline": {
+          "accepted_count": 31,
+          "eligible_count": 69,
+          "end_exclusive": "2025-08-26",
+          "rate": 0.4492753623188406,
+          "start": "2025-07-29"
+        },
+        "current": {
+          "accepted_count": 14,
+          "eligible_count": 21,
+          "end_exclusive": "2025-09-02",
+          "rate": 0.6666666666666666,
+          "start": "2025-08-26"
+        },
+        "delta_pp": 21.739130434782606,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "aebfe0a13d8fdadb06cc65112c4e4a5fd49bf582fbf6a42d0559fe9cde12b193",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "3893bd879a63021fbfbc5e59cf5ca67cd681e5cd5c93eb747f12a341aa119ae3",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4838709677419355,
+        "reasons": [],
+        "relative_change_percent": 48.387096774193544,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-02"
+    },
+    {
+      "alert_days": 5,
+      "direction": "increase",
+      "end": "2025-09-11",
+      "first_evaluation": {
+        "anchor": "2025-09-07",
+        "baseline": {
+          "accepted_count": 32,
+          "eligible_count": 72,
+          "end_exclusive": "2025-08-31",
+          "rate": 0.4444444444444444,
+          "start": "2025-08-03"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 21,
+          "end_exclusive": "2025-09-07",
+          "rate": 0.7142857142857143,
+          "start": "2025-08-31"
+        },
+        "delta_pp": 26.984126984126988,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "92281cc14a51362ca79af1cef079f2390e5d2a68b6d57ede09d78f1a4a735728",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9b7b586e1875b7a01c6a0189564889603f5f526d1031ed866e597945bb505eda",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.6071428571428572,
+        "reasons": [],
+        "relative_change_percent": 60.71428571428572,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-07"
+    },
+    {
+      "alert_days": 9,
+      "direction": "increase",
+      "end": "2025-10-18",
+      "first_evaluation": {
+        "anchor": "2025-10-10",
+        "baseline": {
+          "accepted_count": 40,
+          "eligible_count": 81,
+          "end_exclusive": "2025-10-03",
+          "rate": 0.49382716049382713,
+          "start": "2025-09-05"
+        },
+        "current": {
+          "accepted_count": 28,
+          "eligible_count": 38,
+          "end_exclusive": "2025-10-10",
+          "rate": 0.7368421052631579,
+          "start": "2025-10-03"
+        },
+        "delta_pp": 24.301494476933073,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "dacf5ab8cecc15f51535af5a7f257580a14458c55d022bcfef5c3a9850e674e7",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "6a2b684f2a9e5a01a55c3310f458a113c02f182984a15256d5ebcab7535e6e31",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4921052631578948,
+        "reasons": [],
+        "relative_change_percent": 49.21052631578947,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-10-10"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-10-12",
+      "first_evaluation": {
+        "anchor": "2025-10-12",
+        "baseline": {
+          "accepted_count": 38,
+          "eligible_count": 89,
+          "end_exclusive": "2025-10-05",
+          "rate": 0.42696629213483145,
+          "start": "2025-09-07"
+        },
+        "current": {
+          "accepted_count": 16,
+          "eligible_count": 25,
+          "end_exclusive": "2025-10-12",
+          "rate": 0.64,
+          "start": "2025-10-05"
+        },
+        "delta_pp": 21.303370786516858,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "8f5e8121506b424c4b585c103b2891a9034a770f699b8bc9b147cbb0588fb964",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "636c762a81e4f29e69407fef5f2da880c7bd2997f4d8ef27aba03ced1d79ed9d",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4989473684210528,
+        "reasons": [],
+        "relative_change_percent": 49.894736842105274,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-10-12"
+    },
+    {
+      "alert_days": 2,
+      "direction": "increase",
+      "end": "2025-11-29",
+      "first_evaluation": {
+        "anchor": "2025-11-28",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 74,
+          "end_exclusive": "2025-11-21",
+          "rate": 0.5945945945945946,
+          "start": "2025-10-24"
+        },
+        "current": {
+          "accepted_count": 17,
+          "eligible_count": 21,
+          "end_exclusive": "2025-11-28",
+          "rate": 0.8095238095238095,
+          "start": "2025-11-21"
+        },
+        "delta_pp": 21.49292149292149,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "55d107bc3fc2253e8a8e70fa2da4bdbf56870c3ca322589c99bae959c735261d",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "f0f4f3e117e6db8ce2242323fea65cfe5f99d9556142ce6ab4e6352678cce1e3",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.3614718614718615,
+        "reasons": [],
+        "relative_change_percent": 36.14718614718614,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-11-28"
+    },
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-12-04",
+      "first_evaluation": {
+        "anchor": "2025-12-01",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 70,
+          "end_exclusive": "2025-11-24",
+          "rate": 0.6285714285714286,
+          "start": "2025-10-27"
+        },
+        "current": {
+          "accepted_count": 30,
+          "eligible_count": 36,
+          "end_exclusive": "2025-12-01",
+          "rate": 0.8333333333333334,
+          "start": "2025-11-24"
+        },
+        "delta_pp": 20.47619047619048,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "ad1e8e2927943937e4189f8d0bf71c552489bea68304a58d32045ee800a690b4",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "906ceee002fc4094736d3e160a28a8fa95e743104aa4439756f5a2dfd61ba71e",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.325757575757576,
+        "reasons": [],
+        "relative_change_percent": 32.575757575757585,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-12-01"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-12-03",
+      "first_evaluation": {
+        "anchor": "2025-12-03",
+        "baseline": {
+          "accepted_count": 42,
+          "eligible_count": 83,
+          "end_exclusive": "2025-11-26",
+          "rate": 0.5060240963855421,
+          "start": "2025-10-29"
+        },
+        "current": {
+          "accepted_count": 17,
+          "eligible_count": 22,
+          "end_exclusive": "2025-12-03",
+          "rate": 0.7727272727272727,
+          "start": "2025-11-26"
+        },
+        "delta_pp": 26.670317634173056,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "407511e646596a3b19f56f5e76a437a9c8cb97135666f45994a810440f1e8daa",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "a46b226825542e6ac7ccb0ed3c5e7c7595343b239a86052f7760401fdef431da",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.5270562770562772,
+        "reasons": [],
+        "relative_change_percent": 52.70562770562771,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-12-03"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2026-02-24",
+      "first_evaluation": {
+        "anchor": "2026-02-24",
+        "baseline": {
+          "accepted_count": 46,
+          "eligible_count": 82,
+          "end_exclusive": "2026-02-17",
+          "rate": 0.5609756097560976,
+          "start": "2026-01-20"
+        },
+        "current": {
+          "accepted_count": 19,
+          "eligible_count": 24,
+          "end_exclusive": "2026-02-24",
+          "rate": 0.7916666666666666,
+          "start": "2026-02-17"
+        },
+        "delta_pp": 23.0691056910569,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "07007e6cad4edb4f1cbe7ee0761b6fbafffa8d6cee5cee7e3f6fd6fa88691556",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "d26e54efa7fb6a52f65f069d532a7fae337a0582291d50acaa62dc5b2448c0ec",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4112318840579707,
+        "reasons": [],
+        "relative_change_percent": 41.12318840579708,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2026-02-24"
+    }
+  ],
+  "coverage": {
+    "evaluable_series_days": 1664,
+    "evaluated_series_days": 1664,
+    "excluded_series_days": 0,
+    "reason_counts": {
+      "below_absolute_delta": 1408,
+      "below_relative_change": 1014,
+      "insufficient_baseline_eligible": 361,
+      "insufficient_current_eligible": 909,
+      "insufficient_current_positive": 368,
+      "no_change": 50,
+      "unexpected_direction": 806,
+      "zero_baseline": 60
+    },
+    "series_count": 4,
+    "status_counts": {
+      "candidate": 45,
+      "not_candidate": 1619
+    }
+  },
+  "detector": {
+    "baseline_days": 28,
+    "current_days": 7,
+    "min_absolute_delta_pp": 20.0,
+    "min_baseline_eligible": 50,
+    "min_current_eligible": 20,
+    "min_current_positive": 3,
+    "min_relative_change_percent": 30.0,
+    "version": "simple-rate/1.0.0"
+  },
+  "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+  "evaluation_version": "simple-rate-synthetic/1.0.0",
+  "events": [
+    {
+      "detected": true,
+      "detection_delay_days": 15,
+      "direction": "increase",
+      "end_exclusive": "2025-06-20",
+      "event_id": "gpu_a17_noise",
+      "matched_episode": {
+        "alert_days": 1,
+        "direction": "increase",
+        "end": "2025-05-16",
+        "first_evaluation": {
+          "anchor": "2025-05-16",
+          "baseline": {
+            "accepted_count": 33,
+            "eligible_count": 50,
+            "end_exclusive": "2025-05-09",
+            "rate": 0.66,
+            "start": "2025-04-11"
+          },
+          "current": {
+            "accepted_count": 24,
+            "eligible_count": 27,
+            "end_exclusive": "2025-05-16",
+            "rate": 0.8888888888888888,
+            "start": "2025-05-09"
+          },
+          "delta_pp": 22.888888888888882,
+          "detector_version": "simple-rate/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "70f742b8e89e41bd2a76a65e483d7b8f842ea2bcd504481a3f7d5e6191785ece",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "e7a1d75e79024546485e2e9ed5a246072a65f0ae1444b632583538d089263579",
+          "method": "pooled_binary_rate_change",
+          "ratio": 1.3468013468013467,
+          "reasons": [],
+          "relative_change_percent": 34.68013468013467,
+          "series_id": "product/GPU-A17/topic/product_defect_noise",
+          "status": "candidate"
+        },
+        "series_id": "product/GPU-A17/topic/product_defect_noise",
+        "start": "2025-05-16"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-05-16",
+        "baseline": {
+          "accepted_count": 33,
+          "eligible_count": 50,
+          "end_exclusive": "2025-05-09",
+          "rate": 0.66,
+          "start": "2025-04-11"
+        },
+        "current": {
+          "accepted_count": 24,
+          "eligible_count": 27,
+          "end_exclusive": "2025-05-16",
+          "rate": 0.8888888888888888,
+          "start": "2025-05-09"
+        },
+        "delta_pp": 22.888888888888882,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "70f742b8e89e41bd2a76a65e483d7b8f842ea2bcd504481a3f7d5e6191785ece",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "e7a1d75e79024546485e2e9ed5a246072a65f0ae1444b632583538d089263579",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.3468013468013467,
+        "reasons": [],
+        "relative_change_percent": 34.68013468013467,
+        "series_id": "product/GPU-A17/topic/product_defect_noise",
+        "status": "candidate"
+      },
+      "series_id": "product/GPU-A17/topic/product_defect_noise",
+      "start": "2025-05-01"
+    },
+    {
+      "detected": true,
+      "detection_delay_days": 6,
+      "direction": "increase",
+      "end_exclusive": "2025-08-20",
+      "event_id": "carrier_delay_winter",
+      "matched_episode": {
+        "alert_days": 10,
+        "direction": "increase",
+        "end": "2025-08-14",
+        "first_evaluation": {
+          "anchor": "2025-08-05",
+          "baseline": {
+            "accepted_count": 53,
+            "eligible_count": 93,
+            "end_exclusive": "2025-07-29",
+            "rate": 0.5698924731182796,
+            "start": "2025-07-01"
+          },
+          "current": {
+            "accepted_count": 40,
+            "eligible_count": 49,
+            "end_exclusive": "2025-08-05",
+            "rate": 0.8163265306122449,
+            "start": "2025-07-29"
+          },
+          "delta_pp": 24.64340574939653,
+          "detector_version": "simple-rate/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "76d63a4d38f9a686f64d842df972461baf5b7ed70a06ed9044072655c2b4db3f",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "9311080606dc41a878ef927ade783edc9dd4c7f022ec53c9c9cf9c98fe956531",
+          "method": "pooled_binary_rate_change",
+          "ratio": 1.432422025413939,
+          "reasons": [],
+          "relative_change_percent": 43.2422025413939,
+          "series_id": "all/topic/delivery_late",
+          "status": "candidate"
+        },
+        "series_id": "all/topic/delivery_late",
+        "start": "2025-08-05"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-08-05",
+        "baseline": {
+          "accepted_count": 53,
+          "eligible_count": 93,
+          "end_exclusive": "2025-07-29",
+          "rate": 0.5698924731182796,
+          "start": "2025-07-01"
+        },
+        "current": {
+          "accepted_count": 40,
+          "eligible_count": 49,
+          "end_exclusive": "2025-08-05",
+          "rate": 0.8163265306122449,
+          "start": "2025-07-29"
+        },
+        "delta_pp": 24.64340574939653,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "76d63a4d38f9a686f64d842df972461baf5b7ed70a06ed9044072655c2b4db3f",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9311080606dc41a878ef927ade783edc9dd4c7f022ec53c9c9cf9c98fe956531",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.432422025413939,
+        "reasons": [],
+        "relative_change_percent": 43.2422025413939,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-07-30"
+    },
+    {
+      "detected": true,
+      "detection_delay_days": 7,
+      "direction": "increase",
+      "end_exclusive": "2026-03-27",
+      "event_id": "support_process_change",
+      "matched_episode": {
+        "alert_days": 9,
+        "direction": "increase",
+        "end": "2025-10-18",
+        "first_evaluation": {
+          "anchor": "2025-10-10",
+          "baseline": {
+            "accepted_count": 40,
+            "eligible_count": 81,
+            "end_exclusive": "2025-10-03",
+            "rate": 0.49382716049382713,
+            "start": "2025-09-05"
+          },
+          "current": {
+            "accepted_count": 28,
+            "eligible_count": 38,
+            "end_exclusive": "2025-10-10",
+            "rate": 0.7368421052631579,
+            "start": "2025-10-03"
+          },
+          "delta_pp": 24.301494476933073,
+          "detector_version": "simple-rate/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "dacf5ab8cecc15f51535af5a7f257580a14458c55d022bcfef5c3a9850e674e7",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "6a2b684f2a9e5a01a55c3310f458a113c02f182984a15256d5ebcab7535e6e31",
+          "method": "pooled_binary_rate_change",
+          "ratio": 1.4921052631578948,
+          "reasons": [],
+          "relative_change_percent": 49.21052631578947,
+          "series_id": "all/topic/support_praise",
+          "status": "candidate"
+        },
+        "series_id": "all/topic/support_praise",
+        "start": "2025-10-10"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-10-10",
+        "baseline": {
+          "accepted_count": 40,
+          "eligible_count": 81,
+          "end_exclusive": "2025-10-03",
+          "rate": 0.49382716049382713,
+          "start": "2025-09-05"
+        },
+        "current": {
+          "accepted_count": 28,
+          "eligible_count": 38,
+          "end_exclusive": "2025-10-10",
+          "rate": 0.7368421052631579,
+          "start": "2025-10-03"
+        },
+        "delta_pp": 24.301494476933073,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "dacf5ab8cecc15f51535af5a7f257580a14458c55d022bcfef5c3a9850e674e7",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "6a2b684f2a9e5a01a55c3310f458a113c02f182984a15256d5ebcab7535e6e31",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4921052631578948,
+        "reasons": [],
+        "relative_change_percent": 49.21052631578947,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-10-03"
+    },
+    {
+      "detected": true,
+      "detection_delay_days": 1,
+      "direction": "increase",
+      "end_exclusive": "2025-12-11",
+      "event_id": "returns_backlog",
+      "matched_episode": {
+        "alert_days": 2,
+        "direction": "increase",
+        "end": "2025-11-29",
+        "first_evaluation": {
+          "anchor": "2025-11-28",
+          "baseline": {
+            "accepted_count": 44,
+            "eligible_count": 74,
+            "end_exclusive": "2025-11-21",
+            "rate": 0.5945945945945946,
+            "start": "2025-10-24"
+          },
+          "current": {
+            "accepted_count": 17,
+            "eligible_count": 21,
+            "end_exclusive": "2025-11-28",
+            "rate": 0.8095238095238095,
+            "start": "2025-11-21"
+          },
+          "delta_pp": 21.49292149292149,
+          "detector_version": "simple-rate/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "55d107bc3fc2253e8a8e70fa2da4bdbf56870c3ca322589c99bae959c735261d",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "f0f4f3e117e6db8ce2242323fea65cfe5f99d9556142ce6ab4e6352678cce1e3",
+          "method": "pooled_binary_rate_change",
+          "ratio": 1.3614718614718615,
+          "reasons": [],
+          "relative_change_percent": 36.14718614718614,
+          "series_id": "all/topic/return_unresolved",
+          "status": "candidate"
+        },
+        "series_id": "all/topic/return_unresolved",
+        "start": "2025-11-28"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-11-28",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 74,
+          "end_exclusive": "2025-11-21",
+          "rate": 0.5945945945945946,
+          "start": "2025-10-24"
+        },
+        "current": {
+          "accepted_count": 17,
+          "eligible_count": 21,
+          "end_exclusive": "2025-11-28",
+          "rate": 0.8095238095238095,
+          "start": "2025-11-21"
+        },
+        "delta_pp": 21.49292149292149,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "55d107bc3fc2253e8a8e70fa2da4bdbf56870c3ca322589c99bae959c735261d",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "f0f4f3e117e6db8ce2242323fea65cfe5f99d9556142ce6ab4e6352678cce1e3",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.3614718614718615,
+        "reasons": [],
+        "relative_change_percent": 36.14718614718614,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-11-27"
+    }
+  ],
+  "false_alert_episodes": [
+    {
+      "alert_days": 5,
+      "direction": "increase",
+      "end": "2025-04-15",
+      "first_evaluation": {
+        "anchor": "2025-04-11",
+        "baseline": {
+          "accepted_count": 47,
+          "eligible_count": 88,
+          "end_exclusive": "2025-04-04",
+          "rate": 0.5340909090909091,
+          "start": "2025-03-07"
+        },
+        "current": {
+          "accepted_count": 16,
+          "eligible_count": 20,
+          "end_exclusive": "2025-04-11",
+          "rate": 0.8,
+          "start": "2025-04-04"
+        },
+        "delta_pp": 26.590909090909097,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "17c1957e6c686b042708d0d3b8af8b93f6146e65c13ee18745644fd57e3cd7d3",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "0eba5da1378a8b6a8849c892a08a53f24c945f233b32dc8f3126c30bc2d44221",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.497872340425532,
+        "reasons": [],
+        "relative_change_percent": 49.78723404255321,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-04-11"
+    },
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-05-12",
+      "first_evaluation": {
+        "anchor": "2025-05-09",
+        "baseline": {
+          "accepted_count": 46,
+          "eligible_count": 96,
+          "end_exclusive": "2025-05-02",
+          "rate": 0.4791666666666667,
+          "start": "2025-04-04"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 21,
+          "end_exclusive": "2025-05-09",
+          "rate": 0.7142857142857143,
+          "start": "2025-05-02"
+        },
+        "delta_pp": 23.511904761904763,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "7d1ab11ba3a57fb221232a8af8a5367dbb168f383878fb01ef0505a49ecc78a0",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "916b08d1becd91f1d376efff8f709895b2aa795873869360c1043bda7f9259a9",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4906832298136645,
+        "reasons": [],
+        "relative_change_percent": 49.06832298136646,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-05-09"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-08-29",
+      "first_evaluation": {
+        "anchor": "2025-08-29",
+        "baseline": {
+          "accepted_count": 27,
+          "eligible_count": 67,
+          "end_exclusive": "2025-08-22",
+          "rate": 0.40298507462686567,
+          "start": "2025-07-25"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 24,
+          "end_exclusive": "2025-08-29",
+          "rate": 0.625,
+          "start": "2025-08-22"
+        },
+        "delta_pp": 22.201492537313435,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "8755f3c8774a112e646eeafd0571508ddbd13083832dfca330ca2ba37becd508",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "08760a1918394a59d90008ae516f3ca16929dfb4fcd0e2cc72f12a33c4140be6",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.550925925925926,
+        "reasons": [],
+        "relative_change_percent": 55.092592592592595,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-08-29"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-09-02",
+      "first_evaluation": {
+        "anchor": "2025-09-02",
+        "baseline": {
+          "accepted_count": 31,
+          "eligible_count": 69,
+          "end_exclusive": "2025-08-26",
+          "rate": 0.4492753623188406,
+          "start": "2025-07-29"
+        },
+        "current": {
+          "accepted_count": 14,
+          "eligible_count": 21,
+          "end_exclusive": "2025-09-02",
+          "rate": 0.6666666666666666,
+          "start": "2025-08-26"
+        },
+        "delta_pp": 21.739130434782606,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "aebfe0a13d8fdadb06cc65112c4e4a5fd49bf582fbf6a42d0559fe9cde12b193",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "3893bd879a63021fbfbc5e59cf5ca67cd681e5cd5c93eb747f12a341aa119ae3",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4838709677419355,
+        "reasons": [],
+        "relative_change_percent": 48.387096774193544,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-02"
+    },
+    {
+      "alert_days": 5,
+      "direction": "increase",
+      "end": "2025-09-11",
+      "first_evaluation": {
+        "anchor": "2025-09-07",
+        "baseline": {
+          "accepted_count": 32,
+          "eligible_count": 72,
+          "end_exclusive": "2025-08-31",
+          "rate": 0.4444444444444444,
+          "start": "2025-08-03"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 21,
+          "end_exclusive": "2025-09-07",
+          "rate": 0.7142857142857143,
+          "start": "2025-08-31"
+        },
+        "delta_pp": 26.984126984126988,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "92281cc14a51362ca79af1cef079f2390e5d2a68b6d57ede09d78f1a4a735728",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9b7b586e1875b7a01c6a0189564889603f5f526d1031ed866e597945bb505eda",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.6071428571428572,
+        "reasons": [],
+        "relative_change_percent": 60.71428571428572,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-07"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-10-12",
+      "first_evaluation": {
+        "anchor": "2025-10-12",
+        "baseline": {
+          "accepted_count": 38,
+          "eligible_count": 89,
+          "end_exclusive": "2025-10-05",
+          "rate": 0.42696629213483145,
+          "start": "2025-09-07"
+        },
+        "current": {
+          "accepted_count": 16,
+          "eligible_count": 25,
+          "end_exclusive": "2025-10-12",
+          "rate": 0.64,
+          "start": "2025-10-05"
+        },
+        "delta_pp": 21.303370786516858,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "8f5e8121506b424c4b585c103b2891a9034a770f699b8bc9b147cbb0588fb964",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "636c762a81e4f29e69407fef5f2da880c7bd2997f4d8ef27aba03ced1d79ed9d",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4989473684210528,
+        "reasons": [],
+        "relative_change_percent": 49.894736842105274,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-10-12"
+    },
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-12-04",
+      "first_evaluation": {
+        "anchor": "2025-12-01",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 70,
+          "end_exclusive": "2025-11-24",
+          "rate": 0.6285714285714286,
+          "start": "2025-10-27"
+        },
+        "current": {
+          "accepted_count": 30,
+          "eligible_count": 36,
+          "end_exclusive": "2025-12-01",
+          "rate": 0.8333333333333334,
+          "start": "2025-11-24"
+        },
+        "delta_pp": 20.47619047619048,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "ad1e8e2927943937e4189f8d0bf71c552489bea68304a58d32045ee800a690b4",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "906ceee002fc4094736d3e160a28a8fa95e743104aa4439756f5a2dfd61ba71e",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.325757575757576,
+        "reasons": [],
+        "relative_change_percent": 32.575757575757585,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-12-01"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-12-03",
+      "first_evaluation": {
+        "anchor": "2025-12-03",
+        "baseline": {
+          "accepted_count": 42,
+          "eligible_count": 83,
+          "end_exclusive": "2025-11-26",
+          "rate": 0.5060240963855421,
+          "start": "2025-10-29"
+        },
+        "current": {
+          "accepted_count": 17,
+          "eligible_count": 22,
+          "end_exclusive": "2025-12-03",
+          "rate": 0.7727272727272727,
+          "start": "2025-11-26"
+        },
+        "delta_pp": 26.670317634173056,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "407511e646596a3b19f56f5e76a437a9c8cb97135666f45994a810440f1e8daa",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "a46b226825542e6ac7ccb0ed3c5e7c7595343b239a86052f7760401fdef431da",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.5270562770562772,
+        "reasons": [],
+        "relative_change_percent": 52.70562770562771,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-12-03"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2026-02-24",
+      "first_evaluation": {
+        "anchor": "2026-02-24",
+        "baseline": {
+          "accepted_count": 46,
+          "eligible_count": 82,
+          "end_exclusive": "2026-02-17",
+          "rate": 0.5609756097560976,
+          "start": "2026-01-20"
+        },
+        "current": {
+          "accepted_count": 19,
+          "eligible_count": 24,
+          "end_exclusive": "2026-02-24",
+          "rate": 0.7916666666666666,
+          "start": "2026-02-17"
+        },
+        "delta_pp": 23.0691056910569,
+        "detector_version": "simple-rate/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "07007e6cad4edb4f1cbe7ee0761b6fbafffa8d6cee5cee7e3f6fd6fa88691556",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "d26e54efa7fb6a52f65f069d532a7fae337a0582291d50acaa62dc5b2448c0ec",
+        "method": "pooled_binary_rate_change",
+        "ratio": 1.4112318840579707,
+        "reasons": [],
+        "relative_change_percent": 41.12318840579708,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2026-02-24"
+    }
+  ],
+  "input": {
+    "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+    "evaluation_version": "simple-rate-synthetic/1.0.0",
+    "feedback_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+    "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+    "generator_version": "synthetic-generator/1.0.0",
+    "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+    "record_count": 10000,
+    "seed": 20260919
+  },
+  "limitations": [
+    "Synthetic scenario attribution substitutes for accepted model outputs.",
+    "This report measures one seed and one frozen detector operating point.",
+    "The operating point demonstrates planted-event visibility and has not been selected or validated on independent held-out seeds.",
+    "The detector is an effect-size rule and does not provide inferential claims."
+  ],
+  "method": "pooled_binary_rate_change",
+  "metrics": {
+    "alert_episode_count": 13,
+    "detected_event_count": 4,
+    "event_count": 4,
+    "false_alert_episode_count": 9,
+    "false_alert_episodes_per_100_evaluable_series_days": 0.5408653846153846,
+    "matched_alert_episode_count": 4,
+    "mean_detection_delay_days": 7.25,
+    "precision": 0.3076923076923077,
+    "recall": 1.0
+  },
+  "no_incident_sensitivity": {
+    "alert_episode_count": 9,
+    "alert_episodes_per_100_evaluable_series_days": 0.5408653846153846,
+    "evaluable_series_days": 1664,
+    "feedback_sha256": "94c9a9555eeac58250be6d91f03f90d953aaf0fafda81679dab74a9aa63b6ca9",
+    "method": "same_seed_generator_with_events_removed"
+  },
+  "provenance_boundary": {
+    "adapter_note": "Scenario provenance maps records to independent binary observations; event provenance is read only when constructing truth.",
+    "detector_input_fields": [
+      "series_id",
+      "day",
+      "accepted_count",
+      "eligible_count",
+      "coverage_known"
+    ],
+    "truth_fields_withheld_from_detector": [
+      "scenario_id",
+      "synthetic_event_id"
+    ]
+  },
+  "schema_version": "trend-backtest-report/1.0.0",
+  "windows": {
+    "anchor_semantics": "UTC T with current [T-7,T) and baseline [T-35,T-7)",
+    "first_anchor": "2025-02-05",
+    "last_anchor": "2026-03-27"
+  }
+}

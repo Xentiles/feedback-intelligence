@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/signal-projection-event-1.1.0.json",
+  "title": "Text-free analytics signal projection event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_version",
+    "event_id",
+    "projection_id",
+    "event_time",
+    "feedback_id",
+    "decision_id",
+    "decision_time",
+    "source",
+    "dimensions",
+    "signals",
+    "eligibility",
+    "accepted_positive",
+    "policy",
+    "provenance",
+    "trace_id"
+  ],
+  "properties": {
+    "event_version": { "const": "signal-projection-event/1.1.0" },
+    "event_id": { "type": "string", "format": "uuid" },
+    "projection_id": { "type": "string", "format": "uuid" },
+    "event_time": { "type": "string", "format": "date-time" },
+    "feedback_id": { "type": "string", "format": "uuid" },
+    "decision_id": { "type": "string", "format": "uuid" },
+    "decision_time": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "dataset_name", "dataset_version"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 1 },
+        "dataset_name": { "type": "string", "minLength": 1 },
+        "dataset_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["product_id", "product_family", "source_type", "locale"],
+      "properties": {
+        "product_id": { "type": ["string", "null"] },
+        "product_family": { "type": ["string", "null"] },
+        "source_type": { "type": "string", "minLength": 1 },
+        "locale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_topic",
+        "primary_topic_confidence",
+        "overall_negative_probability",
+        "delivery_negative_probability",
+        "support_negative_probability",
+        "product_defect_probability",
+        "actionable_probability",
+        "severity_score",
+        "resolution_status"
+      ],
+      "properties": {
+        "primary_topic": { "type": ["string", "null"] },
+        "primary_topic_confidence": { "$ref": "#/$defs/nullable_probability" },
+        "overall_negative_probability": { "$ref": "#/$defs/nullable_probability" },
+        "delivery_negative_probability": { "$ref": "#/$defs/nullable_probability" },
+        "support_negative_probability": { "$ref": "#/$defs/nullable_probability" },
+        "product_defect_probability": { "$ref": "#/$defs/nullable_probability" },
+        "actionable_probability": { "$ref": "#/$defs/nullable_probability" },
+        "severity_score": { "type": ["number", "null"], "minimum": 0 },
+        "resolution_status": { "type": ["string", "null"] }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_topic",
+        "overall_experience",
+        "delivery_experience",
+        "support_experience",
+        "product_defect",
+        "actionable",
+        "severity",
+        "resolution"
+      ],
+      "properties": {
+        "primary_topic": { "type": "boolean" },
+        "overall_experience": { "type": "boolean" },
+        "delivery_experience": { "type": "boolean" },
+        "support_experience": { "type": "boolean" },
+        "product_defect": { "type": "boolean" },
+        "actionable": { "type": "boolean" },
+        "severity": { "type": "boolean" },
+        "resolution": { "type": "boolean" }
+      }
+    },
+    "accepted_positive": {
+      "description": "Explicit policy-routed classifications. Null means no accepted classification exists; probability values must never be substituted.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_topic",
+        "overall_experience",
+        "delivery_experience",
+        "support_experience",
+        "product_defect",
+        "actionable",
+        "severity",
+        "resolution"
+      ],
+      "properties": {
+        "primary_topic": { "type": ["boolean", "null"] },
+        "overall_experience": { "type": ["boolean", "null"] },
+        "delivery_experience": { "type": ["boolean", "null"] },
+        "support_experience": { "type": ["boolean", "null"] },
+        "product_defect": { "type": ["boolean", "null"] },
+        "actionable": { "type": ["boolean", "null"] },
+        "severity": { "type": ["boolean", "null"] },
+        "resolution": { "type": ["boolean", "null"] }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "version"],
+      "properties": {
+        "status": { "enum": ["uncalibrated", "active"] },
+        "version": { "type": ["string", "null"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "model_version"],
+      "properties": {
+        "schema_version": { "type": "string", "minLength": 1 },
+        "model_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "trace_id": { "type": "string", "format": "uuid" }
+  },
+  "$defs": {
+    "nullable_probability": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

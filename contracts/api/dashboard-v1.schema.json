@@ -1,0 +1,687 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/api/dashboard-v1.schema.json",
+  "title": "Feedback Intelligence dashboard read models v1",
+  "oneOf": [
+    { "$ref": "#/$defs/metadataResponse" },
+    { "$ref": "#/$defs/overviewResponse" },
+    { "$ref": "#/$defs/signalResponse" },
+    { "$ref": "#/$defs/trendOverviewResponse" },
+    { "$ref": "#/$defs/evaluationComparisonResponse" },
+    { "$ref": "#/$defs/evidencePageResponse" },
+    { "$ref": "#/$defs/evidenceDetailResponse" }
+  ],
+  "$defs": {
+    "context": { "type": "string", "enum": ["live", "demo"] },
+    "availabilityState": {
+      "type": "string",
+      "enum": ["available", "unavailable"]
+    },
+    "unavailableReason": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "uncalibrated",
+        "awaiting_calibration",
+        "awaiting_human_labels",
+        "no_eligible_evidence",
+        "insufficient_data",
+        "unsupported_dimension",
+        "source_unavailable"
+      ]
+    },
+    "availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason"],
+      "properties": {
+        "state": { "$ref": "#/$defs/availabilityState" },
+        "reason": { "$ref": "#/$defs/unavailableReason" }
+      },
+      "oneOf": [
+        { "properties": { "state": { "const": "available" }, "reason": { "const": null } } },
+        { "properties": { "state": { "const": "unavailable" }, "reason": { "type": "string" } } }
+      ]
+    },
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "providerId", "datasetName", "datasetVersion", "displayName", "synthetic"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "providerId": { "type": "string", "minLength": 1 },
+        "datasetName": { "type": "string", "minLength": 1 },
+        "datasetVersion": { "type": "string", "minLength": 1 },
+        "displayName": { "type": "string", "minLength": 1 },
+        "synthetic": { "type": "boolean" }
+      }
+    },
+    "timeRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "toExclusive"],
+      "properties": {
+        "from": { "type": "string", "format": "date-time" },
+        "toExclusive": { "type": "string", "format": "date-time" }
+      }
+    },
+    "filters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceKey", "from", "toExclusive", "topic", "product", "category", "language", "channel"],
+      "properties": {
+        "sourceKey": { "type": "string", "minLength": 1 },
+        "from": { "type": "string", "format": "date-time" },
+        "toExclusive": { "type": "string", "format": "date-time" },
+        "topic": { "type": ["string", "null"] },
+        "product": { "type": ["string", "null"] },
+        "category": { "type": ["string", "null"] },
+        "language": { "type": ["string", "null"] },
+        "channel": { "type": ["string", "null"] }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["products", "categories", "languages", "channels", "evidenceText"],
+      "properties": {
+        "products": { "type": "boolean" },
+        "categories": { "type": "boolean" },
+        "languages": { "type": "boolean" },
+        "channels": { "type": "boolean" },
+        "evidenceText": { "type": "boolean" }
+      }
+    },
+    "filterOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topics", "products", "categories", "languages", "channels"],
+      "properties": {
+        "topics": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "products": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "categories": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "languages": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "channels": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "metadataResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "source", "sources", "availableRange", "capabilities", "filterOptions", "policyStatus"],
+      "properties": {
+        "kind": { "const": "metadata" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "source": { "oneOf": [{ "$ref": "#/$defs/sourceIdentity" }, { "type": "null" }] },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/sourceIdentity" } },
+        "availableRange": { "oneOf": [{ "$ref": "#/$defs/timeRange" }, { "type": "null" }] },
+        "capabilities": { "$ref": "#/$defs/capabilities" },
+        "filterOptions": { "$ref": "#/$defs/filterOptions" },
+        "policyStatus": { "type": "string", "enum": ["awaiting_calibration", "illustrative"] }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "unit", "value", "numerator", "denominator", "availability"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "unit": { "type": "string", "enum": ["count", "percent", "score"] },
+        "value": { "type": ["number", "null"] },
+        "numerator": { "type": ["integer", "null"], "minimum": 0 },
+        "denominator": { "type": ["integer", "null"], "minimum": 0 },
+        "availability": { "$ref": "#/$defs/availability" }
+      }
+    },
+    "processingSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feedbackRecords", "decisionRuns", "typedAnswers", "jobsByStatus", "projectionByDestination"],
+      "properties": {
+        "feedbackRecords": { "type": "integer", "minimum": 0 },
+        "decisionRuns": { "type": "integer", "minimum": 0 },
+        "typedAnswers": { "type": "integer", "minimum": 0 },
+        "jobsByStatus": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "projectionByDestination": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "seriesPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["periodStart", "importedCount", "eligibleCount", "topicNumerator", "value"],
+      "properties": {
+        "periodStart": { "type": "string", "format": "date-time" },
+        "importedCount": { "type": "integer", "minimum": 0 },
+        "eligibleCount": { "type": "integer", "minimum": 0 },
+        "topicNumerator": { "type": "integer", "minimum": 0 },
+        "value": { "type": ["number", "null"] }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["range", "numerator", "denominator", "rate"],
+      "properties": {
+        "range": { "$ref": "#/$defs/timeRange" },
+        "numerator": { "type": "integer", "minimum": 0 },
+        "denominator": { "type": "integer", "minimum": 0 },
+        "rate": { "type": ["number", "null"] }
+      }
+    },
+    "signalSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "definition", "numerator", "denominator", "rate", "comparison", "deltaPoints", "availability"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "definition": { "type": "string" },
+        "numerator": { "type": "integer", "minimum": 0 },
+        "denominator": { "type": "integer", "minimum": 0 },
+        "rate": { "type": ["number", "null"] },
+        "comparison": { "oneOf": [{ "$ref": "#/$defs/comparison" }, { "type": "null" }] },
+        "deltaPoints": { "type": ["number", "null"] },
+        "availability": { "$ref": "#/$defs/availability" }
+      }
+    },
+    "overviewResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "filters", "processing", "metrics", "series", "signals"],
+      "properties": {
+        "kind": { "const": "overview" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "filters": { "$ref": "#/$defs/filters" },
+        "processing": { "$ref": "#/$defs/processingSummary" },
+        "metrics": { "type": "array", "items": { "$ref": "#/$defs/metric" } },
+        "series": { "type": "array", "items": { "$ref": "#/$defs/seriesPoint" } },
+        "signals": { "type": "array", "items": { "$ref": "#/$defs/signalSummary" } }
+      }
+    },
+    "signalResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "filters", "signal", "series", "method"],
+      "properties": {
+        "kind": { "const": "signal" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "filters": { "$ref": "#/$defs/filters" },
+        "signal": { "$ref": "#/$defs/signalSummary" },
+        "series": { "type": "array", "items": { "$ref": "#/$defs/seriesPoint" } },
+        "method": { "type": "string" }
+      }
+    },
+    "trendMethod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "configurationChecksum",
+        "currentWindowDays",
+        "baselineWindowDays",
+        "minimumCurrentDenominator",
+        "minimumBaselineDenominator",
+        "minimumCurrentNumerator",
+        "minimumAbsoluteDeltaPoints",
+        "minimumRelativeChangePercent",
+        "claim",
+        "betaPriorAlpha",
+        "betaPriorBeta",
+        "minimumProbabilityOfDirection"
+      ],
+      "properties": {
+        "id": { "type": "string", "enum": ["simple_rate_change", "candidate_statistical"] },
+        "version": { "type": "string", "minLength": 1 },
+        "configurationChecksum": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "currentWindowDays": { "const": 7 },
+        "baselineWindowDays": { "const": 28 },
+        "minimumCurrentDenominator": { "type": "integer", "minimum": 1 },
+        "minimumBaselineDenominator": { "type": "integer", "minimum": 1 },
+        "minimumCurrentNumerator": { "type": "integer", "minimum": 1 },
+        "minimumAbsoluteDeltaPoints": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "minimumRelativeChangePercent": { "type": "number", "exclusiveMinimum": 0 },
+        "claim": { "type": "string", "enum": ["emerging_signal_not_statistical_significance", "posterior_probability_not_multiple_test_adjusted"] },
+        "betaPriorAlpha": { "type": ["integer", "null"], "minimum": 1 },
+        "betaPriorBeta": { "type": ["integer", "null"], "minimum": 1 },
+        "minimumProbabilityOfDirection": { "type": ["number", "null"], "exclusiveMinimum": 0.5, "exclusiveMaximum": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "id": { "const": "candidate_statistical" } }, "required": ["id"] },
+          "then": {
+            "properties": {
+              "claim": { "const": "posterior_probability_not_multiple_test_adjusted" },
+              "betaPriorAlpha": { "type": "integer", "minimum": 1 },
+              "betaPriorBeta": { "type": "integer", "minimum": 1 },
+              "minimumProbabilityOfDirection": { "type": "number", "exclusiveMinimum": 0.5, "exclusiveMaximum": 1 }
+            }
+          },
+          "else": {
+            "properties": {
+              "claim": { "const": "emerging_signal_not_statistical_significance" },
+              "betaPriorAlpha": { "const": null },
+              "betaPriorBeta": { "const": null },
+              "minimumProbabilityOfDirection": { "const": null }
+            }
+          }
+        }
+      ]
+    },
+    "trendEvaluationSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plantedIncidentCount",
+        "alertEpisodeCount",
+        "evaluableSeriesDayCount",
+        "recall",
+        "precision",
+        "medianDetectionDelayDays",
+        "falseAlertEpisodesPer100SeriesDays"
+      ],
+      "properties": {
+        "plantedIncidentCount": { "type": "integer", "minimum": 0 },
+        "alertEpisodeCount": { "type": "integer", "minimum": 0 },
+        "evaluableSeriesDayCount": { "type": "integer", "minimum": 0 },
+        "recall": { "type": "number", "minimum": 0, "maximum": 1 },
+        "precision": { "type": "number", "minimum": 0, "maximum": 1 },
+        "medianDetectionDelayDays": { "type": "number", "minimum": 0 },
+        "falseAlertEpisodesPer100SeriesDays": { "type": "number", "minimum": 0 }
+      }
+    },
+    "trendSeries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seriesId", "signalId", "signalLabel", "product", "direction"],
+      "properties": {
+        "seriesId": { "type": "string", "minLength": 1 },
+        "signalId": { "type": "string", "minLength": 1 },
+        "signalLabel": { "type": "string", "minLength": 1 },
+        "product": { "type": ["string", "null"] },
+        "direction": { "type": "string", "enum": ["increase", "decrease"] }
+      }
+    },
+    "trendWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["range", "numerator", "denominator", "rate"],
+      "properties": {
+        "range": { "$ref": "#/$defs/timeRange" },
+        "numerator": { "type": "integer", "minimum": 0 },
+        "denominator": { "type": "integer", "minimum": 0 },
+        "rate": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      }
+    },
+    "trendEvaluationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluationId",
+        "seriesId",
+        "anchor",
+        "state",
+        "current",
+        "baseline",
+        "deltaPoints",
+        "rateRatio",
+        "relativeChangePercent",
+        "probabilityOfDirection",
+        "gateReasons"
+      ],
+      "properties": {
+        "evaluationId": { "type": "string", "minLength": 1 },
+        "seriesId": { "type": "string", "minLength": 1 },
+        "anchor": { "type": "string", "format": "date-time" },
+        "state": { "type": "string", "enum": ["emerging_signal", "not_emerging", "insufficient_coverage"] },
+        "current": { "$ref": "#/$defs/trendWindow" },
+        "baseline": { "$ref": "#/$defs/trendWindow" },
+        "deltaPoints": { "type": "number", "minimum": -100, "maximum": 100 },
+        "rateRatio": { "type": ["number", "null"], "minimum": 0 },
+        "relativeChangePercent": { "type": ["number", "null"] },
+        "probabilityOfDirection": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "gateReasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "current_denominator_met",
+              "baseline_denominator_met",
+              "current_numerator_met",
+              "absolute_delta_met",
+              "relative_change_met",
+              "probability_direction_met",
+              "current_denominator_below_minimum",
+              "baseline_denominator_below_minimum",
+              "current_numerator_below_minimum",
+              "absolute_delta_below_minimum",
+              "relative_change_below_minimum",
+              "probability_direction_below_minimum",
+              "baseline_rate_zero"
+            ]
+          }
+        }
+      }
+    },
+    "trendIncident": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["incidentId", "outcome", "seriesId", "plantedAt", "detected", "matchedEvaluationId", "detectionDelayDays"],
+      "properties": {
+        "incidentId": { "type": "string", "pattern": "^synthetic-incident-" },
+        "outcome": {
+          "type": "string",
+          "enum": ["product_defect_noise_increase", "delivery_delay_increase", "support_praise_increase", "return_unresolved_increase"]
+        },
+        "seriesId": { "type": "string", "minLength": 1 },
+        "plantedAt": { "type": "string", "format": "date-time" },
+        "detected": { "type": "boolean" },
+        "matchedEvaluationId": { "type": ["string", "null"] },
+        "detectionDelayDays": { "type": ["integer", "null"], "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "detected": { "const": true } }, "required": ["detected"] },
+          "then": {
+            "properties": {
+              "matchedEvaluationId": { "type": "string", "minLength": 1 },
+              "detectionDelayDays": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "else": {
+            "properties": {
+              "matchedEvaluationId": { "const": null },
+              "detectionDelayDays": { "const": null }
+            }
+          }
+        }
+      ]
+    },
+    "trendOverviewResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "availability", "source", "method", "summary", "series", "results", "incidents"],
+      "properties": {
+        "kind": { "const": "trend-overview" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "availability": { "$ref": "#/$defs/availability" },
+        "source": { "oneOf": [{ "$ref": "#/$defs/sourceIdentity" }, { "type": "null" }] },
+        "method": { "$ref": "#/$defs/trendMethod" },
+        "summary": { "oneOf": [{ "$ref": "#/$defs/trendEvaluationSummary" }, { "type": "null" }] },
+        "series": { "type": "array", "items": { "$ref": "#/$defs/trendSeries" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/trendEvaluationResult" } },
+        "incidents": { "type": "array", "items": { "$ref": "#/$defs/trendIncident" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "availability": { "properties": { "state": { "const": "available" } } } } },
+          "then": {
+            "properties": {
+              "source": { "$ref": "#/$defs/sourceIdentity" },
+              "summary": { "$ref": "#/$defs/trendEvaluationSummary" }
+            }
+          },
+          "else": {
+            "properties": {
+              "source": { "const": null },
+              "summary": { "const": null },
+              "series": { "maxItems": 0 },
+              "results": { "maxItems": 0 },
+              "incidents": { "maxItems": 0 }
+            }
+          }
+        }
+      ]
+    },
+    "evaluationMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["macroF1", "accuracy"],
+      "properties": {
+        "macroF1": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "accuracy": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    },
+    "evaluationLanguageSlice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "recordCount", "successCount", "errorCount", "primaryTopic"],
+      "properties": {
+        "language": { "type": "string", "minLength": 1 },
+        "recordCount": { "type": "integer", "minimum": 0 },
+        "successCount": { "type": "integer", "minimum": 0 },
+        "errorCount": { "type": "integer", "minimum": 0 },
+        "primaryTopic": { "$ref": "#/$defs/evaluationMetrics" }
+      }
+    },
+    "evaluationCostObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "status", "tokens", "costUsd", "successfulRecords", "targetRecords", "estimatedTargetCostUsd", "estimateMethod"],
+      "properties": {
+        "scope": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "tokens": { "type": "integer", "minimum": 0 },
+        "costUsd": { "type": "number", "minimum": 0 },
+        "successfulRecords": { "type": ["integer", "null"], "minimum": 0 },
+        "targetRecords": { "type": ["integer", "null"], "minimum": 0 },
+        "estimatedTargetCostUsd": { "type": ["number", "null"], "minimum": 0 },
+        "estimateMethod": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evaluationComparisonResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "availability", "status", "reference", "recordCount", "successCount", "errorCount", "semif", "semifPrimaryTopic", "semifLanguageSlices", "rules", "rulePrimaryTopic", "ruleLanguageSlices", "llm", "semifCost", "llmCost", "llmPrimaryTopic", "llmLanguageSlices"],
+      "properties": {
+        "kind": { "const": "evaluation-comparison" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "availability": { "$ref": "#/$defs/availability" },
+        "status": { "enum": ["complete", "placeholder_pending_run", "awaiting_human_labels"] },
+        "reference": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "model", "reasoning"],
+              "properties": {
+                "kind": { "const": "ai_reviewed_not_human_gold" },
+                "model": { "type": "string", "minLength": 1 },
+                "reasoning": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "recordCount": { "type": "integer", "minimum": 0 },
+        "successCount": { "type": "integer", "minimum": 0 },
+        "errorCount": { "type": "integer", "minimum": 0 },
+        "semif": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["requestedModel", "resolvedModel"],
+              "properties": {
+                "requestedModel": { "type": "string", "minLength": 1 },
+                "resolvedModel": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "semifPrimaryTopic": { "oneOf": [{ "$ref": "#/$defs/evaluationMetrics" }, { "type": "null" }] },
+        "semifLanguageSlices": { "type": "array", "items": { "$ref": "#/$defs/evaluationLanguageSlice" } },
+        "rules": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["requestedModel", "resolvedModel"],
+              "properties": {
+                "requestedModel": { "type": "string", "minLength": 1 },
+                "resolvedModel": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "rulePrimaryTopic": { "oneOf": [{ "$ref": "#/$defs/evaluationMetrics" }, { "type": "null" }] },
+        "ruleLanguageSlices": { "type": "array", "items": { "$ref": "#/$defs/evaluationLanguageSlice" } },
+        "llm": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["requestedModel", "resolvedModel"],
+              "properties": {
+                "requestedModel": { "type": "string", "minLength": 1 },
+                "resolvedModel": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "semifCost": { "oneOf": [{ "$ref": "#/$defs/evaluationCostObservation" }, { "type": "null" }] },
+        "llmCost": { "oneOf": [{ "$ref": "#/$defs/evaluationCostObservation" }, { "type": "null" }] },
+        "llmPrimaryTopic": { "oneOf": [{ "$ref": "#/$defs/evaluationMetrics" }, { "type": "null" }] },
+        "llmLanguageSlices": { "type": "array", "items": { "$ref": "#/$defs/evaluationLanguageSlice" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "availability": { "properties": { "state": { "const": "unavailable" } } } } },
+          "then": {
+            "properties": {
+              "reference": { "const": null },
+              "semif": { "const": null },
+              "semifPrimaryTopic": { "const": null },
+              "rules": { "const": null },
+              "rulePrimaryTopic": { "const": null },
+              "llm": { "const": null },
+              "semifCost": { "const": null },
+              "llmCost": { "const": null },
+              "llmPrimaryTopic": { "const": null },
+              "recordCount": { "const": 0 },
+              "successCount": { "const": 0 },
+              "errorCount": { "const": 0 },
+              "semifLanguageSlices": { "maxItems": 0 },
+              "ruleLanguageSlices": { "maxItems": 0 },
+              "llmLanguageSlices": { "maxItems": 0 }
+            }
+          }
+        }
+      ]
+    },
+    "evidenceRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feedbackId", "decisionId", "occurredAt", "sourceRecordId", "channel", "productLabel", "excerpt", "evidenceAccess", "inclusionReason"],
+      "properties": {
+        "feedbackId": { "type": "string", "format": "uuid" },
+        "decisionId": { "type": "string", "format": "uuid" },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "sourceRecordId": { "type": "string" },
+        "channel": { "type": ["string", "null"] },
+        "productLabel": { "type": ["string", "null"] },
+        "excerpt": { "type": ["string", "null"] },
+        "evidenceAccess": { "type": "string", "enum": ["permitted_synthetic", "restricted"] },
+        "inclusionReason": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "evidenceAccess": { "const": "restricted" } } },
+          "then": { "properties": { "excerpt": { "const": null } } }
+        }
+      ]
+    },
+    "evidencePageResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "filters", "signalId", "page", "pageSize", "total", "items"],
+      "properties": {
+        "kind": { "const": "evidence-page" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "filters": { "$ref": "#/$defs/filters" },
+        "signalId": { "type": "string" },
+        "page": { "type": "integer", "minimum": 1 },
+        "pageSize": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "total": { "type": "integer", "minimum": 0 },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/evidenceRow" } }
+      }
+    },
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["questionId", "label", "primitive", "value", "confidenceLabel", "eligibility"],
+      "properties": {
+        "questionId": { "type": "string" },
+        "label": { "type": "string" },
+        "primitive": { "type": "string", "enum": ["choice", "score", "noul"] },
+        "value": { "type": ["string", "number", "boolean", "null"] },
+        "confidenceLabel": { "type": ["string", "null"] },
+        "eligibility": { "type": "string", "enum": ["illustrative_eligible", "withheld_uncalibrated", "not_applicable"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decisionId", "schemaName", "schemaVersion", "modelVersion", "policyVersion", "policyStatus", "traceId", "decidedAt"],
+      "properties": {
+        "decisionId": { "type": "string", "format": "uuid" },
+        "schemaName": { "type": "string" },
+        "schemaVersion": { "type": "string" },
+        "modelVersion": { "type": "string" },
+        "policyVersion": { "type": ["string", "null"] },
+        "policyStatus": { "type": "string", "enum": ["awaiting_calibration", "illustrative"] },
+        "traceId": { "type": "string", "format": "uuid" },
+        "decidedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "evidenceDetailResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "contractVersion", "context", "source", "record", "evidence", "answers", "provenance", "inclusionReason"],
+      "properties": {
+        "kind": { "const": "evidence-detail" },
+        "contractVersion": { "const": "1.0" },
+        "context": { "$ref": "#/$defs/context" },
+        "source": { "$ref": "#/$defs/sourceIdentity" },
+        "record": { "$ref": "#/$defs/evidenceRow" },
+        "evidence": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["access", "title", "body"],
+              "properties": {
+                "access": { "const": "permitted_synthetic" },
+                "title": { "type": ["string", "null"] },
+                "body": { "type": "string" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["access", "title", "body"],
+              "properties": {
+                "access": { "const": "restricted" },
+                "title": { "const": null },
+                "body": { "const": null }
+              }
+            }
+          ]
+        },
+        "answers": { "type": "array", "items": { "$ref": "#/$defs/answer" } },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "inclusionReason": { "type": "string" }
+      }
+    }
+  }
+}

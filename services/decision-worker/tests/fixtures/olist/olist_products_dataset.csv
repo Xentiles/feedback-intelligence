@@ -1,0 +1,4 @@
+product_id,product_category_name,product_name_lenght,product_description_lenght,product_photos_qty,product_weight_g,product_length_cm,product_height_cm,product_width_cm
+p-health,beleza_saude,10,20,1,100,10,10,10
+p-computer,informatica_acessorios,10,20,1,1000,30,5,20
+p-chair,moveis_decoracao,10,20,1,5000,80,40,50

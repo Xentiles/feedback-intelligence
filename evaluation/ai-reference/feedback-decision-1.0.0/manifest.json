@@ -1,0 +1,24 @@
+{
+  "adjudication_count": 57,
+  "disagreement_record_count": 57,
+  "labels_sha256": "fd4d2489bb594ff433db5bb8cf174381212b365d69b2bbc9ce42bdab01dc7b73",
+  "limitations": [
+    "AI-reviewed reference; not human gold labels.",
+    "Both review passes and adjudication used the same model family.",
+    "Suitable for an interim demo comparison, not calibration or release-quality claims."
+  ],
+  "pass_1_count": 480,
+  "pass_2_count": 120,
+  "reasoning_effort": "medium",
+  "record_count": 480,
+  "records_sha256": "ac239a2fd52f3e8c474e708c426aafa21c785a8a9517644e59a32b3f8fc16450",
+  "reference_kind": "ai_reference",
+  "reference_model": "gpt-5.6-sol",
+  "sample_version": "feedback-decision-1.0.0",
+  "schema_version": "feedback-ai-reference-manifest/1.0.0",
+  "source_pass_sha256": {
+    "adjudications": "cd441f32532d26c9bc90c19982c3160cf84689578c7fa3153111139d91eaf9fe",
+    "pass_1": "cabbfb6041d00f68cf77566bcfbf93e6f9ee8abda42d7ca67b951bdfc247ee1a",
+    "pass_2": "52993f0494a7c578f226c48a548e7c6095263cbd9506f4a4a4eec9528509a98e"
+  }
+}

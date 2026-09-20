@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/config/runtime-features-v1.schema.json",
+  "title": "Feedback Intelligence runtime feature selection",
+  "type": "object",
+  "required": ["decisionEngine", "trendAlgorithm"],
+  "properties": {
+    "decisionEngine": {
+      "type": "string",
+      "enum": ["fixture", "rules", "llm", "semif"]
+    },
+    "trendAlgorithm": {
+      "type": "string",
+      "enum": ["simple_rate_change", "candidate_statistical"]
+    }
+  },
+  "additionalProperties": false
+}

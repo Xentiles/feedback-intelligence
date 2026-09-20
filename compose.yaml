@@ -1,0 +1,163 @@
+name: feedback-intelligence
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8080}:8080"
+
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Dashboard: Host=postgres;Port=5432;Database=${POSTGRES_DB:-feedback_intelligence};Username=${POSTGRES_USER:-feedback_intelligence};Password=${POSTGRES_PASSWORD:-}
+      ConnectionStrings__Operational: Host=postgres;Port=5432;Database=${POSTGRES_DB:-feedback_intelligence};Username=${POSTGRES_USER:-feedback_intelligence};Password=${POSTGRES_PASSWORD:-}
+      Dashboard__ClickHouse__Url: http://clickhouse:8123
+      Dashboard__ClickHouse__User: ${CLICKHOUSE_USER:-feedback_intelligence}
+      Dashboard__ClickHouse__Password: ${CLICKHOUSE_PASSWORD:-}
+      Ingestion__Enabled: ${INGESTION_ENABLED:-false}
+      Ingestion__ApiKey: ${INGESTION_API_KEY:-}
+      Ingestion__DecisionEngine: ${INGESTION_DECISION_ENGINE:-rules}
+      Ingestion__RequestedModel: ${INGESTION_DECISION_MODEL:-rules-1.0.0}
+      Ingestion__RateLimitPermitLimit: ${INGESTION_RATE_LIMIT:-30}
+      Ingestion__RateLimitWindowSeconds: ${INGESTION_RATE_WINDOW_SECONDS:-60}
+      Trend__Algorithm: ${TREND_ALGORITHM:-simple_rate_change}
+      Observability__Enabled: ${OTEL_ENABLED:-false}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+    ports:
+      - "127.0.0.1:${API_PORT:-5080}:8080"
+
+  decision-worker:
+    profiles: [worker]
+    build:
+      context: .
+      dockerfile: services/decision-worker/Dockerfile
+    environment:
+      FEEDBACK_DATA_PROVIDER: ${FEEDBACK_DATA_PROVIDER:-synthetic}
+      FEEDBACK_DATA_PATH: ${FEEDBACK_DATA_PATH:-}
+      # General-purpose comparison through the System One Adapter.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OTEL_ENABLED: ${OTEL_ENABLED:-false}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: feedback-intelligence-decision-worker
+      DECISION_ENGINE: ${DECISION_ENGINE:-fixture}
+      TREND_ALGORITHM: ${TREND_ALGORITHM:-simple_rate_change}
+      LLM_MODEL: ${LLM_MODEL:-gpt-5.4-mini-2026-03-17}
+    volumes:
+      - ./data:/app/data
+    # The default worker entry point reports its status and exits successfully.
+    restart: "no"
+
+  pipeline-worker:
+    profiles: [pipeline]
+    build:
+      context: .
+      dockerfile: services/decision-worker/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    environment:
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-feedback_intelligence}:${POSTGRES_PASSWORD:-}@postgres:5432/${POSTGRES_DB:-feedback_intelligence}
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-feedback_intelligence}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+    volumes:
+      - ./data:/app/data
+    entrypoint: [feedback-storage]
+    command: [demo, --json]
+    restart: "no"
+
+  processing-worker:
+    profiles: [runtime]
+    build:
+      context: .
+      dockerfile: services/decision-worker/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    environment:
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-feedback_intelligence}:${POSTGRES_PASSWORD:-}@postgres:5432/${POSTGRES_DB:-feedback_intelligence}
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-feedback_intelligence}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+      WORKER_NAME: ${WORKER_NAME:-decision-worker-compose}
+      WORKER_POLL_SECONDS: ${WORKER_POLL_SECONDS:-1}
+      TREND_ALGORITHM: ${TREND_ALGORITHM:-simple_rate_change}
+      OTEL_ENABLED: ${OTEL_ENABLED:-false}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: feedback-intelligence-decision-worker
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - ./data:/app/data
+    command: [run]
+    restart: unless-stopped
+
+  postgres:
+    profiles: [storage, pipeline, runtime]
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-feedback_intelligence}
+      POSTGRES_USER: ${POSTGRES_USER:-feedback_intelligence}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./infra/postgres/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  clickhouse:
+    profiles: [storage, pipeline, runtime]
+    image: clickhouse/clickhouse-server:25.8
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-feedback_intelligence}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-feedback_intelligence}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+    # Fail closed when the optional storage profile lacks a local password.
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - 'test -n "$${CLICKHOUSE_PASSWORD}" || { echo "Set CLICKHOUSE_PASSWORD in .env" >&2; exit 1; }; exec /entrypoint.sh'
+    ports:
+      - "127.0.0.1:${CLICKHOUSE_HTTP_PORT:-8123}:8123"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./infra/clickhouse/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [CMD, wget, --no-verbose, --tries=1, --spider, 'http://127.0.0.1:8123/ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  otel-collector:
+    profiles: [observability]
+    image: otel/opentelemetry-collector-contrib:0.160.0
+    command: [--config=/etc/otelcol/config.yaml]
+    volumes:
+      - ./infra/otel/collector.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "127.0.0.1:${OTEL_GRPC_PORT:-4317}:4317"
+      - "127.0.0.1:${OTEL_HTTP_PORT:-4318}:4318"
+
+volumes:
+  postgres-data:
+  clickhouse-data:

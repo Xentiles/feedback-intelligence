@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/decisions/decision-fixture-set.schema.json",
+  "title": "Recorded decision fixture set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fixture_format", "schema_name", "schema_version", "schema_sha256", "recorded_provider", "requested_model", "resolved_model", "generated_at", "records"],
+  "properties": {
+    "fixture_format": { "const": "decision-fixture-set/1.0.0" },
+    "schema_name": { "const": "feedback-decision" },
+    "schema_version": { "type": "string", "minLength": 1 },
+    "schema_sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "recorded_provider": { "type": "string", "minLength": 1 },
+    "requested_model": { "type": "string", "minLength": 1 },
+    "resolved_model": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "records": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^sha256:[a-f0-9]{64}$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["answers"],
+        "properties": {
+          "answers": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "$ref": "decision-envelope.schema.json#/$defs/answer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

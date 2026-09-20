@@ -1,0 +1,52 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  redaction:
+    allowed_keys:
+      - attempt.count
+      - decision.engine
+      - decision.id
+      - destination
+      - error.type
+      - event.id
+      - feedback.id
+      - http.request.method
+      - http.response.status_code
+      - http.route
+      - ingestion.outcome
+      - job.id
+      - latency.ms
+      - model.version
+      - network.protocol.version
+      - policy.disposition
+      - privacy.status
+      - projection.outcome
+      - redaction.count
+      - schema.version
+      - server.address
+      - server.port
+      - service.name
+      - source.type
+      - url.scheme
+  batch: {}
+
+exporters:
+  debug:
+    verbosity: basic
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [redaction, batch]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: [redaction, batch]
+      exporters: [debug]

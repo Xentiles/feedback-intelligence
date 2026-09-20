@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/processing-job-1.0.0.json",
+  "title": "Feedback processing job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "job_version",
+    "job_id",
+    "idempotency_key",
+    "feedback_id",
+    "decision_schema",
+    "engine",
+    "requested_model",
+    "status",
+    "attempt_count",
+    "max_attempts"
+  ],
+  "properties": {
+    "job_version": { "const": "feedback-processing-job/1.0.0" },
+    "job_id": { "type": "string", "format": "uuid" },
+    "idempotency_key": { "type": "string", "minLength": 1 },
+    "feedback_id": { "type": "string", "format": "uuid" },
+    "decision_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "sha256"],
+      "properties": {
+        "name": { "const": "feedback-decision" },
+        "version": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "engine": { "type": "string", "minLength": 1 },
+    "requested_model": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["pending", "running", "retry_wait", "succeeded", "dead"] },
+    "attempt_count": { "type": "integer", "minimum": 0 },
+    "max_attempts": { "type": "integer", "minimum": 1 }
+  }
+}

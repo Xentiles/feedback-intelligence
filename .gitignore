@@ -1,0 +1,76 @@
+# Operating systems and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local configuration and credentials (examples are safe to track)
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local.json
+DELETME.md
+DELETE_ME.md
+secrets/
+.secrets/
+.aws/
+.azure/
+credentials.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa
+id_ed25519
+
+# Frontend
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+npm-debug.log*
+
+# .NET
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+.vs/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+.uv-cache/
+
+# Internal planning source; never include in repository publication
+/Project Plan Documentation/
+
+# Private design template; the web app contains its own runtime assets
+/orbital-clarity-v0.4/
+
+# Generated local output; reviewed fixtures/reports belong outside these folders
+**/generated/
+artifacts/
+*.log
+
+# External/licensed source data and normalized local imports
+data/external/**/raw/
+data/processed/**
+!data/processed/README.md

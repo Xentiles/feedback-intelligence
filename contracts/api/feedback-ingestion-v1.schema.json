@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/api/feedback-ingestion-v1.schema.json",
+  "title": "Feedback ingestion API v1",
+  "oneOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/receipt" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "feedbackId",
+        "source",
+        "originalText",
+        "title",
+        "occurredAt",
+        "rating",
+        "relatedProducts",
+        "orderId",
+        "channel",
+        "language",
+        "metadata",
+        "operationalContext",
+        "privacyStatus"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "feedback-record/1.0.0" },
+        "feedbackId": { "type": "string", "format": "uuid" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["providerId", "datasetName", "datasetVersion", "sourceRecordId"],
+          "properties": {
+            "providerId": { "type": "string", "minLength": 1, "maxLength": 100 },
+            "datasetName": { "type": "string", "minLength": 1, "maxLength": 200 },
+            "datasetVersion": { "type": "string", "minLength": 1, "maxLength": 100 },
+            "sourceRecordId": { "type": "string", "minLength": 1, "maxLength": 200 }
+          }
+        },
+        "originalText": { "type": "string", "minLength": 1, "maxLength": 10000 },
+        "title": { "type": ["string", "null"], "maxLength": 500 },
+        "occurredAt": { "type": "string", "format": "date-time", "pattern": "Z$" },
+        "rating": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["value", "scaleMin", "scaleMax"],
+              "properties": {
+                "value": { "type": "number" },
+                "scaleMin": { "type": "number" },
+                "scaleMax": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "relatedProducts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/product" }
+        },
+        "orderId": { "type": ["string", "null"] },
+        "channel": { "type": ["string", "null"] },
+        "language": { "type": ["string", "null"] },
+        "metadata": { "type": "object" },
+        "operationalContext": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/operationalContext" }
+          ]
+        },
+        "privacyStatus": { "const": "uninspected" }
+      }
+    },
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": { "type": "string", "pattern": "^-?[0-9]+(\\.[0-9]+)?$" },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" }
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "productId",
+        "productName",
+        "category",
+        "categoryLanguage",
+        "quantity",
+        "sellerIds",
+        "price",
+        "freightCost"
+      ],
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "productName": { "type": ["string", "null"] },
+        "category": { "type": ["string", "null"] },
+        "categoryLanguage": { "type": ["string", "null"] },
+        "quantity": { "type": "integer", "minimum": 1 },
+        "sellerIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "price": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }] },
+        "freightCost": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }] }
+      }
+    },
+    "operationalContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purchasedAt",
+        "deliveredAt",
+        "expectedDeliveryAt",
+        "deliveryDeltaDays",
+        "orderStatus",
+        "totalPrice",
+        "totalFreightCost",
+        "sellerCount"
+      ],
+      "properties": {
+        "purchasedAt": { "type": ["string", "null"], "format": "date-time" },
+        "deliveredAt": { "type": ["string", "null"], "format": "date-time" },
+        "expectedDeliveryAt": { "type": ["string", "null"], "format": "date-time" },
+        "deliveryDeltaDays": { "type": ["number", "null"] },
+        "orderStatus": { "type": ["string", "null"] },
+        "totalPrice": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }] },
+        "totalFreightCost": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/money" }]
+        },
+        "sellerCount": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receiptVersion",
+        "feedbackId",
+        "jobId",
+        "idempotencyKey",
+        "status",
+        "created"
+      ],
+      "properties": {
+        "receiptVersion": { "const": "feedback-ingestion-receipt/1.0.0" },
+        "feedbackId": { "type": "string", "format": "uuid" },
+        "jobId": { "type": "string", "format": "uuid" },
+        "idempotencyKey": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "status": { "enum": ["pending", "running", "retry_wait", "succeeded", "dead"] },
+        "created": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <Deterministic>true</Deterministic>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition="'$(CI)' == 'true'">true</RestoreLockedMode>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,460 @@
+{
+  "environment": {
+    "logical_cpu_count": 10,
+    "machine": "arm64",
+    "operating_system": "Darwin",
+    "operating_system_release": "25.6.0",
+    "peak_rss_semantics": "resource.ru_maxrss is bytes on Darwin and kilobytes on Linux; peak_rss_bytes normalizes either source unit to bytes",
+    "python_implementation": "CPython",
+    "python_version": "3.13.3"
+  },
+  "generated_at_utc": "2026-09-20T00:22:30.448221+00:00",
+  "limitations": [
+    "This is one local host run over deterministic synthetic data, not an SLA.",
+    "Five sequential samples are summarized with min, median, and max; no p95 is claimed.",
+    "First/subsequent runs use fresh processes; timings exclude interpreter startup.",
+    "OS file caching is not controlled, so the first sample is not a cold-cache guarantee.",
+    "Peak RSS is the child process high-water mark and is not an allocation profile.",
+    "Provider import includes canonical JSONL validation and temporary file output.",
+    "Privacy timing excludes provider loading and includes deterministic local redaction only.",
+    "Trend timings include frozen 10k generation and synthetic back-test evaluation.",
+    "No database, external model, browser, concurrency, or network performance is measured."
+  ],
+  "schema_version": "quality-performance-report/1.0.0",
+  "stages": {
+    "candidate_statistical_frozen_evaluation": {
+      "content_sha256": "e5683ff8b2b4a0565356a409e87484310bc431f953527a0d573783cf3c965dea",
+      "samples": [
+        {
+          "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+          "content_sha256": "e5683ff8b2b4a0565356a409e87484310bc431f953527a0d573783cf3c965dea",
+          "detected_event_count": 4,
+          "duration_seconds": 0.8767974589718506,
+          "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+          "event_count": 4,
+          "peak_rss_bytes": 180633600,
+          "peak_rss_raw": 180633600,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+          "content_sha256": "e5683ff8b2b4a0565356a409e87484310bc431f953527a0d573783cf3c965dea",
+          "detected_event_count": 4,
+          "duration_seconds": 1.07373954099603,
+          "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+          "event_count": 4,
+          "peak_rss_bytes": 180600832,
+          "peak_rss_raw": 180600832,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+          "content_sha256": "e5683ff8b2b4a0565356a409e87484310bc431f953527a0d573783cf3c965dea",
+          "detected_event_count": 4,
+          "duration_seconds": 0.9005527090048417,
+          "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+          "event_count": 4,
+          "peak_rss_bytes": 180584448,
+          "peak_rss_raw": 180584448,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+          "content_sha256": "e5683ff8b2b4a0565356a409e87484310bc431f953527a0d573783cf3c965dea",
+          "detected_event_count": 4,
+          "duration_seconds": 0.9007717499043792,
+          "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+          "event_count": 4,
+          "peak_rss_bytes": 180617216,
+          "peak_rss_raw": 180617216,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+          "content_sha256": "e5683ff8b2b4a0565356a409e87484310bc431f953527a0d573783cf3c965dea",
+          "detected_event_count": 4,
+          "duration_seconds": 0.8710542500484735,
+          "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+          "event_count": 4,
+          "peak_rss_bytes": 180617216,
+          "peak_rss_raw": 180617216,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        }
+      ],
+      "summary": {
+        "first": {
+          "duration_seconds": 0.8767974589718506,
+          "peak_rss_bytes": 180633600
+        },
+        "sample_count": 5,
+        "subsequent": {
+          "duration_seconds": {
+            "max": 1.07373954099603,
+            "median": 0.9006622294546105,
+            "min": 0.8710542500484735
+          },
+          "peak_rss_bytes": {
+            "max": 180617216,
+            "median": 180609024.0,
+            "min": 180584448
+          },
+          "sample_count": 4
+        }
+      }
+    },
+    "canonical_provider_import": {
+      "content_sha256": "b58190e0bad1bd34f9637a170fd754961915c0b18a7af9732d43fa8a2a5460fe",
+      "samples": [
+        {
+          "bytes_written": 12968408,
+          "content_sha256": "b58190e0bad1bd34f9637a170fd754961915c0b18a7af9732d43fa8a2a5460fe",
+          "duration_seconds": 0.3222321670036763,
+          "peak_rss_bytes": 143949824,
+          "peak_rss_raw": 143949824,
+          "peak_rss_source_unit": "bytes",
+          "records_discovered": 10000,
+          "records_imported": 10000,
+          "records_rejected": 0
+        },
+        {
+          "bytes_written": 12968408,
+          "content_sha256": "b58190e0bad1bd34f9637a170fd754961915c0b18a7af9732d43fa8a2a5460fe",
+          "duration_seconds": 0.34731604205444455,
+          "peak_rss_bytes": 143933440,
+          "peak_rss_raw": 143933440,
+          "peak_rss_source_unit": "bytes",
+          "records_discovered": 10000,
+          "records_imported": 10000,
+          "records_rejected": 0
+        },
+        {
+          "bytes_written": 12968408,
+          "content_sha256": "b58190e0bad1bd34f9637a170fd754961915c0b18a7af9732d43fa8a2a5460fe",
+          "duration_seconds": 0.3272540830075741,
+          "peak_rss_bytes": 143933440,
+          "peak_rss_raw": 143933440,
+          "peak_rss_source_unit": "bytes",
+          "records_discovered": 10000,
+          "records_imported": 10000,
+          "records_rejected": 0
+        },
+        {
+          "bytes_written": 12968408,
+          "content_sha256": "b58190e0bad1bd34f9637a170fd754961915c0b18a7af9732d43fa8a2a5460fe",
+          "duration_seconds": 0.33607554191257805,
+          "peak_rss_bytes": 143982592,
+          "peak_rss_raw": 143982592,
+          "peak_rss_source_unit": "bytes",
+          "records_discovered": 10000,
+          "records_imported": 10000,
+          "records_rejected": 0
+        },
+        {
+          "bytes_written": 12968408,
+          "content_sha256": "b58190e0bad1bd34f9637a170fd754961915c0b18a7af9732d43fa8a2a5460fe",
+          "duration_seconds": 0.32835262501612306,
+          "peak_rss_bytes": 143687680,
+          "peak_rss_raw": 143687680,
+          "peak_rss_source_unit": "bytes",
+          "records_discovered": 10000,
+          "records_imported": 10000,
+          "records_rejected": 0
+        }
+      ],
+      "summary": {
+        "first": {
+          "duration_seconds": 0.3222321670036763,
+          "peak_rss_bytes": 143949824
+        },
+        "sample_count": 5,
+        "subsequent": {
+          "duration_seconds": {
+            "max": 0.34731604205444455,
+            "median": 0.33221408346435055,
+            "min": 0.3272540830075741
+          },
+          "peak_rss_bytes": {
+            "max": 143982592,
+            "median": 143933440.0,
+            "min": 143687680
+          },
+          "sample_count": 4
+        }
+      }
+    },
+    "privacy_transformation": {
+      "content_sha256": "9a2e1e226d687e8ca763f5bb472c4ff8712e916aa52e2319375f8e3a2a873d63",
+      "samples": [
+        {
+          "content_sha256": "9a2e1e226d687e8ca763f5bb472c4ff8712e916aa52e2319375f8e3a2a873d63",
+          "duration_seconds": 0.20570154197048396,
+          "payment_records_rejected": 0,
+          "peak_rss_bytes": 141901824,
+          "peak_rss_raw": 141901824,
+          "peak_rss_source_unit": "bytes",
+          "records_checked": 10000,
+          "records_prepared": 10000,
+          "redactions": {}
+        },
+        {
+          "content_sha256": "9a2e1e226d687e8ca763f5bb472c4ff8712e916aa52e2319375f8e3a2a873d63",
+          "duration_seconds": 0.20584579196292907,
+          "payment_records_rejected": 0,
+          "peak_rss_bytes": 141787136,
+          "peak_rss_raw": 141787136,
+          "peak_rss_source_unit": "bytes",
+          "records_checked": 10000,
+          "records_prepared": 10000,
+          "redactions": {}
+        },
+        {
+          "content_sha256": "9a2e1e226d687e8ca763f5bb472c4ff8712e916aa52e2319375f8e3a2a873d63",
+          "duration_seconds": 0.2052765419939533,
+          "payment_records_rejected": 0,
+          "peak_rss_bytes": 141852672,
+          "peak_rss_raw": 141852672,
+          "peak_rss_source_unit": "bytes",
+          "records_checked": 10000,
+          "records_prepared": 10000,
+          "redactions": {}
+        },
+        {
+          "content_sha256": "9a2e1e226d687e8ca763f5bb472c4ff8712e916aa52e2319375f8e3a2a873d63",
+          "duration_seconds": 0.2074404580052942,
+          "payment_records_rejected": 0,
+          "peak_rss_bytes": 141803520,
+          "peak_rss_raw": 141803520,
+          "peak_rss_source_unit": "bytes",
+          "records_checked": 10000,
+          "records_prepared": 10000,
+          "redactions": {}
+        },
+        {
+          "content_sha256": "9a2e1e226d687e8ca763f5bb472c4ff8712e916aa52e2319375f8e3a2a873d63",
+          "duration_seconds": 0.20473991602193564,
+          "payment_records_rejected": 0,
+          "peak_rss_bytes": 141967360,
+          "peak_rss_raw": 141967360,
+          "peak_rss_source_unit": "bytes",
+          "records_checked": 10000,
+          "records_prepared": 10000,
+          "redactions": {}
+        }
+      ],
+      "summary": {
+        "first": {
+          "duration_seconds": 0.20570154197048396,
+          "peak_rss_bytes": 141901824
+        },
+        "sample_count": 5,
+        "subsequent": {
+          "duration_seconds": {
+            "max": 0.2074404580052942,
+            "median": 0.20556116697844118,
+            "min": 0.20473991602193564
+          },
+          "peak_rss_bytes": {
+            "max": 141967360,
+            "median": 141828096.0,
+            "min": 141787136
+          },
+          "sample_count": 4
+        }
+      }
+    },
+    "simple_rate_frozen_evaluation": {
+      "content_sha256": "16baf49f8165de9ea7bb7f2e735687f37dcd32d27e93726c9a1ac514fa0dfc9a",
+      "samples": [
+        {
+          "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+          "content_sha256": "16baf49f8165de9ea7bb7f2e735687f37dcd32d27e93726c9a1ac514fa0dfc9a",
+          "detected_event_count": 4,
+          "duration_seconds": 0.852078958065249,
+          "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+          "event_count": 4,
+          "peak_rss_bytes": 180469760,
+          "peak_rss_raw": 180469760,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+          "content_sha256": "16baf49f8165de9ea7bb7f2e735687f37dcd32d27e93726c9a1ac514fa0dfc9a",
+          "detected_event_count": 4,
+          "duration_seconds": 0.8511733340565115,
+          "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+          "event_count": 4,
+          "peak_rss_bytes": 180338688,
+          "peak_rss_raw": 180338688,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+          "content_sha256": "16baf49f8165de9ea7bb7f2e735687f37dcd32d27e93726c9a1ac514fa0dfc9a",
+          "detected_event_count": 4,
+          "duration_seconds": 0.8501394999912009,
+          "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+          "event_count": 4,
+          "peak_rss_bytes": 180486144,
+          "peak_rss_raw": 180486144,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+          "content_sha256": "16baf49f8165de9ea7bb7f2e735687f37dcd32d27e93726c9a1ac514fa0dfc9a",
+          "detected_event_count": 4,
+          "duration_seconds": 0.8464784579118714,
+          "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+          "event_count": 4,
+          "peak_rss_bytes": 180568064,
+          "peak_rss_raw": 180568064,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+          "content_sha256": "16baf49f8165de9ea7bb7f2e735687f37dcd32d27e93726c9a1ac514fa0dfc9a",
+          "detected_event_count": 4,
+          "duration_seconds": 0.8484778749989346,
+          "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+          "event_count": 4,
+          "peak_rss_bytes": 180633600,
+          "peak_rss_raw": 180633600,
+          "peak_rss_source_unit": "bytes",
+          "record_count": 10000,
+          "seed": 20260919
+        }
+      ],
+      "summary": {
+        "first": {
+          "duration_seconds": 0.852078958065249,
+          "peak_rss_bytes": 180469760
+        },
+        "sample_count": 5,
+        "subsequent": {
+          "duration_seconds": {
+            "max": 0.8511733340565115,
+            "median": 0.8493086874950677,
+            "min": 0.8464784579118714
+          },
+          "peak_rss_bytes": {
+            "max": 180633600,
+            "median": 180527104.0,
+            "min": 180338688
+          },
+          "sample_count": 4
+        }
+      }
+    },
+    "synthetic_generation": {
+      "content_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+      "samples": [
+        {
+          "bytes_written": 14748394,
+          "content_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+          "duration_seconds": 0.46709554200060666,
+          "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+          "peak_rss_bytes": 155435008,
+          "peak_rss_raw": 155435008,
+          "peak_rss_source_unit": "bytes",
+          "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "bytes_written": 14748394,
+          "content_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+          "duration_seconds": 0.46084629197139293,
+          "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+          "peak_rss_bytes": 155156480,
+          "peak_rss_raw": 155156480,
+          "peak_rss_source_unit": "bytes",
+          "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "bytes_written": 14748394,
+          "content_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+          "duration_seconds": 0.4635845000157133,
+          "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+          "peak_rss_bytes": 155336704,
+          "peak_rss_raw": 155336704,
+          "peak_rss_source_unit": "bytes",
+          "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "bytes_written": 14748394,
+          "content_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+          "duration_seconds": 0.46272595797199756,
+          "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+          "peak_rss_bytes": 155287552,
+          "peak_rss_raw": 155287552,
+          "peak_rss_source_unit": "bytes",
+          "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+          "record_count": 10000,
+          "seed": 20260919
+        },
+        {
+          "bytes_written": 14748394,
+          "content_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+          "duration_seconds": 0.46558624994941056,
+          "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+          "peak_rss_bytes": 155287552,
+          "peak_rss_raw": 155287552,
+          "peak_rss_source_unit": "bytes",
+          "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+          "record_count": 10000,
+          "seed": 20260919
+        }
+      ],
+      "summary": {
+        "first": {
+          "duration_seconds": 0.46709554200060666,
+          "peak_rss_bytes": 155435008
+        },
+        "sample_count": 5,
+        "subsequent": {
+          "duration_seconds": {
+            "max": 0.46558624994941056,
+            "median": 0.4631552289938554,
+            "min": 0.46084629197139293
+          },
+          "peak_rss_bytes": {
+            "max": 155336704,
+            "median": 155287552.0,
+            "min": 155156480
+          },
+          "sample_count": 4
+        }
+      }
+    }
+  },
+  "workload": {
+    "database_operations": 0,
+    "external_model_calls": 0,
+    "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+    "network_calls": 0,
+    "record_count": 10000,
+    "seed": 20260919,
+    "sequential_samples_per_stage": 5
+  }
+}

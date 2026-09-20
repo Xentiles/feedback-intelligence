@@ -1,0 +1,76 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "feedback-intelligence-worker"
+version = "0.1.0"
+description = "Decision-worker foundation for Feedback Intelligence"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.13"
+authors = [{ name = "Feedback Intelligence contributors" }]
+dependencies = [
+  "kagglehub==1.0.2",
+  "opentelemetry-api==1.44.0",
+  "opentelemetry-exporter-otlp-proto-grpc==1.44.0",
+  "opentelemetry-sdk==1.44.0",
+  "psycopg[binary]==3.3.6",
+  "PyYAML==6.0.3",
+  "system-one-adapter[openai]==0.2.0",
+  "typesafe-sdk==0.7.0",
+]
+
+[project.optional-dependencies]
+semif = [
+  "semif-phase1[mlx] @ git+https://github.com/TheoLeeCJ/SemIf.git@ca3ba65f142967030ecb453346e94d6f476a69df",
+]
+
+[project.scripts]
+decision-worker = "feedback_intelligence_worker.cli:main"
+feedback-data = "feedback_intelligence_worker.data.cli:main"
+feedback-decisions = "feedback_intelligence_worker.decision.cli:main"
+feedback-evaluation = "feedback_intelligence_worker.evaluation.cli:main"
+feedback-privacy = "feedback_intelligence_worker.privacy.cli:main"
+feedback-storage = "feedback_intelligence_worker.storage.cli:main"
+feedback-synthetic = "feedback_intelligence_worker.synthetic.cli:main"
+feedback-trends = "feedback_intelligence_worker.trends.cli:main"
+
+[dependency-groups]
+dev = [
+  "mypy==1.18.2",
+  "pytest==8.4.2",
+  "ruff==0.13.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/feedback_intelligence_worker"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["kagglehub", "semif_phase1", "semif_phase1.*", "yaml"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

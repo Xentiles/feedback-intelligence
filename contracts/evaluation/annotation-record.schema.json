@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/annotation-record-1.0.0.json",
+  "title": "Human annotation record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "feedback_id",
+    "split",
+    "requires_second_pass",
+    "annotations",
+    "adjudication"
+  ],
+  "properties": {
+    "schema_version": { "const": "feedback-annotation-record/1.0.0" },
+    "feedback_id": { "type": "string", "format": "uuid" },
+    "split": { "enum": ["development", "calibration", "locked_test"] },
+    "requires_second_pass": { "type": "boolean" },
+    "annotations": {
+      "type": "array",
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/annotation" }
+    },
+    "adjudication": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/adjudication" }
+      ]
+    }
+  },
+  "$defs": {
+    "answers": {
+      "type": "object",
+      "minProperties": 14,
+      "maxProperties": 14,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "value"],
+        "properties": {
+          "type": { "enum": ["choice", "score", "noul"] },
+          "value": { "type": ["string", "integer", "boolean"] }
+        }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["annotator_id", "pass", "annotated_at", "answers"],
+      "properties": {
+        "annotator_id": { "type": "string", "minLength": 1 },
+        "pass": { "enum": [1, 2] },
+        "annotated_at": { "type": "string", "format": "date-time" },
+        "answers": { "$ref": "#/$defs/answers" }
+      }
+    },
+    "adjudication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adjudicator_id", "adjudicated_at", "reason", "answers"],
+      "properties": {
+        "adjudicator_id": { "type": "string", "minLength": 1 },
+        "adjudicated_at": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string", "minLength": 1 },
+        "answers": { "$ref": "#/$defs/answers" }
+      }
+    }
+  }
+}

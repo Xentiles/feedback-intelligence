@@ -1,0 +1,9 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+r-normal,o-late,5,Great purchase,Great product but delivery took forever.,2026-01-11 10:00:00,2026-01-12 10:00:00
+r-title-only,o-early,1,Delivery was painful,,2026-01-04 09:00:00,2026-01-05 09:00:00
+r-multi,o-multi,3,,The laptop is excellent but the chair arrived scratched.,2026-01-12 08:00:00,2026-01-13 08:00:00
+r-empty,o-late,2,,,2026-01-11 11:00:00,2026-01-12 11:00:00
+r-invalid-time,o-late,4,,Useful product,not-a-date,2026-01-12 12:00:00
+r-orphan,o-missing,4,,Useful product,2026-01-11 12:00:00,2026-01-12 12:00:00
+r-invalid-rating,o-late,9,,Useful product,2026-01-11 13:00:00,2026-01-12 13:00:00
+r-normal,o-late,5,,Duplicate source record,2026-01-11 14:00:00,2026-01-12 14:00:00

@@ -1,0 +1,1069 @@
+{
+  "alert_episodes": [
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-04-14",
+      "first_evaluation": {
+        "anchor": "2025-04-11",
+        "baseline": {
+          "accepted_count": 47,
+          "eligible_count": 88,
+          "end_exclusive": "2025-04-04",
+          "rate": 0.5340909090909091,
+          "start": "2025-03-07"
+        },
+        "current": {
+          "accepted_count": 16,
+          "eligible_count": 20,
+          "end_exclusive": "2025-04-11",
+          "rate": 0.8,
+          "start": "2025-04-04"
+        },
+        "delta_pp": 26.590909090909097,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "94ec089063ebba81f663c20397fe1462ba294c0e279978bff0546cea0f69148c",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "0eba5da1378a8b6a8849c892a08a53f24c945f233b32dc8f3126c30bc2d44221",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.984614193,
+        "ratio": 1.497872340425532,
+        "reasons": [],
+        "relative_change_percent": 49.78723404255321,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-04-11"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-05-10",
+      "first_evaluation": {
+        "anchor": "2025-05-10",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 94,
+          "end_exclusive": "2025-05-03",
+          "rate": 0.46808510638297873,
+          "start": "2025-04-05"
+        },
+        "current": {
+          "accepted_count": 19,
+          "eligible_count": 27,
+          "end_exclusive": "2025-05-10",
+          "rate": 0.7037037037037037,
+          "start": "2025-05-03"
+        },
+        "delta_pp": 23.5618597320725,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "56d92052e0b1d6013375064e4123ffcbcbfb9d9ad9865c0371f7b8616cd833f3",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "21437aebaf057e53c6f874a4ea6e5a6272d7a2b5e487c39ddcd8003d097313d0",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9839202304,
+        "ratio": 1.5033670033670035,
+        "reasons": [],
+        "relative_change_percent": 50.33670033670034,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-05-10"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-05-12",
+      "first_evaluation": {
+        "anchor": "2025-05-12",
+        "baseline": {
+          "accepted_count": 43,
+          "eligible_count": 91,
+          "end_exclusive": "2025-05-05",
+          "rate": 0.4725274725274725,
+          "start": "2025-04-07"
+        },
+        "current": {
+          "accepted_count": 20,
+          "eligible_count": 28,
+          "end_exclusive": "2025-05-12",
+          "rate": 0.7142857142857143,
+          "start": "2025-05-05"
+        },
+        "delta_pp": 24.17582417582418,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "c4186d22f6320f6bafa6198a31cf97058af396098b86d795e297a77f0f75792f",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "2dbce23518ae5229bed03d2a4b4322154edbcf825709ff3a6ec8a6af74474b6f",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9869943236,
+        "ratio": 1.5116279069767442,
+        "reasons": [],
+        "relative_change_percent": 51.162790697674424,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-05-12"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-05-16",
+      "first_evaluation": {
+        "anchor": "2025-05-16",
+        "baseline": {
+          "accepted_count": 33,
+          "eligible_count": 50,
+          "end_exclusive": "2025-05-09",
+          "rate": 0.66,
+          "start": "2025-04-11"
+        },
+        "current": {
+          "accepted_count": 24,
+          "eligible_count": 27,
+          "end_exclusive": "2025-05-16",
+          "rate": 0.8888888888888888,
+          "start": "2025-05-09"
+        },
+        "delta_pp": 22.888888888888882,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "3b14966b98d2d2eff531321d632599c878be5833f28272cbbe6f643f6a7ab596",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "e7a1d75e79024546485e2e9ed5a246072a65f0ae1444b632583538d089263579",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9849643926,
+        "ratio": 1.3468013468013467,
+        "reasons": [],
+        "relative_change_percent": 34.68013468013467,
+        "series_id": "product/GPU-A17/topic/product_defect_noise",
+        "status": "candidate"
+      },
+      "series_id": "product/GPU-A17/topic/product_defect_noise",
+      "start": "2025-05-16"
+    },
+    {
+      "alert_days": 10,
+      "direction": "increase",
+      "end": "2025-08-14",
+      "first_evaluation": {
+        "anchor": "2025-08-05",
+        "baseline": {
+          "accepted_count": 53,
+          "eligible_count": 93,
+          "end_exclusive": "2025-07-29",
+          "rate": 0.5698924731182796,
+          "start": "2025-07-01"
+        },
+        "current": {
+          "accepted_count": 40,
+          "eligible_count": 49,
+          "end_exclusive": "2025-08-05",
+          "rate": 0.8163265306122449,
+          "start": "2025-07-29"
+        },
+        "delta_pp": 24.64340574939653,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "6626e86b7f3094aa4122e19349e795e06576e8d249c06684f0719770dc48ec48",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9311080606dc41a878ef927ade783edc9dd4c7f022ec53c9c9cf9c98fe956531",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9984740213,
+        "ratio": 1.432422025413939,
+        "reasons": [],
+        "relative_change_percent": 43.2422025413939,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-08-05"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-09-07",
+      "first_evaluation": {
+        "anchor": "2025-09-07",
+        "baseline": {
+          "accepted_count": 32,
+          "eligible_count": 72,
+          "end_exclusive": "2025-08-31",
+          "rate": 0.4444444444444444,
+          "start": "2025-08-03"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 21,
+          "end_exclusive": "2025-09-07",
+          "rate": 0.7142857142857143,
+          "start": "2025-08-31"
+        },
+        "delta_pp": 26.984126984126988,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "9ff6178bb4caa0f98bdfc17c6f1e13976168582c2ce401164d4a00fa8aec03a2",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9b7b586e1875b7a01c6a0189564889603f5f526d1031ed866e597945bb505eda",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9843224241,
+        "ratio": 1.6071428571428572,
+        "reasons": [],
+        "relative_change_percent": 60.71428571428572,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-07"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-09-10",
+      "first_evaluation": {
+        "anchor": "2025-09-10",
+        "baseline": {
+          "accepted_count": 35,
+          "eligible_count": 72,
+          "end_exclusive": "2025-09-03",
+          "rate": 0.4861111111111111,
+          "start": "2025-08-06"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 20,
+          "end_exclusive": "2025-09-10",
+          "rate": 0.75,
+          "start": "2025-09-03"
+        },
+        "delta_pp": 26.38888888888889,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "724c73e84d5a8aca57480b7ca511b0bf1e170a9d7e6bde36b018904400995817",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "5fc979dbe0251e45e13e87ae8f1e13712063fefbab39fdcf814bbf877348f736",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.980843744,
+        "ratio": 1.542857142857143,
+        "reasons": [],
+        "relative_change_percent": 54.285714285714285,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-10"
+    },
+    {
+      "alert_days": 6,
+      "direction": "increase",
+      "end": "2025-10-15",
+      "first_evaluation": {
+        "anchor": "2025-10-10",
+        "baseline": {
+          "accepted_count": 40,
+          "eligible_count": 81,
+          "end_exclusive": "2025-10-03",
+          "rate": 0.49382716049382713,
+          "start": "2025-09-05"
+        },
+        "current": {
+          "accepted_count": 28,
+          "eligible_count": 38,
+          "end_exclusive": "2025-10-10",
+          "rate": 0.7368421052631579,
+          "start": "2025-10-03"
+        },
+        "delta_pp": 24.301494476933073,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "da3e565ed874097977e71a8343e1803dfee59f937ee035aeaa1960c1d04ee5d0",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "6a2b684f2a9e5a01a55c3310f458a113c02f182984a15256d5ebcab7535e6e31",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9936614709,
+        "ratio": 1.4921052631578948,
+        "reasons": [],
+        "relative_change_percent": 49.21052631578947,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-10-10"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-10-17",
+      "first_evaluation": {
+        "anchor": "2025-10-17",
+        "baseline": {
+          "accepted_count": 52,
+          "eligible_count": 97,
+          "end_exclusive": "2025-10-10",
+          "rate": 0.5360824742268041,
+          "start": "2025-09-12"
+        },
+        "current": {
+          "accepted_count": 24,
+          "eligible_count": 32,
+          "end_exclusive": "2025-10-17",
+          "rate": 0.75,
+          "start": "2025-10-10"
+        },
+        "delta_pp": 21.39175257731959,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "c49d20ef4e420ac823421a1b24075ca13db65d442e0347c2d2aadbc617e2d555",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "8a80dc93096b75a7c4910c2e5ad4bf486dc479fc09d98c9b9c1ed7fd047480b2",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9829827698,
+        "ratio": 1.3990384615384617,
+        "reasons": [],
+        "relative_change_percent": 39.90384615384616,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-10-17"
+    },
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-12-04",
+      "first_evaluation": {
+        "anchor": "2025-12-01",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 70,
+          "end_exclusive": "2025-11-24",
+          "rate": 0.6285714285714286,
+          "start": "2025-10-27"
+        },
+        "current": {
+          "accepted_count": 30,
+          "eligible_count": 36,
+          "end_exclusive": "2025-12-01",
+          "rate": 0.8333333333333334,
+          "start": "2025-11-24"
+        },
+        "delta_pp": 20.47619047619048,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "b119e5c053ced572db29f04cbb704e44a2a921f71019b7879e1a63b69c71ecd2",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "906ceee002fc4094736d3e160a28a8fa95e743104aa4439756f5a2dfd61ba71e",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9847470524,
+        "ratio": 1.325757575757576,
+        "reasons": [],
+        "relative_change_percent": 32.575757575757585,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-12-01"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-12-03",
+      "first_evaluation": {
+        "anchor": "2025-12-03",
+        "baseline": {
+          "accepted_count": 42,
+          "eligible_count": 83,
+          "end_exclusive": "2025-11-26",
+          "rate": 0.5060240963855421,
+          "start": "2025-10-29"
+        },
+        "current": {
+          "accepted_count": 17,
+          "eligible_count": 22,
+          "end_exclusive": "2025-12-03",
+          "rate": 0.7727272727272727,
+          "start": "2025-11-26"
+        },
+        "delta_pp": 26.670317634173056,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "0e6e3c68121f86ab6e69212961aa0f396f153ea21e3f3f51cc869985064db8b9",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "a46b226825542e6ac7ccb0ed3c5e7c7595343b239a86052f7760401fdef431da",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9870001436,
+        "ratio": 1.5270562770562772,
+        "reasons": [],
+        "relative_change_percent": 52.70562770562771,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-12-03"
+    }
+  ],
+  "coverage": {
+    "evaluable_series_days": 1664,
+    "evaluated_series_days": 1664,
+    "excluded_series_days": 0,
+    "reason_counts": {
+      "below_absolute_delta": 1408,
+      "below_probability_threshold": 1607,
+      "below_relative_change": 1014,
+      "insufficient_baseline_eligible": 361,
+      "insufficient_current_eligible": 909,
+      "insufficient_current_positive": 368,
+      "no_change": 50,
+      "unexpected_direction": 806
+    },
+    "series_count": 4,
+    "status_counts": {
+      "candidate": 31,
+      "not_candidate": 1633
+    }
+  },
+  "detector": {
+    "baseline_days": 28,
+    "beta_prior_alpha": 1,
+    "beta_prior_beta": 1,
+    "current_days": 7,
+    "min_absolute_delta_pp": 20.0,
+    "min_baseline_eligible": 50,
+    "min_current_eligible": 20,
+    "min_current_positive": 3,
+    "min_probability_of_direction": 0.98,
+    "min_relative_change_percent": 30.0,
+    "version": "beta-binomial/1.0.0"
+  },
+  "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+  "evaluation_version": "candidate-statistical-synthetic/1.0.0",
+  "events": [
+    {
+      "detected": true,
+      "detection_delay_days": 15,
+      "direction": "increase",
+      "end_exclusive": "2025-06-20",
+      "event_id": "gpu_a17_noise",
+      "matched_episode": {
+        "alert_days": 1,
+        "direction": "increase",
+        "end": "2025-05-16",
+        "first_evaluation": {
+          "anchor": "2025-05-16",
+          "baseline": {
+            "accepted_count": 33,
+            "eligible_count": 50,
+            "end_exclusive": "2025-05-09",
+            "rate": 0.66,
+            "start": "2025-04-11"
+          },
+          "current": {
+            "accepted_count": 24,
+            "eligible_count": 27,
+            "end_exclusive": "2025-05-16",
+            "rate": 0.8888888888888888,
+            "start": "2025-05-09"
+          },
+          "delta_pp": 22.888888888888882,
+          "detector_version": "beta-binomial/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "3b14966b98d2d2eff531321d632599c878be5833f28272cbbe6f643f6a7ab596",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "e7a1d75e79024546485e2e9ed5a246072a65f0ae1444b632583538d089263579",
+          "method": "beta_binomial_probability_of_change",
+          "probability_of_direction": 0.9849643926,
+          "ratio": 1.3468013468013467,
+          "reasons": [],
+          "relative_change_percent": 34.68013468013467,
+          "series_id": "product/GPU-A17/topic/product_defect_noise",
+          "status": "candidate"
+        },
+        "series_id": "product/GPU-A17/topic/product_defect_noise",
+        "start": "2025-05-16"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-05-16",
+        "baseline": {
+          "accepted_count": 33,
+          "eligible_count": 50,
+          "end_exclusive": "2025-05-09",
+          "rate": 0.66,
+          "start": "2025-04-11"
+        },
+        "current": {
+          "accepted_count": 24,
+          "eligible_count": 27,
+          "end_exclusive": "2025-05-16",
+          "rate": 0.8888888888888888,
+          "start": "2025-05-09"
+        },
+        "delta_pp": 22.888888888888882,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "3b14966b98d2d2eff531321d632599c878be5833f28272cbbe6f643f6a7ab596",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "e7a1d75e79024546485e2e9ed5a246072a65f0ae1444b632583538d089263579",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9849643926,
+        "ratio": 1.3468013468013467,
+        "reasons": [],
+        "relative_change_percent": 34.68013468013467,
+        "series_id": "product/GPU-A17/topic/product_defect_noise",
+        "status": "candidate"
+      },
+      "series_id": "product/GPU-A17/topic/product_defect_noise",
+      "start": "2025-05-01"
+    },
+    {
+      "detected": true,
+      "detection_delay_days": 6,
+      "direction": "increase",
+      "end_exclusive": "2025-08-20",
+      "event_id": "carrier_delay_winter",
+      "matched_episode": {
+        "alert_days": 10,
+        "direction": "increase",
+        "end": "2025-08-14",
+        "first_evaluation": {
+          "anchor": "2025-08-05",
+          "baseline": {
+            "accepted_count": 53,
+            "eligible_count": 93,
+            "end_exclusive": "2025-07-29",
+            "rate": 0.5698924731182796,
+            "start": "2025-07-01"
+          },
+          "current": {
+            "accepted_count": 40,
+            "eligible_count": 49,
+            "end_exclusive": "2025-08-05",
+            "rate": 0.8163265306122449,
+            "start": "2025-07-29"
+          },
+          "delta_pp": 24.64340574939653,
+          "detector_version": "beta-binomial/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "6626e86b7f3094aa4122e19349e795e06576e8d249c06684f0719770dc48ec48",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "9311080606dc41a878ef927ade783edc9dd4c7f022ec53c9c9cf9c98fe956531",
+          "method": "beta_binomial_probability_of_change",
+          "probability_of_direction": 0.9984740213,
+          "ratio": 1.432422025413939,
+          "reasons": [],
+          "relative_change_percent": 43.2422025413939,
+          "series_id": "all/topic/delivery_late",
+          "status": "candidate"
+        },
+        "series_id": "all/topic/delivery_late",
+        "start": "2025-08-05"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-08-05",
+        "baseline": {
+          "accepted_count": 53,
+          "eligible_count": 93,
+          "end_exclusive": "2025-07-29",
+          "rate": 0.5698924731182796,
+          "start": "2025-07-01"
+        },
+        "current": {
+          "accepted_count": 40,
+          "eligible_count": 49,
+          "end_exclusive": "2025-08-05",
+          "rate": 0.8163265306122449,
+          "start": "2025-07-29"
+        },
+        "delta_pp": 24.64340574939653,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "6626e86b7f3094aa4122e19349e795e06576e8d249c06684f0719770dc48ec48",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9311080606dc41a878ef927ade783edc9dd4c7f022ec53c9c9cf9c98fe956531",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9984740213,
+        "ratio": 1.432422025413939,
+        "reasons": [],
+        "relative_change_percent": 43.2422025413939,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-07-30"
+    },
+    {
+      "detected": true,
+      "detection_delay_days": 7,
+      "direction": "increase",
+      "end_exclusive": "2026-03-27",
+      "event_id": "support_process_change",
+      "matched_episode": {
+        "alert_days": 6,
+        "direction": "increase",
+        "end": "2025-10-15",
+        "first_evaluation": {
+          "anchor": "2025-10-10",
+          "baseline": {
+            "accepted_count": 40,
+            "eligible_count": 81,
+            "end_exclusive": "2025-10-03",
+            "rate": 0.49382716049382713,
+            "start": "2025-09-05"
+          },
+          "current": {
+            "accepted_count": 28,
+            "eligible_count": 38,
+            "end_exclusive": "2025-10-10",
+            "rate": 0.7368421052631579,
+            "start": "2025-10-03"
+          },
+          "delta_pp": 24.301494476933073,
+          "detector_version": "beta-binomial/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "da3e565ed874097977e71a8343e1803dfee59f937ee035aeaa1960c1d04ee5d0",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "6a2b684f2a9e5a01a55c3310f458a113c02f182984a15256d5ebcab7535e6e31",
+          "method": "beta_binomial_probability_of_change",
+          "probability_of_direction": 0.9936614709,
+          "ratio": 1.4921052631578948,
+          "reasons": [],
+          "relative_change_percent": 49.21052631578947,
+          "series_id": "all/topic/support_praise",
+          "status": "candidate"
+        },
+        "series_id": "all/topic/support_praise",
+        "start": "2025-10-10"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-10-10",
+        "baseline": {
+          "accepted_count": 40,
+          "eligible_count": 81,
+          "end_exclusive": "2025-10-03",
+          "rate": 0.49382716049382713,
+          "start": "2025-09-05"
+        },
+        "current": {
+          "accepted_count": 28,
+          "eligible_count": 38,
+          "end_exclusive": "2025-10-10",
+          "rate": 0.7368421052631579,
+          "start": "2025-10-03"
+        },
+        "delta_pp": 24.301494476933073,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "da3e565ed874097977e71a8343e1803dfee59f937ee035aeaa1960c1d04ee5d0",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "6a2b684f2a9e5a01a55c3310f458a113c02f182984a15256d5ebcab7535e6e31",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9936614709,
+        "ratio": 1.4921052631578948,
+        "reasons": [],
+        "relative_change_percent": 49.21052631578947,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-10-03"
+    },
+    {
+      "detected": true,
+      "detection_delay_days": 4,
+      "direction": "increase",
+      "end_exclusive": "2025-12-11",
+      "event_id": "returns_backlog",
+      "matched_episode": {
+        "alert_days": 4,
+        "direction": "increase",
+        "end": "2025-12-04",
+        "first_evaluation": {
+          "anchor": "2025-12-01",
+          "baseline": {
+            "accepted_count": 44,
+            "eligible_count": 70,
+            "end_exclusive": "2025-11-24",
+            "rate": 0.6285714285714286,
+            "start": "2025-10-27"
+          },
+          "current": {
+            "accepted_count": 30,
+            "eligible_count": 36,
+            "end_exclusive": "2025-12-01",
+            "rate": 0.8333333333333334,
+            "start": "2025-11-24"
+          },
+          "delta_pp": 20.47619047619048,
+          "detector_version": "beta-binomial/1.0.0",
+          "direction": "increase",
+          "evaluation_id": "b119e5c053ced572db29f04cbb704e44a2a921f71019b7879e1a63b69c71ecd2",
+          "expected_direction": "increase",
+          "input_snapshot_sha256": "906ceee002fc4094736d3e160a28a8fa95e743104aa4439756f5a2dfd61ba71e",
+          "method": "beta_binomial_probability_of_change",
+          "probability_of_direction": 0.9847470524,
+          "ratio": 1.325757575757576,
+          "reasons": [],
+          "relative_change_percent": 32.575757575757585,
+          "series_id": "all/topic/return_unresolved",
+          "status": "candidate"
+        },
+        "series_id": "all/topic/return_unresolved",
+        "start": "2025-12-01"
+      },
+      "matched_evaluation": {
+        "anchor": "2025-12-01",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 70,
+          "end_exclusive": "2025-11-24",
+          "rate": 0.6285714285714286,
+          "start": "2025-10-27"
+        },
+        "current": {
+          "accepted_count": 30,
+          "eligible_count": 36,
+          "end_exclusive": "2025-12-01",
+          "rate": 0.8333333333333334,
+          "start": "2025-11-24"
+        },
+        "delta_pp": 20.47619047619048,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "b119e5c053ced572db29f04cbb704e44a2a921f71019b7879e1a63b69c71ecd2",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "906ceee002fc4094736d3e160a28a8fa95e743104aa4439756f5a2dfd61ba71e",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9847470524,
+        "ratio": 1.325757575757576,
+        "reasons": [],
+        "relative_change_percent": 32.575757575757585,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-11-27"
+    }
+  ],
+  "false_alert_episodes": [
+    {
+      "alert_days": 4,
+      "direction": "increase",
+      "end": "2025-04-14",
+      "first_evaluation": {
+        "anchor": "2025-04-11",
+        "baseline": {
+          "accepted_count": 47,
+          "eligible_count": 88,
+          "end_exclusive": "2025-04-04",
+          "rate": 0.5340909090909091,
+          "start": "2025-03-07"
+        },
+        "current": {
+          "accepted_count": 16,
+          "eligible_count": 20,
+          "end_exclusive": "2025-04-11",
+          "rate": 0.8,
+          "start": "2025-04-04"
+        },
+        "delta_pp": 26.590909090909097,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "94ec089063ebba81f663c20397fe1462ba294c0e279978bff0546cea0f69148c",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "0eba5da1378a8b6a8849c892a08a53f24c945f233b32dc8f3126c30bc2d44221",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.984614193,
+        "ratio": 1.497872340425532,
+        "reasons": [],
+        "relative_change_percent": 49.78723404255321,
+        "series_id": "all/topic/return_unresolved",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/return_unresolved",
+      "start": "2025-04-11"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-05-10",
+      "first_evaluation": {
+        "anchor": "2025-05-10",
+        "baseline": {
+          "accepted_count": 44,
+          "eligible_count": 94,
+          "end_exclusive": "2025-05-03",
+          "rate": 0.46808510638297873,
+          "start": "2025-04-05"
+        },
+        "current": {
+          "accepted_count": 19,
+          "eligible_count": 27,
+          "end_exclusive": "2025-05-10",
+          "rate": 0.7037037037037037,
+          "start": "2025-05-03"
+        },
+        "delta_pp": 23.5618597320725,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "56d92052e0b1d6013375064e4123ffcbcbfb9d9ad9865c0371f7b8616cd833f3",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "21437aebaf057e53c6f874a4ea6e5a6272d7a2b5e487c39ddcd8003d097313d0",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9839202304,
+        "ratio": 1.5033670033670035,
+        "reasons": [],
+        "relative_change_percent": 50.33670033670034,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-05-10"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-05-12",
+      "first_evaluation": {
+        "anchor": "2025-05-12",
+        "baseline": {
+          "accepted_count": 43,
+          "eligible_count": 91,
+          "end_exclusive": "2025-05-05",
+          "rate": 0.4725274725274725,
+          "start": "2025-04-07"
+        },
+        "current": {
+          "accepted_count": 20,
+          "eligible_count": 28,
+          "end_exclusive": "2025-05-12",
+          "rate": 0.7142857142857143,
+          "start": "2025-05-05"
+        },
+        "delta_pp": 24.17582417582418,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "c4186d22f6320f6bafa6198a31cf97058af396098b86d795e297a77f0f75792f",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "2dbce23518ae5229bed03d2a4b4322154edbcf825709ff3a6ec8a6af74474b6f",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9869943236,
+        "ratio": 1.5116279069767442,
+        "reasons": [],
+        "relative_change_percent": 51.162790697674424,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-05-12"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-09-07",
+      "first_evaluation": {
+        "anchor": "2025-09-07",
+        "baseline": {
+          "accepted_count": 32,
+          "eligible_count": 72,
+          "end_exclusive": "2025-08-31",
+          "rate": 0.4444444444444444,
+          "start": "2025-08-03"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 21,
+          "end_exclusive": "2025-09-07",
+          "rate": 0.7142857142857143,
+          "start": "2025-08-31"
+        },
+        "delta_pp": 26.984126984126988,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "9ff6178bb4caa0f98bdfc17c6f1e13976168582c2ce401164d4a00fa8aec03a2",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "9b7b586e1875b7a01c6a0189564889603f5f526d1031ed866e597945bb505eda",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9843224241,
+        "ratio": 1.6071428571428572,
+        "reasons": [],
+        "relative_change_percent": 60.71428571428572,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-07"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-09-10",
+      "first_evaluation": {
+        "anchor": "2025-09-10",
+        "baseline": {
+          "accepted_count": 35,
+          "eligible_count": 72,
+          "end_exclusive": "2025-09-03",
+          "rate": 0.4861111111111111,
+          "start": "2025-08-06"
+        },
+        "current": {
+          "accepted_count": 15,
+          "eligible_count": 20,
+          "end_exclusive": "2025-09-10",
+          "rate": 0.75,
+          "start": "2025-09-03"
+        },
+        "delta_pp": 26.38888888888889,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "724c73e84d5a8aca57480b7ca511b0bf1e170a9d7e6bde36b018904400995817",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "5fc979dbe0251e45e13e87ae8f1e13712063fefbab39fdcf814bbf877348f736",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.980843744,
+        "ratio": 1.542857142857143,
+        "reasons": [],
+        "relative_change_percent": 54.285714285714285,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-09-10"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-10-17",
+      "first_evaluation": {
+        "anchor": "2025-10-17",
+        "baseline": {
+          "accepted_count": 52,
+          "eligible_count": 97,
+          "end_exclusive": "2025-10-10",
+          "rate": 0.5360824742268041,
+          "start": "2025-09-12"
+        },
+        "current": {
+          "accepted_count": 24,
+          "eligible_count": 32,
+          "end_exclusive": "2025-10-17",
+          "rate": 0.75,
+          "start": "2025-10-10"
+        },
+        "delta_pp": 21.39175257731959,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "c49d20ef4e420ac823421a1b24075ca13db65d442e0347c2d2aadbc617e2d555",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "8a80dc93096b75a7c4910c2e5ad4bf486dc479fc09d98c9b9c1ed7fd047480b2",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9829827698,
+        "ratio": 1.3990384615384617,
+        "reasons": [],
+        "relative_change_percent": 39.90384615384616,
+        "series_id": "all/topic/support_praise",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/support_praise",
+      "start": "2025-10-17"
+    },
+    {
+      "alert_days": 1,
+      "direction": "increase",
+      "end": "2025-12-03",
+      "first_evaluation": {
+        "anchor": "2025-12-03",
+        "baseline": {
+          "accepted_count": 42,
+          "eligible_count": 83,
+          "end_exclusive": "2025-11-26",
+          "rate": 0.5060240963855421,
+          "start": "2025-10-29"
+        },
+        "current": {
+          "accepted_count": 17,
+          "eligible_count": 22,
+          "end_exclusive": "2025-12-03",
+          "rate": 0.7727272727272727,
+          "start": "2025-11-26"
+        },
+        "delta_pp": 26.670317634173056,
+        "detector_version": "beta-binomial/1.0.0",
+        "direction": "increase",
+        "evaluation_id": "0e6e3c68121f86ab6e69212961aa0f396f153ea21e3f3f51cc869985064db8b9",
+        "expected_direction": "increase",
+        "input_snapshot_sha256": "a46b226825542e6ac7ccb0ed3c5e7c7595343b239a86052f7760401fdef431da",
+        "method": "beta_binomial_probability_of_change",
+        "probability_of_direction": 0.9870001436,
+        "ratio": 1.5270562770562772,
+        "reasons": [],
+        "relative_change_percent": 52.70562770562771,
+        "series_id": "all/topic/delivery_late",
+        "status": "candidate"
+      },
+      "series_id": "all/topic/delivery_late",
+      "start": "2025-12-03"
+    }
+  ],
+  "input": {
+    "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+    "evaluation_version": "candidate-statistical-synthetic/1.0.0",
+    "feedback_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+    "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+    "generator_version": "synthetic-generator/1.0.0",
+    "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+    "record_count": 10000,
+    "seed": 20260919
+  },
+  "limitations": [
+    "Synthetic scenario attribution substitutes for accepted model outputs.",
+    "This report measures one seed and one frozen detector operating point.",
+    "The operating point demonstrates planted-event visibility and has not been selected or validated on independent held-out seeds.",
+    "Posterior probability is conditional on the configured independent Beta priors and binary-window model.",
+    "The candidate has no multiple-testing correction and is not promoted for live use by this report."
+  ],
+  "method": "beta_binomial_probability_of_change",
+  "metrics": {
+    "alert_episode_count": 11,
+    "detected_event_count": 4,
+    "event_count": 4,
+    "false_alert_episode_count": 7,
+    "false_alert_episodes_per_100_evaluable_series_days": 0.4206730769230769,
+    "matched_alert_episode_count": 4,
+    "mean_detection_delay_days": 8.0,
+    "precision": 0.36363636363636365,
+    "recall": 1.0
+  },
+  "no_incident_sensitivity": {
+    "alert_episode_count": 6,
+    "alert_episodes_per_100_evaluable_series_days": 0.3605769230769231,
+    "evaluable_series_days": 1664,
+    "feedback_sha256": "94c9a9555eeac58250be6d91f03f90d953aaf0fafda81679dab74a9aa63b6ca9",
+    "method": "same_seed_generator_with_events_removed"
+  },
+  "provenance_boundary": {
+    "adapter_note": "Scenario provenance maps records to independent binary observations; event provenance is read only when constructing truth.",
+    "detector_input_fields": [
+      "series_id",
+      "day",
+      "accepted_count",
+      "eligible_count",
+      "coverage_known"
+    ],
+    "truth_fields_withheld_from_detector": [
+      "scenario_id",
+      "synthetic_event_id"
+    ]
+  },
+  "schema_version": "trend-backtest-report/1.0.0",
+  "windows": {
+    "anchor_semantics": "UTC T with current [T-7,T) and baseline [T-35,T-7)",
+    "first_anchor": "2025-02-05",
+    "last_anchor": "2026-03-27"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "distributions": {
+    "challenge_classes": {
+      "challenge": 43,
+      "event": 44,
+      "standard": 393
+    },
+    "events": {
+      "carrier_delay_winter": 10,
+      "gpu_a17_noise": 10,
+      "none": 436,
+      "returns_backlog": 10,
+      "support_process_change": 14
+    },
+    "languages": {
+      "en-GB": 302,
+      "sv-SE": 178
+    },
+    "scenarios": {
+      "ambiguous": 10,
+      "compatibility_problem": 34,
+      "delivery_late": 45,
+      "delivery_positive": 20,
+      "irrelevant_chatter": 10,
+      "mixed_experience": 23,
+      "price_value": 21,
+      "product_defect_general": 37,
+      "product_defect_noise": 21,
+      "product_information": 19,
+      "product_positive": 63,
+      "return_resolved": 27,
+      "return_unresolved": 32,
+      "support_praise": 51,
+      "support_unresolved": 42,
+      "website_checkout": 25
+    },
+    "sources": {
+      "delivery_survey": 65,
+      "product_review": 209,
+      "return_feedback": 59,
+      "site_feedback": 54,
+      "support_ticket": 93
+    }
+  },
+  "double_annotated_counts": {
+    "calibration": 20,
+    "development": 75,
+    "locked_test": 25
+  },
+  "labels_template_sha256": "9035a00e058d1877ed9f20e6ca888e7a94876c68b5278af0d4752ff186364121",
+  "provenance_usage": "selection_only_never_model_input_or_gold_label",
+  "record_count": 480,
+  "records_sha256": "ac239a2fd52f3e8c474e708c426aafa21c785a8a9517644e59a32b3f8fc16450",
+  "sample_version": "feedback-decision-1.0.0",
+  "schema_version": "evaluation-selection-manifest/1.0.0",
+  "selection_constraints": {
+    "minimum_per_event": 10,
+    "minimum_per_language_source_cell": 12,
+    "minimum_per_scenario": 10
+  },
+  "selection_seed": "feedback-evaluation-2026-09-19-v1",
+  "source": {
+    "config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+    "feedback_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+    "generator_version": "synthetic-generator/1.0.0",
+    "provenance_sha256": "3db6fbc5c7caec32a761db5d9b0788b519c5836a0a7454036f413fd591e841e3",
+    "seed": 20260919
+  },
+  "split_counts": {
+    "calibration": 80,
+    "development": 300,
+    "locked_test": 100
+  }
+}

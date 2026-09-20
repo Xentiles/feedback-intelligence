@@ -1,0 +1,79 @@
+{
+  "kind": "overview",
+  "contractVersion": "1.0",
+  "context": "live",
+  "filters": {
+    "sourceKey": "synthetic/Feedback Intelligence synthetic demo/demo-data-0.1.0",
+    "from": "2026-01-01T00:00:00Z",
+    "toExclusive": "2026-02-01T00:00:00Z",
+    "topic": "delivery_delay",
+    "product": null,
+    "category": null,
+    "language": null,
+    "channel": null
+  },
+  "processing": {
+    "feedbackRecords": 9,
+    "decisionRuns": 9,
+    "typedAnswers": 126,
+    "jobsByStatus": {"completed": 9},
+    "projectionByDestination": {"clickhouse": 0}
+  },
+  "metrics": [
+    {
+      "id": "imported_feedback",
+      "label": "Imported feedback",
+      "unit": "count",
+      "value": 9,
+      "numerator": 9,
+      "denominator": null,
+      "availability": {"state": "available", "reason": null}
+    },
+    {
+      "id": "classified_feedback",
+      "label": "Classified feedback",
+      "unit": "percent",
+      "value": 100,
+      "numerator": 9,
+      "denominator": 9,
+      "availability": {"state": "available", "reason": null}
+    },
+    {
+      "id": "analytical_coverage",
+      "label": "Analytical coverage",
+      "unit": "percent",
+      "value": null,
+      "numerator": 0,
+      "denominator": 9,
+      "availability": {"state": "unavailable", "reason": "uncalibrated"}
+    },
+    {
+      "id": "topic_rate",
+      "label": "Delivery-delay rate",
+      "unit": "percent",
+      "value": null,
+      "numerator": 0,
+      "denominator": 0,
+      "availability": {"state": "unavailable", "reason": "uncalibrated"}
+    }
+  ],
+  "series": [
+    {"periodStart": "2026-01-01T00:00:00Z", "importedCount": 2, "eligibleCount": 0, "topicNumerator": 0, "value": null},
+    {"periodStart": "2026-01-08T00:00:00Z", "importedCount": 2, "eligibleCount": 0, "topicNumerator": 0, "value": null},
+    {"periodStart": "2026-01-15T00:00:00Z", "importedCount": 2, "eligibleCount": 0, "topicNumerator": 0, "value": null},
+    {"periodStart": "2026-01-22T00:00:00Z", "importedCount": 3, "eligibleCount": 0, "topicNumerator": 0, "value": null}
+  ],
+  "signals": [
+    {
+      "id": "delivery_delay",
+      "label": "Delivery delay",
+      "definition": "Distinct eligible feedback assigned the delivery-delay topic; withheld until the aggregation policy is calibrated.",
+      "numerator": 0,
+      "denominator": 0,
+      "rate": null,
+      "comparison": null,
+      "deltaPoints": null,
+      "availability": {"state": "unavailable", "reason": "uncalibrated"}
+    }
+  ]
+}

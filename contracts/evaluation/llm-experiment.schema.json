@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/llm-experiment-1.0.0.json",
+  "title": "Closed LLM evaluation experiment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "closure_reason", "model", "target_record_count", "successful_record_count", "failed_record_count", "billing_observation", "full_run_cost_estimate", "adapter_usage_observation", "quality_observation", "artifacts"],
+  "properties": {
+    "schema_version": { "const": "feedback-llm-experiment/1.0.0" },
+    "status": { "const": "closed_partial" },
+    "closure_reason": { "type": "string", "minLength": 1 },
+    "model": { "type": "string", "minLength": 1 },
+    "target_record_count": { "type": "integer", "minimum": 1 },
+    "successful_record_count": { "type": "integer", "minimum": 1 },
+    "failed_record_count": { "type": "integer", "minimum": 0 },
+    "billing_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "tokens", "cost_usd"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "tokens": { "type": "integer", "minimum": 0 },
+        "cost_usd": { "type": "number", "minimum": 0 }
+      }
+    },
+    "full_run_cost_estimate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_record_count", "cost_usd", "method", "scale_factor"],
+      "properties": {
+        "target_record_count": { "type": "integer", "minimum": 1 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "method": { "type": "string", "minLength": 1 },
+        "scale_factor": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "adapter_usage_observation": { "type": "object" },
+    "quality_observation": { "type": "object" },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["predictions_path", "predictions_sha256", "report_path", "report_sha256"],
+      "properties": {
+        "predictions_path": { "type": "string", "minLength": 1 },
+        "predictions_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "report_path": { "type": "string", "minLength": 1 },
+        "report_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

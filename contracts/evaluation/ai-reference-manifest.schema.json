@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/ai-reference-manifest-1.0.0.json",
+  "title": "AI reference manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "sample_version", "reference_kind", "reference_model", "reasoning_effort", "record_count", "pass_1_count", "pass_2_count", "disagreement_record_count", "adjudication_count", "records_sha256", "labels_sha256", "source_pass_sha256", "limitations"],
+  "properties": {
+    "schema_version": { "const": "feedback-ai-reference-manifest/1.0.0" },
+    "sample_version": { "const": "feedback-decision-1.0.0" },
+    "reference_kind": { "const": "ai_reference" },
+    "reference_model": { "const": "gpt-5.6-sol" },
+    "reasoning_effort": { "const": "medium" },
+    "record_count": { "const": 480 },
+    "pass_1_count": { "const": 480 },
+    "pass_2_count": { "const": 120 },
+    "disagreement_record_count": { "type": "integer", "minimum": 0, "maximum": 120 },
+    "adjudication_count": { "type": "integer", "minimum": 0, "maximum": 120 },
+    "records_sha256": { "$ref": "#/$defs/sha256" },
+    "labels_sha256": { "$ref": "#/$defs/sha256" },
+    "source_pass_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pass_1", "pass_2", "adjudications"],
+      "properties": {
+        "pass_1": { "$ref": "#/$defs/sha256" },
+        "pass_2": { "$ref": "#/$defs/sha256" },
+        "adjudications": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

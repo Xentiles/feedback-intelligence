@@ -1,0 +1,10 @@
+version: 1
+dataset_name: Minimal custom feedback example
+dataset_version: example/1.0.0
+license: CC BY 4.0
+attribution: Feedback Intelligence synthetic example
+timezone: UTC
+columns:
+  id: id
+  text: text
+  timestamp: timestamp

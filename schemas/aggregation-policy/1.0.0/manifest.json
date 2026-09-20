@@ -1,0 +1,34 @@
+{
+  "manifest_format": "aggregation-policy-manifest/1.0.0",
+  "name": "feedback-aggregation-policy",
+  "version": "1.0.0",
+  "status": "awaiting_calibration",
+  "decision_schema": {
+    "name": "feedback-decision",
+    "version": "1.0.0",
+    "sha256": "sha256:9314b38daf329f4c61fbea3d64f9a76a8d6334511888dcd61f7c75563c8f7094"
+  },
+  "calibration_requirements": {
+    "development": 300,
+    "calibration": 80,
+    "locked_test": 100,
+    "double_annotated": 120
+  },
+  "questions": [
+    { "id": "primary_topic", "primitive": "choice", "routing": "confidence_bands", "thresholds": null },
+    { "id": "mentions_product", "primitive": "noul", "routing": "probability_band", "thresholds": null },
+    { "id": "mentions_delivery", "primitive": "noul", "routing": "probability_band", "thresholds": null },
+    { "id": "mentions_support", "primitive": "noul", "routing": "probability_band", "thresholds": null },
+    { "id": "overall_experience", "primitive": "score", "routing": "confidence_bands", "thresholds": null },
+    { "id": "product_experience", "primitive": "score", "routing": "confidence_bands", "thresholds": null },
+    { "id": "delivery_experience", "primitive": "score", "routing": "confidence_bands", "thresholds": null },
+    { "id": "support_experience", "primitive": "score", "routing": "confidence_bands", "thresholds": null },
+    { "id": "reports_product_defect", "primitive": "noul", "routing": "probability_band", "thresholds": null },
+    { "id": "issue_severity", "primitive": "score", "routing": "confidence_bands", "thresholds": null },
+    { "id": "resolution_status", "primitive": "choice", "routing": "confidence_bands", "thresholds": null },
+    { "id": "actionable_feedback", "primitive": "noul", "routing": "probability_band", "thresholds": null },
+    { "id": "explicit_repurchase_risk", "primitive": "noul", "routing": "probability_band", "thresholds": null },
+    { "id": "defect_type", "primitive": "choice", "routing": "confidence_bands", "thresholds": null }
+  ],
+  "calibration": null
+}

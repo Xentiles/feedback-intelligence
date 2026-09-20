@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/decisions/decision-envelope.schema.json",
+  "title": "Feedback decision envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["envelope_version", "decision_id", "feedback_id", "decided_at", "schema", "engine", "input", "answers", "policy", "execution"],
+  "properties": {
+    "envelope_version": { "const": "feedback-decision-envelope/1.0.0" },
+    "decision_id": { "type": "string", "format": "uuid" },
+    "feedback_id": { "type": "string", "format": "uuid" },
+    "decided_at": { "type": "string", "format": "date-time" },
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "sha256"],
+      "properties": {
+        "name": { "const": "feedback-decision" },
+        "version": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/prefixed_sha256" }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "recorded_provider", "requested_model", "resolved_model"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "recorded_provider": { "type": ["string", "null"], "minLength": 1 },
+        "requested_model": { "type": "string", "minLength": 1 },
+        "resolved_model": { "type": "string", "minLength": 1 }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["redacted_text_sha256", "language", "channel"],
+      "properties": {
+        "redacted_text_sha256": { "$ref": "#/$defs/prefixed_sha256" },
+        "language": { "type": ["string", "null"] },
+        "channel": { "type": ["string", "null"] }
+      }
+    },
+    "answers": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/answer" }
+    },
+    "policy": { "type": "null" },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "latency_ms", "input_tokens", "output_tokens"],
+      "properties": {
+        "request_id": { "type": ["string", "null"] },
+        "latency_ms": { "type": "integer", "minimum": 0 },
+        "input_tokens": { "type": ["integer", "null"], "minimum": 0 },
+        "output_tokens": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "prefixed_sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "choice_answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "choice", "probabilities", "confidence"],
+      "properties": {
+        "type": { "const": "choice" },
+        "choice": { "type": "string", "minLength": 1 },
+        "probabilities": {
+          "type": "object",
+          "minProperties": 2,
+          "additionalProperties": { "$ref": "#/$defs/probability" }
+        },
+        "confidence": { "$ref": "#/$defs/probability" }
+      }
+    },
+    "score_answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "score", "probabilities", "confidence", "legend"],
+      "properties": {
+        "type": { "const": "score" },
+        "score": { "type": "number", "minimum": 0 },
+        "probabilities": {
+          "type": "object",
+          "minProperties": 2,
+          "additionalProperties": { "$ref": "#/$defs/probability" }
+        },
+        "confidence": { "$ref": "#/$defs/probability" },
+        "legend": {
+          "type": "object",
+          "minProperties": 2,
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "noul_answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "noul"],
+      "properties": {
+        "type": { "const": "noul" },
+        "noul": { "$ref": "#/$defs/probability" }
+      }
+    },
+    "answer": {
+      "oneOf": [
+        { "$ref": "#/$defs/choice_answer" },
+        { "$ref": "#/$defs/score_answer" },
+        { "$ref": "#/$defs/noul_answer" }
+      ]
+    }
+  }
+}

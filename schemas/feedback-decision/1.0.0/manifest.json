@@ -1,0 +1,178 @@
+{
+  "manifest_format": "feedback-decision-manifest/1.0.0",
+  "name": "feedback-decision",
+  "version": "1.0.0",
+  "status": "active",
+  "state": {
+    "allowed_fields": ["feedback_text", "language", "channel"],
+    "prohibited_fields": [
+      "feedback_id",
+      "source",
+      "rating",
+      "product_id",
+      "order_id",
+      "metadata",
+      "scenario_id",
+      "synthetic_event_id",
+      "ground_truth"
+    ]
+  },
+  "questions": [
+    {
+      "id": "primary_topic",
+      "primitive": "choice",
+      "instructions": "Choose the single primary subject of the customer feedback. Use other when no listed subject is clearly primary.",
+      "options": [
+        { "id": "product_quality", "description": "Performance, reliability, build quality, damage, faults, or other qualities of a product." },
+        { "id": "compatibility", "description": "Whether a product works with another device, system, connector, size, or requirement." },
+        { "id": "delivery", "description": "Shipping, tracking, packaging in transit, fulfilment timing, or receipt of an order." },
+        { "id": "support", "description": "Customer service, technical support, agent communication, or assistance." },
+        { "id": "returns_refunds", "description": "Returns, exchanges, replacements, refunds, or their status." },
+        { "id": "price_value", "description": "Price, affordability, value for money, discounts, or price comparison." },
+        { "id": "website_checkout", "description": "Store website, navigation, basket, checkout flow, or online payment experience." },
+        { "id": "product_information", "description": "Product descriptions, specifications, dimensions, stock information, or buying guidance." },
+        { "id": "other", "description": "No listed subject is clearly primary, or the feedback is irrelevant." }
+      ]
+    },
+    {
+      "id": "mentions_product",
+      "primitive": "noul",
+      "instructions": "Does the feedback discuss the experience of using, receiving, choosing, or considering a product?",
+      "criteria": {
+        "true": "A product or its qualities, use, fit, condition, or suitability are discussed.",
+        "false": "No product experience is discussed; operational or irrelevant text alone is false."
+      }
+    },
+    {
+      "id": "mentions_delivery",
+      "primitive": "noul",
+      "instructions": "Does the feedback discuss delivery, shipping, tracking, fulfilment, or the condition of a parcel in transit?",
+      "criteria": {
+        "true": "Delivery or fulfilment is explicitly discussed.",
+        "false": "Delivery and fulfilment are not discussed."
+      }
+    },
+    {
+      "id": "mentions_support",
+      "primitive": "noul",
+      "instructions": "Does the feedback discuss customer service, support, or help from an agent?",
+      "criteria": {
+        "true": "An interaction with support, service staff, or an agent is discussed.",
+        "false": "No customer-service or support interaction is discussed."
+      }
+    },
+    {
+      "id": "overall_experience",
+      "primitive": "score",
+      "instructions": "Rate the customer's overall expressed experience in this feedback. Judge the text, including mixed statements, rather than any numeric rating outside the text.",
+      "levels": [
+        { "value": 0, "label": "strongly_negative", "description": "Clearly very dissatisfied, severe failure, anger, or an experience dominated by serious problems." },
+        { "value": 1, "label": "negative", "description": "More negative than positive, with a clear complaint or dissatisfaction." },
+        { "value": 2, "label": "neutral_mixed_unclear", "description": "Neutral, balanced mixed experience, ambiguous sentiment, or insufficient evidence." },
+        { "value": 3, "label": "positive", "description": "More positive than negative, with clear satisfaction despite possible minor reservations." },
+        { "value": 4, "label": "strongly_positive", "description": "Clearly very satisfied, enthusiastic, or an experience dominated by praise." }
+      ]
+    },
+    {
+      "id": "product_experience",
+      "primitive": "score",
+      "instructions": "Rate only the customer's expressed product experience. Use the middle level when no product experience is present or it is unclear; relevance is decided separately.",
+      "levels": [
+        { "value": 0, "label": "strongly_negative", "description": "The product experience is clearly extremely poor or involves a serious failure." },
+        { "value": 1, "label": "negative", "description": "The product experience is clearly more negative than positive." },
+        { "value": 2, "label": "neutral_mixed_unclear", "description": "Neutral, mixed, unclear, or no product-specific experience is expressed." },
+        { "value": 3, "label": "positive", "description": "The product experience is clearly more positive than negative." },
+        { "value": 4, "label": "strongly_positive", "description": "The product experience is exceptionally positive or enthusiastic." }
+      ]
+    },
+    {
+      "id": "delivery_experience",
+      "primitive": "score",
+      "instructions": "Rate only the customer's expressed delivery and fulfilment experience. Use the middle level when delivery is absent or unclear; relevance is decided separately.",
+      "levels": [
+        { "value": 0, "label": "strongly_negative", "description": "Delivery or fulfilment failed seriously or caused extreme dissatisfaction." },
+        { "value": 1, "label": "negative", "description": "Delivery or fulfilment was clearly more negative than positive." },
+        { "value": 2, "label": "neutral_mixed_unclear", "description": "Neutral, mixed, unclear, or no delivery experience is expressed." },
+        { "value": 3, "label": "positive", "description": "Delivery or fulfilment was clearly more positive than negative." },
+        { "value": 4, "label": "strongly_positive", "description": "Delivery or fulfilment was exceptionally positive." }
+      ]
+    },
+    {
+      "id": "support_experience",
+      "primitive": "score",
+      "instructions": "Rate only the customer's expressed support or service experience. Use the middle level when support is absent or unclear; relevance is decided separately.",
+      "levels": [
+        { "value": 0, "label": "strongly_negative", "description": "Support failed seriously or caused extreme dissatisfaction." },
+        { "value": 1, "label": "negative", "description": "The support experience was clearly more negative than positive." },
+        { "value": 2, "label": "neutral_mixed_unclear", "description": "Neutral, mixed, unclear, or no support experience is expressed." },
+        { "value": 3, "label": "positive", "description": "The support experience was clearly more positive than negative." },
+        { "value": 4, "label": "strongly_positive", "description": "The support experience was exceptionally positive." }
+      ]
+    },
+    {
+      "id": "reports_product_defect",
+      "primitive": "noul",
+      "instructions": "Does the feedback report a product fault, damage, missing component, malfunction, or failure rather than a preference or ordinary incompatibility?",
+      "criteria": {
+        "true": "A concrete product defect, damage, missing part, malfunction, instability, or failure is reported.",
+        "false": "No defect is reported, or the issue is only preference, expected behavior, delivery, service, or ordinary incompatibility."
+      }
+    },
+    {
+      "id": "issue_severity",
+      "primitive": "score",
+      "instructions": "Rate the severity of the concrete customer issue described. This is operational impact, not mathematical risk or customer emotion.",
+      "levels": [
+        { "value": 0, "label": "none", "description": "No concrete issue or adverse impact is described." },
+        { "value": 1, "label": "minor_inconvenience", "description": "A small inconvenience; the main product or journey remains usable." },
+        { "value": 2, "label": "materially_impaired", "description": "The product or journey is materially impaired and needs meaningful remediation." },
+        { "value": 3, "label": "unusable_serious", "description": "The product or journey is unusable, completely failed, or the issue is otherwise serious." }
+      ]
+    },
+    {
+      "id": "resolution_status",
+      "primitive": "choice",
+      "instructions": "Choose the resolution status explicitly supported by the feedback. Do not infer a resolution that the text does not state.",
+      "options": [
+        { "id": "resolved", "description": "The issue was fully solved or the requested remedy was completed." },
+        { "id": "partially_resolved", "description": "Some progress or remedy occurred, but part of the issue remains." },
+        { "id": "unresolved", "description": "The issue remains open, failed, missing, or explicitly unsolved." },
+        { "id": "not_applicable", "description": "There is no issue or resolution process to assess." },
+        { "id": "unclear", "description": "An issue exists but the text does not establish whether it was resolved." }
+      ]
+    },
+    {
+      "id": "actionable_feedback",
+      "primitive": "noul",
+      "instructions": "Does the feedback contain a concrete issue, request, praise about a specific experience, or observation that a product or operations team could act on?",
+      "criteria": {
+        "true": "The text contains a specific and potentially useful observation, issue, request, or praise signal.",
+        "false": "The text is irrelevant, content-free, or too vague to support any action or learning."
+      }
+    },
+    {
+      "id": "explicit_repurchase_risk",
+      "primitive": "noul",
+      "instructions": "Does the customer explicitly state reluctance or refusal to buy again from the retailer or brand?",
+      "criteria": {
+        "true": "The text explicitly says or clearly commits that the customer may not or will not purchase again.",
+        "false": "No explicit future purchase reluctance or refusal is expressed; dissatisfaction alone is false."
+      }
+    },
+    {
+      "id": "defect_type",
+      "primitive": "choice",
+      "instructions": "Choose the primary product defect type reported. Use unclear when a defect seems present but its type is not established, and other for a clear defect outside the listed types.",
+      "options": [
+        { "id": "noise", "description": "Unwanted buzzing, whining, rattling, clicking, or other sound." },
+        { "id": "thermal", "description": "Overheating, excessive temperature, cooling failure, or heat-related shutdown." },
+        { "id": "stability", "description": "Crashes, disconnects, restarts, intermittent operation, or unreliable behavior." },
+        { "id": "physical_damage", "description": "Broken, bent, cracked, scratched, dented, or otherwise physically damaged." },
+        { "id": "compatibility", "description": "A defect claim specifically concerning fit, connectors, interoperability, or compatibility." },
+        { "id": "missing_component", "description": "A required part, accessory, or component is missing." },
+        { "id": "other", "description": "A clear product defect outside the listed types." },
+        { "id": "unclear", "description": "No defect, or the available text does not establish a defect type." }
+      ]
+    }
+  ]
+}

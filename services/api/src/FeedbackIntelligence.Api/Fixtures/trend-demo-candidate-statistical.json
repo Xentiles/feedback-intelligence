@@ -1,0 +1,508 @@
+{
+  "kind": "trend-overview",
+  "contractVersion": "1.0",
+  "context": "demo",
+  "availability": {
+    "state": "available",
+    "reason": null
+  },
+  "source": {
+    "key": "synthetic/trend-backtest/seed-20260919",
+    "providerId": "synthetic",
+    "datasetName": "Feedback Intelligence deterministic synthetic retail feedback",
+    "datasetVersion": "synthetic-generator/1.0.0+seed.20260919+config.56d95c969fc2",
+    "displayName": "Synthetic detector backtest — seed 20260919",
+    "synthetic": true
+  },
+  "method": {
+    "id": "candidate_statistical",
+    "version": "beta-binomial/1.0.0",
+    "configurationChecksum": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+    "currentWindowDays": 7,
+    "baselineWindowDays": 28,
+    "minimumCurrentDenominator": 20,
+    "minimumBaselineDenominator": 50,
+    "minimumCurrentNumerator": 3,
+    "minimumAbsoluteDeltaPoints": 20.0,
+    "minimumRelativeChangePercent": 30.0,
+    "claim": "posterior_probability_not_multiple_test_adjusted",
+    "betaPriorAlpha": 1,
+    "betaPriorBeta": 1,
+    "minimumProbabilityOfDirection": 0.98
+  },
+  "summary": {
+    "plantedIncidentCount": 4,
+    "alertEpisodeCount": 11,
+    "evaluableSeriesDayCount": 1664,
+    "recall": 1.0,
+    "precision": 0.36363636363636365,
+    "medianDetectionDelayDays": 6.5,
+    "falseAlertEpisodesPer100SeriesDays": 0.4206730769230769
+  },
+  "series": [
+    {
+      "seriesId": "product/GPU-A17/topic/product_defect_noise",
+      "signalId": "product_defect_noise",
+      "signalLabel": "GPU-A17 noise reports",
+      "product": "GPU-A17",
+      "direction": "increase"
+    },
+    {
+      "seriesId": "all/topic/delivery_late",
+      "signalId": "delivery_late",
+      "signalLabel": "Late delivery reports",
+      "product": null,
+      "direction": "increase"
+    },
+    {
+      "seriesId": "all/topic/support_praise",
+      "signalId": "support_praise",
+      "signalLabel": "Support praise",
+      "product": null,
+      "direction": "increase"
+    },
+    {
+      "seriesId": "all/topic/return_unresolved",
+      "signalId": "return_unresolved",
+      "signalLabel": "Unresolved returns",
+      "product": null,
+      "direction": "increase"
+    }
+  ],
+  "results": [
+    {
+      "evaluationId": "94ec089063ebba81f663c20397fe1462ba294c0e279978bff0546cea0f69148c",
+      "seriesId": "all/topic/return_unresolved",
+      "anchor": "2025-04-11T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-04-04T00:00:00Z",
+          "toExclusive": "2025-04-11T00:00:00Z"
+        },
+        "numerator": 16,
+        "denominator": 20,
+        "rate": 80.0
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-03-07T00:00:00Z",
+          "toExclusive": "2025-04-04T00:00:00Z"
+        },
+        "numerator": 47,
+        "denominator": 88,
+        "rate": 53.40909090909091
+      },
+      "deltaPoints": 26.590909090909097,
+      "rateRatio": 1.497872340425532,
+      "relativeChangePercent": 49.78723404255321,
+      "probabilityOfDirection": 0.9846141930346249,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "56d92052e0b1d6013375064e4123ffcbcbfb9d9ad9865c0371f7b8616cd833f3",
+      "seriesId": "all/topic/support_praise",
+      "anchor": "2025-05-10T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-05-03T00:00:00Z",
+          "toExclusive": "2025-05-10T00:00:00Z"
+        },
+        "numerator": 19,
+        "denominator": 27,
+        "rate": 70.37037037037037
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-04-05T00:00:00Z",
+          "toExclusive": "2025-05-03T00:00:00Z"
+        },
+        "numerator": 44,
+        "denominator": 94,
+        "rate": 46.808510638297875
+      },
+      "deltaPoints": 23.5618597320725,
+      "rateRatio": 1.5033670033670035,
+      "relativeChangePercent": 50.33670033670034,
+      "probabilityOfDirection": 0.9839202303688696,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "c4186d22f6320f6bafa6198a31cf97058af396098b86d795e297a77f0f75792f",
+      "seriesId": "all/topic/support_praise",
+      "anchor": "2025-05-12T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-05-05T00:00:00Z",
+          "toExclusive": "2025-05-12T00:00:00Z"
+        },
+        "numerator": 20,
+        "denominator": 28,
+        "rate": 71.42857142857143
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-04-07T00:00:00Z",
+          "toExclusive": "2025-05-05T00:00:00Z"
+        },
+        "numerator": 43,
+        "denominator": 91,
+        "rate": 47.25274725274725
+      },
+      "deltaPoints": 24.17582417582418,
+      "rateRatio": 1.5116279069767442,
+      "relativeChangePercent": 51.162790697674424,
+      "probabilityOfDirection": 0.9869943235500982,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "3b14966b98d2d2eff531321d632599c878be5833f28272cbbe6f643f6a7ab596",
+      "seriesId": "product/GPU-A17/topic/product_defect_noise",
+      "anchor": "2025-05-16T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-05-09T00:00:00Z",
+          "toExclusive": "2025-05-16T00:00:00Z"
+        },
+        "numerator": 24,
+        "denominator": 27,
+        "rate": 88.88888888888889
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-04-11T00:00:00Z",
+          "toExclusive": "2025-05-09T00:00:00Z"
+        },
+        "numerator": 33,
+        "denominator": 50,
+        "rate": 66.0
+      },
+      "deltaPoints": 22.888888888888882,
+      "rateRatio": 1.3468013468013467,
+      "relativeChangePercent": 34.68013468013467,
+      "probabilityOfDirection": 0.9849643925531992,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "6626e86b7f3094aa4122e19349e795e06576e8d249c06684f0719770dc48ec48",
+      "seriesId": "all/topic/delivery_late",
+      "anchor": "2025-08-05T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-07-29T00:00:00Z",
+          "toExclusive": "2025-08-05T00:00:00Z"
+        },
+        "numerator": 40,
+        "denominator": 49,
+        "rate": 81.63265306122449
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-07-01T00:00:00Z",
+          "toExclusive": "2025-07-29T00:00:00Z"
+        },
+        "numerator": 53,
+        "denominator": 93,
+        "rate": 56.98924731182796
+      },
+      "deltaPoints": 24.64340574939653,
+      "rateRatio": 1.432422025413939,
+      "relativeChangePercent": 43.2422025413939,
+      "probabilityOfDirection": 0.9984740213265668,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "9ff6178bb4caa0f98bdfc17c6f1e13976168582c2ce401164d4a00fa8aec03a2",
+      "seriesId": "all/topic/support_praise",
+      "anchor": "2025-09-07T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-08-31T00:00:00Z",
+          "toExclusive": "2025-09-07T00:00:00Z"
+        },
+        "numerator": 15,
+        "denominator": 21,
+        "rate": 71.42857142857143
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-08-03T00:00:00Z",
+          "toExclusive": "2025-08-31T00:00:00Z"
+        },
+        "numerator": 32,
+        "denominator": 72,
+        "rate": 44.44444444444444
+      },
+      "deltaPoints": 26.984126984126988,
+      "rateRatio": 1.6071428571428572,
+      "relativeChangePercent": 60.71428571428572,
+      "probabilityOfDirection": 0.9843224241401612,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "724c73e84d5a8aca57480b7ca511b0bf1e170a9d7e6bde36b018904400995817",
+      "seriesId": "all/topic/support_praise",
+      "anchor": "2025-09-10T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-09-03T00:00:00Z",
+          "toExclusive": "2025-09-10T00:00:00Z"
+        },
+        "numerator": 15,
+        "denominator": 20,
+        "rate": 75.0
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-08-06T00:00:00Z",
+          "toExclusive": "2025-09-03T00:00:00Z"
+        },
+        "numerator": 35,
+        "denominator": 72,
+        "rate": 48.61111111111111
+      },
+      "deltaPoints": 26.38888888888889,
+      "rateRatio": 1.542857142857143,
+      "relativeChangePercent": 54.285714285714285,
+      "probabilityOfDirection": 0.980843744014145,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "da3e565ed874097977e71a8343e1803dfee59f937ee035aeaa1960c1d04ee5d0",
+      "seriesId": "all/topic/support_praise",
+      "anchor": "2025-10-10T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-10-03T00:00:00Z",
+          "toExclusive": "2025-10-10T00:00:00Z"
+        },
+        "numerator": 28,
+        "denominator": 38,
+        "rate": 73.68421052631578
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-09-05T00:00:00Z",
+          "toExclusive": "2025-10-03T00:00:00Z"
+        },
+        "numerator": 40,
+        "denominator": 81,
+        "rate": 49.382716049382715
+      },
+      "deltaPoints": 24.301494476933073,
+      "rateRatio": 1.4921052631578948,
+      "relativeChangePercent": 49.21052631578947,
+      "probabilityOfDirection": 0.9936614708717292,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "c49d20ef4e420ac823421a1b24075ca13db65d442e0347c2d2aadbc617e2d555",
+      "seriesId": "all/topic/support_praise",
+      "anchor": "2025-10-17T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-10-10T00:00:00Z",
+          "toExclusive": "2025-10-17T00:00:00Z"
+        },
+        "numerator": 24,
+        "denominator": 32,
+        "rate": 75.0
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-09-12T00:00:00Z",
+          "toExclusive": "2025-10-10T00:00:00Z"
+        },
+        "numerator": 52,
+        "denominator": 97,
+        "rate": 53.608247422680414
+      },
+      "deltaPoints": 21.39175257731959,
+      "rateRatio": 1.3990384615384617,
+      "relativeChangePercent": 39.90384615384616,
+      "probabilityOfDirection": 0.9829827698416588,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "b119e5c053ced572db29f04cbb704e44a2a921f71019b7879e1a63b69c71ecd2",
+      "seriesId": "all/topic/return_unresolved",
+      "anchor": "2025-12-01T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-11-24T00:00:00Z",
+          "toExclusive": "2025-12-01T00:00:00Z"
+        },
+        "numerator": 30,
+        "denominator": 36,
+        "rate": 83.33333333333334
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-10-27T00:00:00Z",
+          "toExclusive": "2025-11-24T00:00:00Z"
+        },
+        "numerator": 44,
+        "denominator": 70,
+        "rate": 62.857142857142854
+      },
+      "deltaPoints": 20.47619047619048,
+      "rateRatio": 1.325757575757576,
+      "relativeChangePercent": 32.575757575757585,
+      "probabilityOfDirection": 0.9847470523913034,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    },
+    {
+      "evaluationId": "0e6e3c68121f86ab6e69212961aa0f396f153ea21e3f3f51cc869985064db8b9",
+      "seriesId": "all/topic/delivery_late",
+      "anchor": "2025-12-03T00:00:00Z",
+      "state": "emerging_signal",
+      "current": {
+        "range": {
+          "from": "2025-11-26T00:00:00Z",
+          "toExclusive": "2025-12-03T00:00:00Z"
+        },
+        "numerator": 17,
+        "denominator": 22,
+        "rate": 77.27272727272727
+      },
+      "baseline": {
+        "range": {
+          "from": "2025-10-29T00:00:00Z",
+          "toExclusive": "2025-11-26T00:00:00Z"
+        },
+        "numerator": 42,
+        "denominator": 83,
+        "rate": 50.602409638554214
+      },
+      "deltaPoints": 26.670317634173056,
+      "rateRatio": 1.5270562770562772,
+      "relativeChangePercent": 52.70562770562771,
+      "probabilityOfDirection": 0.9870001435623438,
+      "gateReasons": [
+        "current_denominator_met",
+        "baseline_denominator_met",
+        "current_numerator_met",
+        "absolute_delta_met",
+        "relative_change_met",
+        "probability_direction_met"
+      ]
+    }
+  ],
+  "incidents": [
+    {
+      "incidentId": "synthetic-incident-gpu_a17_noise",
+      "outcome": "product_defect_noise_increase",
+      "seriesId": "product/GPU-A17/topic/product_defect_noise",
+      "plantedAt": "2025-05-01T00:00:00Z",
+      "detected": true,
+      "matchedEvaluationId": "3b14966b98d2d2eff531321d632599c878be5833f28272cbbe6f643f6a7ab596",
+      "detectionDelayDays": 15
+    },
+    {
+      "incidentId": "synthetic-incident-carrier_delay_winter",
+      "outcome": "delivery_delay_increase",
+      "seriesId": "all/topic/delivery_late",
+      "plantedAt": "2025-07-30T00:00:00Z",
+      "detected": true,
+      "matchedEvaluationId": "6626e86b7f3094aa4122e19349e795e06576e8d249c06684f0719770dc48ec48",
+      "detectionDelayDays": 6
+    },
+    {
+      "incidentId": "synthetic-incident-support_process_change",
+      "outcome": "support_praise_increase",
+      "seriesId": "all/topic/support_praise",
+      "plantedAt": "2025-10-03T00:00:00Z",
+      "detected": true,
+      "matchedEvaluationId": "da3e565ed874097977e71a8343e1803dfee59f937ee035aeaa1960c1d04ee5d0",
+      "detectionDelayDays": 7
+    },
+    {
+      "incidentId": "synthetic-incident-returns_backlog",
+      "outcome": "return_unresolved_increase",
+      "seriesId": "all/topic/return_unresolved",
+      "plantedAt": "2025-11-27T00:00:00Z",
+      "detected": true,
+      "matchedEvaluationId": "b119e5c053ced572db29f04cbb704e44a2a921f71019b7879e1a63b69c71ecd2",
+      "detectionDelayDays": 4
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+order_id,order_item_id,product_id,seller_id,shipping_limit_date,price,freight_value
+o-late,1,p-health,s-1,2026-01-02 00:00:00,100.00,10.00
+o-early,1,p-health,s-1,2026-01-02 00:00:00,50.00,5.00
+o-multi,1,p-computer,s-2,2026-01-04 00:00:00,500.00,20.00
+o-multi,2,p-chair,s-3,2026-01-04 00:00:00,150.00,15.00
+o-multi,3,p-computer,s-2,2026-01-04 00:00:00,500.00,20.00

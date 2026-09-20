@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/schemas/aggregation-policy-manifest-1.0.0.json",
+  "title": "Aggregation policy manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_format",
+    "name",
+    "version",
+    "status",
+    "decision_schema",
+    "calibration_requirements",
+    "questions"
+  ],
+  "properties": {
+    "manifest_format": { "const": "aggregation-policy-manifest/1.0.0" },
+    "name": { "const": "feedback-aggregation-policy" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "status": { "enum": ["awaiting_calibration", "active", "retired"] },
+    "decision_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "sha256"],
+      "properties": {
+        "name": { "const": "feedback-decision" },
+        "version": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "calibration_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["development", "calibration", "locked_test", "double_annotated"],
+      "properties": {
+        "development": { "const": 300 },
+        "calibration": { "const": 80 },
+        "locked_test": { "const": 100 },
+        "double_annotated": { "const": 120 }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "primitive", "routing", "thresholds"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "primitive": { "enum": ["choice", "score", "noul"] },
+          "routing": { "enum": ["confidence_bands", "probability_band"] },
+          "thresholds": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["review_min", "accept_min"],
+                "properties": {
+                  "review_min": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "accept_min": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["negative_max", "positive_min"],
+                "properties": {
+                  "negative_max": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "positive_min": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "calibration": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dataset_sha256", "labels_sha256", "calibrated_at"],
+          "properties": {
+            "dataset_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "labels_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "calibrated_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    }
+  }
+}

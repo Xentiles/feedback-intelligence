@@ -1,0 +1,85 @@
+{
+  "baseline": {
+    "config_sha256": "af56b0b602fae5cc36339bcf24632e2dc3ba0a9367c44aacb1dcd2ba705e3fe2",
+    "evaluation_id": "f09c5d4f598ed88aa98e4e02ba4d326712b97c5d612c1b317a9ce20cfa68d56d",
+    "evaluation_version": "simple-rate-synthetic/1.0.0",
+    "method": "pooled_binary_rate_change",
+    "metrics": {
+      "alert_episode_count": 13,
+      "false_alert_episode_count": 9,
+      "false_alert_episodes_per_100_evaluable_series_days": 0.5408653846153846,
+      "mean_detection_delay_days": 7.25,
+      "no_incident_alert_episodes_per_100_evaluable_series_days": 0.5408653846153846,
+      "precision": 0.3076923076923077,
+      "recall": 1.0
+    }
+  },
+  "candidate": {
+    "config_sha256": "887f919a80f229126324a5544e503c8987b90e16a5bbfe63bf7d2cccb8dfc360",
+    "evaluation_id": "6fcb219f2011e7cccdda73dd27966cbae3725a9a2838d9300182ed43f518630c",
+    "evaluation_version": "candidate-statistical-synthetic/1.0.0",
+    "method": "beta_binomial_probability_of_change",
+    "metrics": {
+      "alert_episode_count": 11,
+      "false_alert_episode_count": 7,
+      "false_alert_episodes_per_100_evaluable_series_days": 0.4206730769230769,
+      "mean_detection_delay_days": 8.0,
+      "no_incident_alert_episodes_per_100_evaluable_series_days": 0.3605769230769231,
+      "precision": 0.36363636363636365,
+      "recall": 1.0
+    }
+  },
+  "candidate_promoted": false,
+  "comparison_id": "b54390ecfc8e6b0743919041bede997dca4584010195d99399dd1d999ba282e6",
+  "decision": "retain_simple_rate_change",
+  "input": {
+    "feedback_sha256": "097bcec46b80bd2178c3d2bbbef30fec20f95bf1e2008c8ef0fc6203b033c6b8",
+    "generator_config_sha256": "56d95c969fc2374291670aa0ac082e2ab11e52ed3a1abfe1299d12506abb6cb6",
+    "record_count": 10000,
+    "seed": 20260919
+  },
+  "limitations": [
+    "Both detectors are compared on one shared synthetic seed.",
+    "The candidate operating point was explored on this seed and is not held-out.",
+    "Promotion requires every declared metric criterion to pass."
+  ],
+  "promotion_criteria": [
+    {
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "name": "incident_recall_not_lower",
+      "operator": ">=",
+      "passed": true
+    },
+    {
+      "baseline": 0.3076923076923077,
+      "candidate": 0.36363636363636365,
+      "name": "episode_precision_higher",
+      "operator": ">",
+      "passed": true
+    },
+    {
+      "baseline": 0.5408653846153846,
+      "candidate": 0.4206730769230769,
+      "name": "false_episode_rate_lower",
+      "operator": "<",
+      "passed": true
+    },
+    {
+      "baseline": 7.25,
+      "candidate": 8.0,
+      "name": "mean_detection_delay_not_higher",
+      "operator": "<=",
+      "passed": false
+    },
+    {
+      "baseline": 0.5408653846153846,
+      "candidate": 0.3605769230769231,
+      "name": "no_incident_episode_rate_lower",
+      "operator": "<",
+      "passed": true
+    }
+  ],
+  "schema_version": "trend-detector-comparison/1.0.0",
+  "selected_algorithm": "simple_rate_change"
+}

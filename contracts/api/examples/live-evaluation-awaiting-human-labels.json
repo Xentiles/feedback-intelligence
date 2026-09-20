@@ -1,0 +1,25 @@
+{
+  "kind": "evaluation-comparison",
+  "contractVersion": "1.0",
+  "context": "live",
+  "availability": {
+    "state": "unavailable",
+    "reason": "awaiting_human_labels"
+  },
+  "status": "awaiting_human_labels",
+  "reference": null,
+  "recordCount": 0,
+  "successCount": 0,
+  "errorCount": 0,
+  "semif": null,
+  "semifPrimaryTopic": null,
+  "semifLanguageSlices": [],
+  "rules": null,
+  "rulePrimaryTopic": null,
+  "ruleLanguageSlices": [],
+  "llm": null,
+  "semifCost": null,
+  "llmCost": null,
+  "llmPrimaryTopic": null,
+  "llmLanguageSlices": []
+}

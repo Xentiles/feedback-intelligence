@@ -1,0 +1,58 @@
+{
+  "kind": "metadata",
+  "contractVersion": "1.0",
+  "context": "demo",
+  "source": {
+    "key": "synthetic/feedback-decision-ai-reference/1.0.0",
+    "providerId": "synthetic",
+    "datasetName": "feedback-decision-ai-reference",
+    "datasetVersion": "1.0.0+sol-medium",
+    "displayName": "Sol-medium reference feedback",
+    "synthetic": true
+  },
+  "sources": [
+    {
+      "key": "synthetic/feedback-decision-semif/1.0.0",
+      "providerId": "synthetic",
+      "datasetName": "feedback-decision-semif",
+      "datasetVersion": "1.0.0+qwen3.5-4b-mlx-q4",
+      "displayName": "SemIf-reviewed synthetic feedback",
+      "synthetic": true
+    },
+    {
+      "key": "synthetic/feedback-decision-rules/1.0.0",
+      "providerId": "synthetic",
+      "datasetName": "feedback-decision-rules",
+      "datasetVersion": "1.0.0",
+      "displayName": "Rules-baseline synthetic feedback",
+      "synthetic": true
+    },
+    {
+      "key": "synthetic/feedback-decision-ai-reference/1.0.0",
+      "providerId": "synthetic",
+      "datasetName": "feedback-decision-ai-reference",
+      "datasetVersion": "1.0.0+sol-medium",
+      "displayName": "Sol-medium reference feedback",
+      "synthetic": true
+    }
+  ],
+  "availableRange": {
+    "from": "2026-05-01T00:00:00Z",
+    "toExclusive": "2026-06-01T00:00:00Z"
+  },
+  "capabilities": {
+    "products": true,
+    "categories": true,
+    "languages": true,
+    "channels": true,
+    "evidenceText": true
+  },
+  "filterOptions": {
+    "topics": ["delivery_delay"],
+    "products": ["Sample parcel"],
+    "categories": ["illustrative_orders"],
+    "languages": ["en"],
+    "channels": ["illustrative_survey"]
+  },
+  "policyStatus": "illustrative"
+}

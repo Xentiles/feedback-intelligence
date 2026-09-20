@@ -1,0 +1,38 @@
+{
+  "adapter_usage_observation": {
+    "input_tokens": 475295,
+    "note": "Adapter cumulative counters differ from the owner-reported billing total and are retained as execution telemetry, not billed usage.",
+    "output_tokens": 72113
+  },
+  "artifacts": {
+    "predictions_path": "evaluation/benchmarks/feedback-decision-1.0.0/gpt-5.4-mini-2026-03-17.predictions.jsonl",
+    "predictions_sha256": "918db84a49ad5177d7328aa7e7eabfe9fefeb8a3c5681243c9194783dff3af99",
+    "report_path": "evaluation/reports/feedback-decision-1.0.0/gpt-5.4-mini-2026-03-17-partial-vs-sol-ai-reference.json",
+    "report_sha256": "56e26a252e3be0752e5c112f5c60dc6818a532f80c4f5d7175f19e4aba1e687e"
+  },
+  "billing_observation": {
+    "cost_usd": 0.39,
+    "source": "project_owner_openai_usage_observation",
+    "tokens": 477777
+  },
+  "closure_reason": "closed_by_project_owner_with_sufficient_partial_evidence",
+  "failed_record_count": 0,
+  "full_run_cost_estimate": {
+    "cost_usd": 0.98,
+    "method": "linear_extrapolation_from_192_record_owner_reported_spend_rounded_to_cents",
+    "scale_factor": 2.5,
+    "target_record_count": 480
+  },
+  "model": "gpt-5.4-mini-2026-03-17",
+  "quality_observation": {
+    "partial": true,
+    "primary_topic_accuracy": 0.8489583333333334,
+    "primary_topic_macro_f1": 0.782838358729344,
+    "reference_kind": "ai_reference",
+    "reference_model": "gpt-5.6-sol"
+  },
+  "schema_version": "feedback-llm-experiment/1.0.0",
+  "status": "closed_partial",
+  "successful_record_count": 192,
+  "target_record_count": 480
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/evaluation-selection-manifest-1.0.0.json",
+  "title": "Evaluation selection manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sample_version",
+    "selection_seed",
+    "source",
+    "record_count",
+    "split_counts",
+    "double_annotated_counts",
+    "distributions",
+    "records_sha256",
+    "labels_template_sha256",
+    "selection_constraints",
+    "provenance_usage"
+  ],
+  "properties": {
+    "schema_version": { "const": "evaluation-selection-manifest/1.0.0" },
+    "sample_version": { "const": "feedback-decision-1.0.0" },
+    "selection_seed": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generator_version", "seed", "config_sha256", "feedback_sha256", "provenance_sha256"],
+      "properties": {
+        "generator_version": { "type": "string" },
+        "seed": { "type": "integer", "minimum": 0 },
+        "config_sha256": { "$ref": "#/$defs/sha256" },
+        "feedback_sha256": { "$ref": "#/$defs/sha256" },
+        "provenance_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "record_count": { "const": 480 },
+    "split_counts": { "$ref": "#/$defs/splits" },
+    "double_annotated_counts": { "$ref": "#/$defs/double_splits" },
+    "distributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["languages", "sources", "scenarios", "events", "challenge_classes"],
+      "properties": {
+        "languages": { "$ref": "#/$defs/counts" },
+        "sources": { "$ref": "#/$defs/counts" },
+        "scenarios": { "$ref": "#/$defs/counts" },
+        "events": { "$ref": "#/$defs/counts" },
+        "challenge_classes": { "$ref": "#/$defs/counts" }
+      }
+    },
+    "records_sha256": { "$ref": "#/$defs/sha256" },
+    "labels_template_sha256": { "$ref": "#/$defs/sha256" },
+    "selection_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_per_scenario", "minimum_per_event", "minimum_per_language_source_cell"],
+      "properties": {
+        "minimum_per_scenario": { "const": 10 },
+        "minimum_per_event": { "const": 10 },
+        "minimum_per_language_source_cell": { "const": 12 }
+      }
+    },
+    "provenance_usage": { "const": "selection_only_never_model_input_or_gold_label" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "counts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "splits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["development", "calibration", "locked_test"],
+      "properties": {
+        "development": { "const": 300 },
+        "calibration": { "const": 80 },
+        "locked_test": { "const": 100 }
+      }
+    },
+    "double_splits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["development", "calibration", "locked_test"],
+      "properties": {
+        "development": { "const": 75 },
+        "calibration": { "const": 20 },
+        "locked_test": { "const": 25 }
+      }
+    }
+  }
+}
