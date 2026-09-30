@@ -47,6 +47,9 @@ services:
       WORKBENCH_PURGE_DSN_FILE: /run/workbench/purge-dsn
       WORKBENCH_SERVICE_TOKEN_FILE: /run/workbench/service-token
       WORKBENCH_BROKER_URL: http://api:8080
+      WORKBENCH_MAX_UPLOAD_BYTES: ${WORKBENCH_MAX_UPLOAD_BYTES:-26214400}
+      WORKBENCH_MAX_RECORDS: ${WORKBENCH_MAX_RECORDS:-10000}
+      WORKBENCH_MAX_TEXT_CHARS: ${WORKBENCH_MAX_TEXT_CHARS:-20000}
       CLICKHOUSE_URL: http://clickhouse:8123
       CLICKHOUSE_USER: feedback_intelligence
       CLICKHOUSE_PASSWORD_FILE: /run/workbench/clickhouse-password

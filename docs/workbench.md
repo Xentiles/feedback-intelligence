@@ -16,6 +16,10 @@ alter existing demo storage. Uploaded data, keys and the vault are excluded from
 Git and Docker build contexts. Local persistence is not a backup; retain your
 source files and explicitly exported results separately.
 
+Operators can lower the upload ceilings with `WORKBENCH_MAX_UPLOAD_BYTES`,
+`WORKBENCH_MAX_RECORDS`, and `WORKBENCH_MAX_TEXT_CHARS` before starting the runtime.
+Defaults and hard ceilings are 25 MiB, 10,000 records, and 20,000 text characters.
+
 ## The workflow
 
 1. Upload CSV/TSV, XLSX, a JSON array, JSONL, or paste one comment per line.

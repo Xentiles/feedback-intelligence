@@ -7,6 +7,7 @@ import hashlib
 import io
 import json
 import math
+import os
 import re
 import unicodedata
 import zipfile
@@ -17,9 +18,17 @@ from uuid import NAMESPACE_URL, uuid5
 from xml.etree import ElementTree as ET
 from zoneinfo import ZoneInfo
 
-MAX_BYTES = 25 * 1024 * 1024
-MAX_RECORDS = 10_000
-MAX_TEXT = 20_000
+
+def configured_limit(name: str, ceiling: int) -> int:
+    value = int(os.getenv(name, str(ceiling)))
+    if not 1 <= value <= ceiling:
+        raise ValueError(f"{name} must be between 1 and {ceiling}")
+    return value
+
+
+MAX_BYTES = configured_limit("WORKBENCH_MAX_UPLOAD_BYTES", 25 * 1024 * 1024)
+MAX_RECORDS = configured_limit("WORKBENCH_MAX_RECORDS", 10_000)
+MAX_TEXT = configured_limit("WORKBENCH_MAX_TEXT_CHARS", 20_000)
 NS = {"s": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 
 
@@ -40,7 +49,7 @@ def depth(value: Any, level: int = 0) -> None:
 
 def parse_upload(content: bytes, filename: str, sheet: int = 0) -> dict[str, Any]:
     if len(content) > MAX_BYTES:
-        raise ValueError("Upload exceeds 25 MiB")
+        raise ValueError(f"Upload exceeds the configured {MAX_BYTES}-byte limit")
     suffix = filename.rsplit(".", 1)[-1].lower()
     sheets: list[str] = []
     if suffix == "xlsx":
@@ -86,7 +95,7 @@ def parse_upload(content: bytes, filename: str, sheet: int = 0) -> dict[str, Any
         else:
             raise ValueError("Supported formats: CSV, TSV, XLSX, JSON, JSONL, TXT")
     if not rows or len(rows) > MAX_RECORDS:
-        raise ValueError("Upload must contain 1-10,000 records")
+        raise ValueError(f"Upload must contain 1-{MAX_RECORDS} records")
     columns = list(dict.fromkeys(str(key) for row in rows for key in row))
     if len(columns) > 200:
         raise ValueError("Upload exceeds 200 columns")
@@ -244,7 +253,7 @@ def validate_import(upload: dict[str, Any], options: dict[str, Any]) -> dict[str
                 empty += 1
                 raise ValueError("Feedback text is empty or is not a string")
             if len(raw) > MAX_TEXT:
-                raise ValueError("Feedback exceeds 20,000 characters")
+                raise ValueError(f"Feedback exceeds the configured {MAX_TEXT}-character limit")
             date = timestamp(str(row.get(mapping.get("date"), "") or ""), options.get("timezone"))
             missing_dates += int(date is None)
             rating = None
