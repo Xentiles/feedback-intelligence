@@ -30,6 +30,7 @@
 artifacts
 Project Plan Documentation
 orbital-clarity-v0.4
+.workbench-runtime
 data/external
 data/processed
 

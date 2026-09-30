@@ -3,6 +3,17 @@
 The initial publication includes the privacy-boundary and CI repairs documented
 in [the pre-publication security review](docs/quality/security-review.md).
 
+## Unreleased — 0.2.0 workbench
+
+- Opt-in local upload workbench for CSV/XLSX/JSON/JSONL and pasted reviews.
+- Versioned topic templates, explainable keywords, durable run history,
+  exploratory analysis, evidence, matched-run comparison and CSV/JSON exports.
+- Separate database principals, protected local sessions, encrypted credential
+  vault, ChatGPT OAuth and explicitly selected OpenAI API billing.
+- Dedicated deduplicated analytical projection and durable dataset purge.
+- Deterministic 10,000-record rules scenario alongside the frozen showcase.
+- Live ChatGPT admission and inference verification remain pending owner sign-in.
+
 ## 0.1.0 — 2026-09-20
 
 ### Available

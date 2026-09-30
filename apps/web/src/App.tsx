@@ -24,6 +24,7 @@ import {
   type EvaluationAsyncState,
 } from './evaluation-components'
 import { OrbitalSurface } from './orbital-surface'
+import { Workbench } from './Workbench'
 import { TrendEvaluationRegion, type TrendAsyncState } from './trend-components'
 import type {
   DashboardFilters,
@@ -91,7 +92,19 @@ function isAbort(error: unknown) {
   return error instanceof DOMException && error.name === 'AbortError'
 }
 
-export function App({
+export function App(props: { client?: DashboardClient }) {
+  const [workbenchOpen, setWorkbenchOpen] = useState(
+    window.location.hash === '#workbench',
+  )
+  useEffect(() => {
+    const update = () => setWorkbenchOpen(window.location.hash === '#workbench')
+    window.addEventListener('hashchange', update)
+    return () => window.removeEventListener('hashchange', update)
+  }, [])
+  return workbenchOpen ? <Workbench /> : <DashboardApp {...props} />
+}
+
+function DashboardApp({
   client = dashboardClient,
 }: {
   client?: DashboardClient
@@ -450,6 +463,7 @@ export function App({
         </a>
         <span className="rail-section-label">Workspace</span>
         <nav className="primary-nav" aria-label="Primary navigation">
+          <a href="#workbench">Open workbench</a>
           <button
             type="button"
             aria-current={view.name === 'overview' ? 'page' : undefined}

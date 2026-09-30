@@ -36,6 +36,7 @@ feedback-privacy = "feedback_intelligence_worker.privacy.cli:main"
 feedback-storage = "feedback_intelligence_worker.storage.cli:main"
 feedback-synthetic = "feedback_intelligence_worker.synthetic.cli:main"
 feedback-trends = "feedback_intelligence_worker.trends.cli:main"
+feedback-workbench = "feedback_intelligence_worker.workbench.server:main"
 
 [dependency-groups]
 dev = [

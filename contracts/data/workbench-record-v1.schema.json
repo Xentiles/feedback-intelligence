@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/workbench-record/1.0.0",
+  "title": "Local workbench upload record",
+  "type": "object",
+  "required": ["schemaVersion", "id", "position", "sourceId", "text", "occurredAt", "language", "channel", "rating", "groups"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "workbench-record/1.0.0"},
+    "id": {"type": "string", "format": "uuid"},
+    "position": {"type": "integer", "minimum": 1},
+    "sourceId": {"type": "string", "minLength": 1},
+    "text": {"type": "string", "minLength": 1, "maxLength": 20000},
+    "occurredAt": {"type": ["string", "null"], "format": "date-time"},
+    "language": {"type": ["string", "null"]},
+    "channel": {"type": ["string", "null"]},
+    "rating": {"type": ["object", "null"], "required": ["value", "min", "max"], "properties": {"value": {"type": "number"}, "min": {"type": "number"}, "max": {"type": "number"}}, "additionalProperties": false},
+    "groups": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}

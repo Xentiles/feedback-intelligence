@@ -13,6 +13,21 @@ signal back to the records and model output behind it.
 
 ## Try it locally
 
+For interactive uploads, configurable rules, run history, comparisons and
+OpenAI connections, start the opt-in [local workbench](docs/workbench.md):
+
+```sh
+python3 scripts/start_workbench.py
+```
+
+Open [localhost:8081/#workbench](http://localhost:8081/#workbench) and unlock with
+the private owner code in `.workbench-runtime/api/owner-code`. Data stays in this
+local installation unless you explicitly approve external model processing.
+ChatGPT plan integration is implemented with mocked tests; real-account sign-in
+and inference verification remain pending.
+
+The original recorded showcase remains available with the command below.
+
 With Docker Desktop running, run from the repository root:
 
 ```sh
