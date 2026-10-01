@@ -102,7 +102,10 @@ public static class WorkbenchEndpoints
                 var state = await connections.Complete(context.Request.Query);
                 return Results.Redirect((config["Workbench:Origin"] ?? "http://localhost:8081") + "/?connection=" + state + "#workbench");
             }
-            catch (Exception) { return Results.Problem(statusCode: 400, title: "ChatGPT sign-in failed", detail: "Sign-in expired, permission was declined, or identity could not be verified. Return to the app and try again."); }
+            catch (Exception)
+            {
+                return Results.Redirect((config["Workbench:Origin"] ?? "http://localhost:8081") + "/?connection=error#workbench");
+            }
         });
 
         app.MapPost("/internal/workbench/{operation}", async (HttpContext context, string operation, Connections connections) =>

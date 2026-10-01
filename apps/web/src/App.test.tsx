@@ -326,7 +326,9 @@ describe('dashboard journey', () => {
     await screen.findByRole('heading', { name: 'Feedback overview' })
     expect(document.documentElement).not.toHaveAttribute('data-theme')
     expect(
-      screen.getByRole('button', { name: /background|texture/i }),
+      within(
+        screen.getByRole('group', { name: 'Background appearance' }),
+      ).getByRole('button', { name: 'Flat' }),
     ).toHaveAttribute('aria-pressed')
     expect(document.querySelector('.orbital-backdrop')).toBeInTheDocument()
   })

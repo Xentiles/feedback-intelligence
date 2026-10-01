@@ -23,8 +23,16 @@ import {
   EvaluationComparisonRegion,
   type EvaluationAsyncState,
 } from './evaluation-components'
-import { OrbitalSurface } from './orbital-surface'
+import {
+  ApplicationShell,
+  NavigationIcon,
+  ShellSlot,
+} from './application-shell'
+import { readRoute, type ApplicationRoute } from './application-routes'
+import { ConfirmationProvider } from './confirmation-dialog'
+import { type workbench as WorkbenchRequest } from './workbench-api'
 import { Workbench } from './Workbench'
+import type { OrbitalModule } from './orbital-surface'
 import { TrendEvaluationRegion, type TrendAsyncState } from './trend-components'
 import type {
   DashboardFilters,
@@ -92,25 +100,81 @@ function isAbort(error: unknown) {
   return error instanceof DOMException && error.name === 'AbortError'
 }
 
-export function App(props: { client?: DashboardClient }) {
-  const [workbenchOpen, setWorkbenchOpen] = useState(
-    window.location.hash === '#workbench',
+export function App(props: {
+  client?: DashboardClient
+  workbenchClient?: typeof WorkbenchRequest
+  backgroundLoader?: () => Promise<OrbitalModule>
+}) {
+  const [route, setRoute] = useState<ApplicationRoute>(() => {
+    const initial = readRoute(window.location.hash) ?? {
+      area: 'showcase',
+      page: 'Datasets',
+    }
+    return new URLSearchParams(window.location.search).has('connection')
+      ? { area: 'workbench', page: 'Connections' }
+      : initial
+  })
+  const [visitedWorkbench, setVisitedWorkbench] = useState(
+    route.area === 'workbench',
   )
+  const navigate = (next: ApplicationRoute) => {
+    setRoute(next)
+    if (next.area === 'workbench') setVisitedWorkbench(true)
+    window.history.pushState(
+      null,
+      '',
+      next.area === 'workbench'
+        ? `#workbench/${next.page.toLowerCase()}`
+        : '#showcase',
+    )
+  }
   useEffect(() => {
-    const update = () => setWorkbenchOpen(window.location.hash === '#workbench')
+    const update = () => {
+      const next = readRoute(window.location.hash)
+      if (!next) return
+      setRoute(next)
+      if (next.area === 'workbench') setVisitedWorkbench(true)
+    }
     window.addEventListener('hashchange', update)
-    return () => window.removeEventListener('hashchange', update)
+    window.addEventListener('popstate', update)
+    return () => {
+      window.removeEventListener('hashchange', update)
+      window.removeEventListener('popstate', update)
+    }
   }, [])
-  return workbenchOpen ? <Workbench /> : <DashboardApp {...props} />
+  return (
+    <ConfirmationProvider>
+      <ApplicationShell
+        route={route}
+        navigate={navigate}
+        backgroundLoader={props.backgroundLoader}
+      >
+        <div hidden={route.area !== 'showcase'}>
+          <DashboardApp {...props} visible={route.area === 'showcase'} />
+        </div>
+        {visitedWorkbench && (
+          <div hidden={route.area !== 'workbench'}>
+            <Workbench
+              page={route.page}
+              visible={route.area === 'workbench'}
+              onNavigate={(page) => navigate({ area: 'workbench', page })}
+              client={props.workbenchClient}
+            />
+          </div>
+        )}
+      </ApplicationShell>
+    </ConfirmationProvider>
+  )
 }
 
 function DashboardApp({
   client = dashboardClient,
+  visible,
 }: {
   client?: DashboardClient
+  visible: boolean
 }) {
   const [context, setContext] = useState<PresentationContext>('demo')
-  const [headerCollapsed, setHeaderCollapsed] = useState(false)
   const [view, setView] = useState<View>({ name: 'overview' })
   const [filters, setFilters] = useState<DashboardFilters | null>(null)
   const [metadata, setMetadata] = useState<AsyncState<MetadataResponse>>({
@@ -145,6 +209,13 @@ function DashboardApp({
   const evidencePage = view.name === 'signal' ? view.page : null
   const detailIdentity =
     view.name === 'detail' ? `${view.feedbackId}:${view.decisionId}` : null
+
+  useEffect(() => {
+    if (visible)
+      document
+        .querySelector('.application')
+        ?.scrollIntoView?.({ block: 'start' })
+  }, [view.name, visible])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -421,59 +492,32 @@ function DashboardApp({
         : null
 
   return (
-    <div className="application" data-header-collapsed={headerCollapsed}>
-      <a className="skip-link" href="#main">
-        Skip to content
-      </a>
-      <OrbitalSurface />
-      <button
-        type="button"
-        className="header-toggle"
-        aria-controls="app-header"
-        aria-expanded={!headerCollapsed}
-        aria-label={headerCollapsed ? 'Open navigation' : 'Collapse navigation'}
-        title={headerCollapsed ? 'Open navigation' : 'Collapse navigation'}
-        onClick={() => setHeaderCollapsed((collapsed) => !collapsed)}
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          aria-hidden="true"
-        >
-          <rect x="3" y="4" width="18" height="16" rx="2" />
-          <path d="M9 4v16" />
-          <path d={headerCollapsed ? 'm13 9 3 3-3 3' : 'm16 9-3 3 3 3'} />
-        </svg>
-      </button>
-      <header id="app-header" className="app-header" hidden={headerCollapsed}>
-        <a
-          className="brand"
-          href="#main"
-          aria-label="Feedback Intelligence home"
-        >
-          <span className="brand__mark" aria-hidden="true" />
-          <span>
-            <strong>Feedback Intelligence</strong>
-            <small>Confidence-aware analytics</small>
-          </span>
-        </a>
-        <span className="rail-section-label">Workspace</span>
+    <div className="showcase-surface">
+      <ShellSlot name="title">
+        Showcase /{' '}
+        {view.name === 'overview'
+          ? 'Overview'
+          : view.name === 'signal'
+            ? 'Signal Explorer'
+            : 'Decision evidence'}
+      </ShellSlot>
+      <ShellSlot name="showcase">
         <nav className="primary-nav" aria-label="Primary navigation">
-          <a href="#workbench">Open workbench</a>
           <button
             type="button"
-            aria-current={view.name === 'overview' ? 'page' : undefined}
+            aria-current={
+              visible && view.name === 'overview' ? 'page' : undefined
+            }
             onClick={() => setView({ name: 'overview' })}
           >
-            Overview
+            <NavigationIcon name="Overview" />
+            <span>Overview</span>
           </button>
           <button
             type="button"
-            aria-current={view.name !== 'overview' ? 'page' : undefined}
+            aria-current={
+              visible && view.name !== 'overview' ? 'page' : undefined
+            }
             disabled={!firstSignalId}
             onClick={() => {
               if (!firstSignalId) return
@@ -482,13 +526,16 @@ function DashboardApp({
               setView({ name: 'signal', signalId: firstSignalId, page: 1 })
             }}
           >
-            Signals
+            <NavigationIcon name="Signals" />
+            <span>Signals</span>
           </button>
         </nav>
+      </ShellSlot>
+      <ShellSlot name="context">
         <div className="header-actions">
           <ContextSwitch context={context} onChange={changeContext} />
         </div>
-      </header>
+      </ShellSlot>
 
       <div
         className={`context-banner context-banner--${context}`}

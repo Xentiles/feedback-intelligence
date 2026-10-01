@@ -407,8 +407,9 @@ and reproducible detector promotion gate.
 
 Dashboard contracts, metric semantics, privacy boundaries, and local commands are
 documented in [dashboard read architecture](docs/dashboard-architecture.md). The
-design/token mapping and exact partial native-Figma status are recorded in
-[dashboard product design](docs/dashboard-design.md).
+shared Orbital Clarity tokens, floating navigation, workbench components, and
+motion behavior are recorded in [interface design](docs/dashboard-design.md),
+with dated [browser and regression evidence](docs/quality/orbital-ui-review.md).
 
 ## Licensing
 

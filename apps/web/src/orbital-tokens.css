@@ -1,0 +1,57 @@
+/* Orbital Clarity v0.4: approved palette and semantic roles. */
+:root {
+  color-scheme: dark;
+  --oc-graphite: #2c2c2c;
+  --oc-gunmetal: #404040;
+  --oc-deep-space-blue: #28384e;
+  --oc-autumn-leaf: #e86823;
+  --oc-platinum: #edf0f5;
+  --oc-surface-primary: var(--oc-graphite);
+  --oc-surface-secondary: var(--oc-gunmetal);
+  --oc-surface-complementary: var(--oc-deep-space-blue);
+  --oc-text-primary: var(--oc-platinum);
+  --oc-text-inverse: var(--oc-gunmetal);
+  --oc-accent: var(--oc-autumn-leaf);
+  --oc-border-control: var(--oc-platinum);
+  --oc-border-divider: rgb(237 240 245 / 16%);
+  --oc-radius-control: 4px;
+  --oc-radius-surface: 8px;
+  --oc-space-4: 4px;
+  --oc-space-8: 8px;
+  --oc-space-12: 12px;
+  --oc-space-16: 16px;
+  --oc-space-24: 24px;
+  --oc-space-32: 32px;
+  --oc-space-48: 48px;
+  --oc-space-64: 64px;
+  --oc-font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
+  --oc-font-mono: 'IBM Plex Mono', monospace;
+  --oc-feedback: 120ms;
+  --oc-disclosure: 180ms;
+  --oc-content-max: 1280px;
+  --oc-page-padding: 32px;
+  --fi-rail-width: 184px;
+  --fi-color-background-canvas: var(--oc-graphite);
+  --fi-color-background-surface: var(--oc-gunmetal);
+  --fi-color-background-subtle: var(--oc-deep-space-blue);
+  --fi-color-text-primary: var(--oc-platinum);
+  --fi-color-text-secondary: var(--oc-platinum);
+  --fi-color-accent-default: var(--oc-autumn-leaf);
+  --fi-color-border: var(--oc-border-divider);
+}
+@media (max-width: 1199px) {
+  :root {
+    --oc-page-padding: 24px;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --oc-page-padding: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --oc-feedback: 0ms;
+    --oc-disclosure: 0ms;
+  }
+}

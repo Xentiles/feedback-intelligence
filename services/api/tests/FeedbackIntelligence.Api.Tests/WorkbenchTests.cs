@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FeedbackIntelligence.Api.Workbench;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 
 namespace FeedbackIntelligence.Api.Tests;
 
@@ -15,6 +16,28 @@ public sealed class WorkbenchTests
         var state = await client.GetStringAsync("/api/v1/workbench/session");
         Assert.False(JsonDocument.Parse(state).RootElement.GetProperty("enabled").GetBoolean());
         Assert.Equal(System.Net.HttpStatusCode.NotFound, (await client.GetAsync("/api/v1/workbench/datasets")).StatusCode);
+    }
+
+    [Fact]
+    public async Task FailedCallbackReturnsOnlyAnAppOwnedErrorFlag()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "workbench-callback-" + Guid.NewGuid());
+        await using var application = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Workbench:Enabled"] = "true",
+                ["Workbench:Origin"] = "http://localhost:8081",
+                ["Workbench:VaultPath"] = Path.Combine(directory, "vault"),
+                ["Workbench:KeysPath"] = Path.Combine(directory, "keys")
+            }));
+            builder.ConfigureServices((context, services) => services.AddWorkbench(context.Configuration));
+        });
+        using var client = application.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var response = await client.GetAsync("/auth/callback?state=invalid&code=private-code&error=private-description");
+        Assert.Equal(System.Net.HttpStatusCode.Redirect, response.StatusCode);
+        Assert.Equal("http://localhost:8081/?connection=error#workbench", response.Headers.Location!.OriginalString);
+        Assert.Empty(await response.Content.ReadAsStringAsync());
     }
 
     [Theory]

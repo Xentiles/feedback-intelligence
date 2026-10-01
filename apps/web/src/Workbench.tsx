@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
-  workbench,
+  workbench as defaultWorkbench,
   setWorkbenchCsrf,
   type Dataset,
   type Template,
@@ -14,10 +14,11 @@ import {
   type Comparison,
   type TrendResult,
 } from './workbench-api'
-import './workbench.css'
+import { type WorkbenchPage } from './application-routes'
+import { useConfirmation } from './confirmation-context'
 import { priceReference } from './workbench-pricing'
 
-type View = 'Datasets' | 'Classification' | 'Runs' | 'Results' | 'Connections'
+type View = WorkbenchPage
 const FIELDS = [
   'text',
   'id',
@@ -29,17 +30,35 @@ const FIELDS = [
   'group',
 ]
 
-export function Workbench() {
+export function Workbench({
+  page,
+  onNavigate,
+  visible = true,
+  client = defaultWorkbench,
+}: {
+  page?: WorkbenchPage
+  onNavigate?: (view: WorkbenchPage) => void
+  visible?: boolean
+  client?: typeof defaultWorkbench
+} = {}) {
+  const workbench = client
+  const confirm = useConfirmation()
   const [session, setSession] = useState<
     'loading' | 'disabled' | 'locked' | 'ready'
   >('loading')
-  const [view, setView] = useState<View>(
+  const [localView, setLocalView] = useState<View>(
     new URLSearchParams(window.location.search).has('connection')
       ? 'Connections'
       : 'Datasets',
   )
+  const view = page ?? localView
+  const setView = onNavigate ?? setLocalView
   const [code, setCode] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState(
+    new URLSearchParams(window.location.search).get('connection') === 'error'
+      ? 'ChatGPT sign-in was not completed. Return to Connections and try again; no plan usage was authorized by this failed attempt.'
+      : '',
+  )
   const [busy, setBusy] = useState(false)
   const [datasets, setDatasets] = useState<Dataset[]>([])
   const [templates, setTemplates] = useState<Template[]>([])
@@ -107,10 +126,10 @@ export function Workbench() {
       (id) => id || d.find((row) => row.status === 'ready')?.id || '',
     )
     setTemplateId((id) => id || t[0]?.id || '')
-  }, [])
+  }, [workbench])
   useEffect(() => {
     if (new URLSearchParams(window.location.search).has('connection'))
-      window.history.replaceState(null, '', '/#workbench')
+      window.history.replaceState(null, '', '/#workbench/connections')
     const expired = () => {
       setSession('locked')
       setResults(null)
@@ -138,9 +157,9 @@ export function Workbench() {
       abort.abort()
       window.removeEventListener('workbench-session-expired', expired)
     }
-  }, [])
+  }, [workbench])
   useEffect(() => {
-    if (session !== 'ready') return
+    if (session !== 'ready' || !visible) return
     let active = true
     const reload = () => {
       void refresh().catch((e) => {
@@ -153,7 +172,7 @@ export function Workbench() {
       active = false
       window.clearInterval(interval)
     }
-  }, [session, refresh])
+  }, [session, refresh, visible])
   useEffect(() => {
     if (!connectionId) return
     const abort = new AbortController()
@@ -172,12 +191,12 @@ export function Workbench() {
         if (!abort.signal.aborted) setError(String(e))
       })
     return () => abort.abort()
-  }, [connectionId])
+  }, [connectionId, workbench])
   const query = new URLSearchParams(
     Object.entries(filters).map(([name, value]) => [name, String(value)]),
   ).toString()
   useEffect(() => {
-    if (!selectedRun || session !== 'ready') return
+    if (!selectedRun || session !== 'ready' || !visible) return
     const abort = new AbortController()
     let generation = 0
     const reload = () => {
@@ -202,7 +221,7 @@ export function Workbench() {
       abort.abort()
       window.clearInterval(interval)
     }
-  }, [selectedRun, query, session])
+  }, [selectedRun, query, session, visible, workbench])
 
   const startRun = async (mode: 'sample' | 'full', sample?: Run) => {
     const options = {
@@ -227,9 +246,11 @@ export function Workbench() {
         .map((row) => `Row ${row.row}: ${row.redactedText.slice(0, 500)}`)
         .join('\n\n')
       if (
-        !window.confirm(
-          `Process ${preview.selected} records with ${options.model}? ${preview.blocked} are privacy-blocked; ${preview.reused} results will be reused. Prepared examples:\n\n${examples}\n\nApproved feedback will be sent to OpenAI using the selected connection. This consumes your plan allowance or API billing.`,
-        )
+        !(await confirm({
+          title: 'Approve OpenAI processing',
+          confirmLabel: `Process ${preview.selected} records`,
+          message: `Process ${preview.selected} records with ${options.model}? ${preview.blocked} are privacy-blocked; ${preview.reused} results will be reused. Prepared examples:\n\n${examples}\n\nApproved feedback will be sent to OpenAI using the selected connection. This consumes your plan allowance or API billing.`,
+        }))
       )
         return
     }
@@ -250,31 +271,8 @@ export function Workbench() {
 
   return (
     <div className="wb-shell">
-      <header className="wb-header">
-        <a href="#">Feedback Intelligence</a>
-        <span>Local workbench</span>
-        <a href="#">Recorded showcase ↗</a>
-      </header>
-      <nav className="wb-nav" aria-label="Workbench navigation">
-        {(
-          [
-            'Datasets',
-            'Classification',
-            'Runs',
-            'Results',
-            'Connections',
-          ] as View[]
-        ).map((name) => (
-          <button
-            key={name}
-            aria-current={view === name ? 'page' : undefined}
-            onClick={() => setView(name)}
-          >
-            {name}
-          </button>
-        ))}
-      </nav>
-      <main className="wb-main">
+      <main id="workbench-main" className="wb-main" aria-busy={busy}>
+        <p className="eyebrow">Local workbench</p>
         <h1>{view}</h1>
         <p className="wb-muted">
           Your datasets and runs are saved on this machine. Results are
@@ -292,6 +290,7 @@ export function Workbench() {
             <button onClick={() => setNotice('')}>Got it</button>
           </div>
         )}
+        {busy && <p role="status">Working on your local request…</p>}
         {session === 'loading' ? (
           <p role="status">Checking local workspace…</p>
         ) : session === 'disabled' ? (
@@ -339,102 +338,114 @@ export function Workbench() {
           </form>
         ) : (
           <>
-            {view === 'Datasets' && (
-              <>
-                <section className="wb-panel">
-                  <h2>Choose data</h2>
-                  <p>
-                    Start with your own reviews or a reproducible rules
-                    scenario. For the existing SemIf/rules/Sol comparison, open
-                    the recorded showcase.
-                  </p>
-                  <button
-                    disabled={busy}
-                    onClick={() => {
-                      void task(async () => {
-                        const d = await workbench<Dataset>('/datasets/demo', {
-                          count: 10000,
-                        })
-                        setDatasetId(d.id)
-                        await refresh()
-                        setView('Classification')
+            <section
+              hidden={view !== 'Datasets'}
+              aria-label="Dataset workspace"
+            >
+              <section className="wb-panel">
+                <h2>Choose data</h2>
+                <p>
+                  Start with your own reviews or a reproducible rules scenario.
+                  For the existing SemIf/rules/Sol comparison, open the recorded
+                  showcase.
+                </p>
+                <button
+                  className="button--primary"
+                  disabled={busy}
+                  onClick={() => {
+                    void task(async () => {
+                      const d = await workbench<Dataset>('/datasets/demo', {
+                        count: 10000,
                       })
-                    }}
-                  >
-                    Load 10,000-record synthetic rules scenario
-                  </button>
-                </section>
-                <ImportWizard
-                  busy={busy}
-                  task={task}
-                  imported={async () => {
-                    await refresh()
-                    setView('Classification')
+                      setDatasetId(d.id)
+                      await refresh()
+                      setView('Classification')
+                    })
                   }}
-                />
-                <section className="wb-panel">
-                  <h2>Saved datasets</h2>
-                  {datasets.length === 0 ? (
-                    <p>No datasets imported yet.</p>
-                  ) : (
-                    <div className="wb-table-wrap">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Name</th>
-                            <th>Records</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {datasets.map((d) => (
-                            <tr key={d.id}>
-                              <td>{d.name}</td>
-                              <td>{d.count.toLocaleString()}</td>
-                              <td>{d.status}</td>
-                              <td>
-                                <button
-                                  disabled={d.status !== 'ready'}
-                                  onClick={() => {
-                                    setDatasetId(d.id)
-                                    setView('Classification')
-                                  }}
-                                >
-                                  Use {d.name}
-                                </button>
-                                <button
-                                  disabled={busy || d.status !== 'ready'}
-                                  onClick={() => {
-                                    if (
-                                      window.confirm(
-                                        `Delete ${d.name} and all its runs and results? This permanently purges local data.`,
+                >
+                  Load 10,000-record synthetic rules scenario
+                </button>
+              </section>
+              <ImportWizard
+                client={workbench}
+                busy={busy}
+                task={task}
+                imported={async () => {
+                  await refresh()
+                  setView('Classification')
+                }}
+              />
+              <section className="wb-panel">
+                <h2>Saved datasets</h2>
+                {datasets.length === 0 ? (
+                  <p>No datasets imported yet.</p>
+                ) : (
+                  <div
+                    className="wb-table-wrap"
+                    role="region"
+                    aria-label="Saved datasets table"
+                    tabIndex={0}
+                  >
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Records</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {datasets.map((d) => (
+                          <tr key={d.id}>
+                            <td>{d.name}</td>
+                            <td>{d.count.toLocaleString()}</td>
+                            <td>{d.status}</td>
+                            <td>
+                              <button
+                                disabled={d.status !== 'ready'}
+                                onClick={() => {
+                                  setDatasetId(d.id)
+                                  setView('Classification')
+                                }}
+                              >
+                                Use {d.name}
+                              </button>
+                              <button
+                                className="button--destructive"
+                                disabled={busy || d.status !== 'ready'}
+                                onClick={async () => {
+                                  if (
+                                    await confirm({
+                                      title: 'Delete dataset',
+                                      destructive: true,
+                                      confirmLabel: 'Delete dataset',
+                                      message: `Delete ${d.name} and all its runs and results? This permanently purges local data.`,
+                                    })
+                                  )
+                                    void task(async () => {
+                                      await workbench(
+                                        `/datasets/${d.id}`,
+                                        undefined,
+                                        'DELETE',
                                       )
-                                    )
-                                      void task(async () => {
-                                        await workbench(
-                                          `/datasets/${d.id}`,
-                                          undefined,
-                                          'DELETE',
-                                        )
-                                        if (datasetId === d.id) setDatasetId('')
-                                        setSelectedRun('')
-                                        await refresh()
-                                      })
-                                  }}
-                                >
-                                  Delete {d.name}
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </section>
-              </>
-            )}
+                                      if (datasetId === d.id) setDatasetId('')
+                                      setSelectedRun('')
+                                      await refresh()
+                                    })
+                                }}
+                              >
+                                Delete {d.name}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </section>
+            </section>
             {view === 'Classification' && (
               <>
                 <section className="wb-panel">
@@ -496,7 +507,7 @@ export function Workbench() {
                         Choose a connected account. ChatGPT plan usage and API
                         billing are separate.{' '}
                         <a
-                          href="#workbench"
+                          href="#workbench/connections"
                           onClick={() => setView('Connections')}
                         >
                           Manage connections
@@ -570,6 +581,7 @@ export function Workbench() {
                     </>
                   )}
                   <button
+                    className="button--primary"
                     disabled={
                       busy ||
                       !datasetId ||
@@ -662,6 +674,7 @@ export function Workbench() {
                         Add topic
                       </button>
                       <button
+                        className="button--primary"
                         disabled={busy}
                         onClick={() => {
                           void task(async () => {
@@ -688,7 +701,12 @@ export function Workbench() {
                 {runs.length === 0 ? (
                   <p>Choose a dataset and start a classification run.</p>
                 ) : (
-                  <div className="wb-table-wrap">
+                  <div
+                    className="wb-table-wrap"
+                    role="region"
+                    aria-label="Run history table"
+                    tabIndex={0}
+                  >
                     <table>
                       <thead>
                         <tr>
@@ -731,9 +749,19 @@ export function Workbench() {
                               </button>
                               {['queued', 'running'].includes(r.status) && (
                                 <button
+                                  className="button--destructive"
                                   disabled={busy}
                                   onClick={() => {
                                     void task(async () => {
+                                      if (
+                                        !(await confirm({
+                                          title: 'Cancel processing',
+                                          confirmLabel: 'Stop run',
+                                          message:
+                                            'Stop dispatching records? Successful results are retained. An in-flight model request may still consume usage.',
+                                        }))
+                                      )
+                                        return
                                       await workbench(
                                         `/runs/${r.id}/cancel`,
                                         {},
@@ -749,12 +777,16 @@ export function Workbench() {
                                 r.status,
                               ) && (
                                 <button
+                                  className="button--primary"
                                   disabled={busy}
-                                  onClick={() => {
+                                  onClick={async () => {
                                     if (
-                                      window.confirm(
-                                        'Resume unfinished records? Interrupted OpenAI requests can consume additional usage.',
-                                      )
+                                      await confirm({
+                                        title: 'Resume unfinished records',
+                                        confirmLabel: 'Resume run',
+                                        message:
+                                          'Resume unfinished records? Interrupted OpenAI requests can consume additional usage.',
+                                      })
                                     )
                                       void task(async () => {
                                         await workbench(
@@ -908,6 +940,7 @@ export function Workbench() {
                               same configuration.
                             </label>
                             <button
+                              className="button--primary"
                               disabled={busy || !consent}
                               onClick={() => {
                                 void task(() => startRun('full', results.run))
@@ -992,7 +1025,12 @@ export function Workbench() {
                       )}
                       <details>
                         <summary>Daily counts and topic rates</summary>
-                        <div className="wb-table-wrap">
+                        <div
+                          className="wb-table-wrap"
+                          role="region"
+                          aria-label="Daily counts table"
+                          tabIndex={0}
+                        >
                           <table>
                             <thead>
                               <tr>
@@ -1034,7 +1072,12 @@ export function Workbench() {
                     </section>
                     <section className="wb-panel">
                       <h2>Record evidence</h2>
-                      <div className="wb-table-wrap">
+                      <div
+                        className="wb-table-wrap"
+                        role="region"
+                        aria-label="Classified record evidence table"
+                        tabIndex={0}
+                      >
                         <table>
                           <thead>
                             <tr>
@@ -1260,9 +1303,12 @@ export function Workbench() {
                             void task(async () => {
                               if (
                                 originalExport &&
-                                !window.confirm(
-                                  'Export original text, including any private content?',
-                                )
+                                !(await confirm({
+                                  title: 'Export original text',
+                                  confirmLabel: 'Export original text',
+                                  message:
+                                    'Export original text, including any private content? The local download will contain source feedback rather than only prepared text.',
+                                }))
                               )
                                 return
                               const file = await workbench<{
@@ -1312,6 +1358,7 @@ export function Workbench() {
                     existing allowance.
                   </p>
                   <button
+                    className="button--primary"
                     disabled={busy}
                     onClick={() => {
                       void task(async () => {
@@ -1484,7 +1531,12 @@ function Distribution({
       {Object.entries(values).map(([label, count]) => (
         <div key={label} className="wb-distribution">
           <span>{label}</span>
-          <meter min={0} max={Math.max(total, 1)} value={count}>
+          <meter
+            aria-label={`${title}: ${label}`}
+            min={0}
+            max={Math.max(total, 1)}
+            value={count}
+          >
             {count}
           </meter>
           <span>
@@ -1555,7 +1607,9 @@ function TopicEditor({
           }
         />
       </label>
-      <button onClick={remove}>Remove {topic.label}</button>
+      <button className="button--destructive" onClick={remove}>
+        Remove {topic.label}
+      </button>
     </fieldset>
   )
 }
@@ -1564,11 +1618,14 @@ function ImportWizard({
   busy,
   task,
   imported,
+  client,
 }: {
   busy: boolean
   task: (fn: () => Promise<void>) => Promise<void>
   imported: () => Promise<void>
+  client: typeof defaultWorkbench
 }) {
+  const workbench = client
   const [file, setFile] = useState<File | null>(null)
   const [pasted, setPasted] = useState('')
   const [name, setName] = useState('My feedback')
@@ -1655,6 +1712,7 @@ function ImportWizard({
         />
       </label>
       <button
+        className="button--primary"
         disabled={busy || (!file && !pasted.trim())}
         onClick={() => {
           void task(() => inspect())
@@ -1759,6 +1817,7 @@ function ImportWizard({
             <pre>{JSON.stringify(preview.rows, null, 2)}</pre>
           </details>
           <button
+            className="button--primary"
             disabled={busy || !mapping.text}
             onClick={() => {
               void task(async () =>
@@ -1819,6 +1878,7 @@ function ImportWizard({
             exclusions.
           </label>
           <button
+            className="button--primary"
             disabled={busy || !confirmed || validation.summary.accepted === 0}
             onClick={() => {
               void task(async () => {
