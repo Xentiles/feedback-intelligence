@@ -502,34 +502,40 @@ function DashboardApp({
             : 'Decision evidence'}
       </ShellSlot>
       <ShellSlot name="showcase">
-        <nav className="primary-nav" aria-label="Primary navigation">
-          <button
-            type="button"
-            aria-current={
-              visible && view.name === 'overview' ? 'page' : undefined
-            }
-            onClick={() => setView({ name: 'overview' })}
-          >
-            <NavigationIcon name="Overview" />
-            <span>Overview</span>
-          </button>
-          <button
-            type="button"
-            aria-current={
-              visible && view.name !== 'overview' ? 'page' : undefined
-            }
-            disabled={!firstSignalId}
-            onClick={() => {
-              if (!firstSignalId) return
-              setSignal({ status: 'idle' })
-              setEvidence({ status: 'idle' })
-              setView({ name: 'signal', signalId: firstSignalId, page: 1 })
-            }}
-          >
-            <NavigationIcon name="Signals" />
-            <span>Signals</span>
-          </button>
-        </nav>
+        {(activateShowcase) => (
+          <nav className="primary-nav" aria-label="Primary navigation">
+            <button
+              type="button"
+              aria-current={
+                visible && view.name === 'overview' ? 'page' : undefined
+              }
+              onClick={() => {
+                activateShowcase()
+                setView({ name: 'overview' })
+              }}
+            >
+              <NavigationIcon name="Overview" />
+              <span>Overview</span>
+            </button>
+            <button
+              type="button"
+              aria-current={
+                visible && view.name !== 'overview' ? 'page' : undefined
+              }
+              disabled={!firstSignalId}
+              onClick={() => {
+                if (!firstSignalId) return
+                activateShowcase()
+                setSignal({ status: 'idle' })
+                setEvidence({ status: 'idle' })
+                setView({ name: 'signal', signalId: firstSignalId, page: 1 })
+              }}
+            >
+              <NavigationIcon name="Signals" />
+              <span>Signals</span>
+            </button>
+          </nav>
+        )}
       </ShellSlot>
       <ShellSlot name="context">
         <div className="header-actions">

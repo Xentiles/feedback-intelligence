@@ -15,17 +15,28 @@ type Slots = {
   context: HTMLElement | null
   title: HTMLElement | null
 }
-const ShellSlots = createContext<Slots | null>(null)
+const ShellSlots = createContext<{
+  targets: Slots
+  activateShowcase: () => void
+} | null>(null)
 
 export function ShellSlot({
   name,
   children,
 }: {
   name: keyof Slots
-  children: ReactNode
+  children: ReactNode | ((activateShowcase: () => void) => ReactNode)
 }) {
   const slots = useContext(ShellSlots)
-  return slots?.[name] ? createPortal(children, slots[name]) : null
+  const target = slots?.targets[name]
+  return target && slots
+    ? createPortal(
+        typeof children === 'function'
+          ? children(slots.activateShowcase)
+          : children,
+        target,
+      )
+    : null
 }
 
 export function NavigationIcon({ name }: { name: string }) {
@@ -115,7 +126,15 @@ export function ApplicationShell({
     }
   }
   return (
-    <ShellSlots.Provider value={{ showcase, context, title }}>
+    <ShellSlots.Provider
+      value={{
+        targets: { showcase, context, title },
+        activateShowcase: () => {
+          navigate({ area: 'showcase', page: 'Datasets' })
+          closeAfterSelection()
+        },
+      }}
+    >
       <div
         className="application oc-application"
         data-header-collapsed={!expanded}
@@ -190,17 +209,7 @@ export function ApplicationShell({
             </span>
           </a>
           <span className="rail-section-label">Showcase</span>
-          <div
-            ref={setShowcase}
-            onClickCapture={(event) => {
-              if (
-                (event.target as HTMLElement).closest('button:not(:disabled)')
-              ) {
-                navigate({ area: 'showcase', page: 'Datasets' })
-                closeAfterSelection()
-              }
-            }}
-          />
+          <div ref={setShowcase} />
           <span className="rail-section-label">Workbench</span>
           <nav className="primary-nav" aria-label="Workbench navigation">
             {workbenchPages.map((page) => (

@@ -77,3 +77,22 @@ document visibility.
 Remote CI evidence is attached to the updated draft PR. Real owner-initiated
 ChatGPT sign-in and a separately approved small inference smoke run remain the
 workbench integration acceptance gate; this UI review does not close that gate.
+
+## Navigation repair — v0.1.2
+
+The original Showcase buttons were rendered through React portals. Their clicks
+did not pass through the shell slot's React capture handler, leaving the Workbench
+area visible. Overview and Signals now explicitly invoke the shell's Showcase
+activation action, which also closes the phone menu.
+
+Two regression cases failed on the original implementation and pass with the
+repair. The full frontend suite now has 45 passing tests; formatting, lint, types
+and production build also passed. Existing draft-preservation and phone-focus
+tests now include a Workbench-to-Showcase round trip.
+
+The rebuilt local website was checked at 1440 px: Overview and Signals both
+returned visibly to the Showcase from each of the five Workbench tabs. At 390 px,
+keyboard selection from Connections returned to Overview, closed the menu and
+restored focus to its trigger. One background remained mounted. Local captures:
+`artifacts/orbital-ui/navigation-repair-1440.jpg` and
+`artifacts/orbital-ui/navigation-repair-390.jpg`.

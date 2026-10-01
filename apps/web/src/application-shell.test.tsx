@@ -18,6 +18,38 @@ afterEach(() => {
 })
 
 describe('shared navigation', () => {
+  it.each(['Overview', 'Signals'] as const)(
+    'returns from Workbench to %s using its floating navigation button',
+    async (destination) => {
+      window.history.replaceState(null, '', '/#workbench/classification')
+      render(
+        <App client={visualDashboard} workbenchClient={visualWorkbench()} />,
+      )
+      await screen.findByRole('heading', { name: 'Configure a run' })
+      // Wait for the retained showcase's metadata before using Signals.
+      await screen.findByRole('heading', {
+        name: 'Imported feedback',
+        hidden: true,
+      })
+      fireEvent.click(screen.getByRole('button', { name: destination }))
+      expect(window.location.hash).toBe('#showcase')
+      await screen.findByRole('heading', {
+        name:
+          destination === 'Overview'
+            ? 'Feedback overview'
+            : 'Illustrative delivery delay',
+        level: 1,
+      })
+      expect(
+        screen.queryByRole('heading', { name: 'Classification', level: 1 }),
+      ).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: destination })).toHaveAttribute(
+        'aria-current',
+        'page',
+      )
+    },
+  )
+
   it('retains legacy routes and ignores in-page anchors', () => {
     expect(readRoute('#workbench')).toEqual({
       area: 'workbench',
@@ -45,6 +77,10 @@ describe('shared navigation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Collapse navigation' }))
     expect(screen.getByLabelText('Template name')).toHaveValue('My draft')
     fireEvent.click(screen.getByRole('button', { name: 'Open navigation' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Overview' }))
+    await screen.findByRole('heading', { name: 'Feedback overview' })
+    fireEvent.click(screen.getByRole('button', { name: 'Classification' }))
+    expect(screen.getByLabelText('Template name')).toHaveValue('My draft')
     fireEvent.click(screen.getByRole('button', { name: 'Datasets' }))
     expect(screen.getByLabelText('Or paste one review per line')).toHaveValue(
       'Keep this unfinished upload',
@@ -79,6 +115,12 @@ describe('shared navigation', () => {
     fireEvent.click(open)
     fireEvent.click(screen.getByRole('button', { name: 'Connections' }))
     await screen.findByRole('heading', { name: 'ChatGPT plan connection' })
+    expect(open).toHaveFocus()
+    expect(open).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(open)
+    fireEvent.click(screen.getByRole('button', { name: 'Overview' }))
+    await screen.findByRole('heading', { name: 'Feedback overview' })
+    expect(window.location.hash).toBe('#showcase')
     expect(open).toHaveFocus()
     expect(open).toHaveAttribute('aria-expanded', 'false')
   })
