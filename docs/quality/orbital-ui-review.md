@@ -119,3 +119,20 @@ that source failure was shown explicitly and is separate from the mocked
 awaiting-calibration case. No live analytics or inference was enabled for this
 presentation change. Local captures: `artifacts/orbital-ui/compact-background-live-1440.jpg`
 and `artifacts/orbital-ui/compact-background-menu-390.jpg`.
+
+## Shared dropdown spacing — v0.1.4
+
+Single-choice selects now draw one shared chevron with its 16 px icon box inset
+12 px from the field edge. A 44 px trailing padding area keeps selected text clear
+of the arrow. Native select elements and option menus are retained; forced-color
+mode restores native appearance rather than relying on the decorative SVG.
+
+Frontend formatting, lint, types, all 45 tests and production build passed.
+Browser checks covered Showcase filters, classification settings and nine upload
+mapping/language selects at desktop and phone widths. Computed styles confirmed
+the same inset and text padding. The 390 and 320 px views had no document overflow.
+Space opened the Engine menu, and ArrowDown/Enter changed its selected option.
+These interactions used isolated fixtures and made no inference requests.
+
+Local captures: `artifacts/orbital-ui/select-spacing-overview-1440.jpg` and
+`artifacts/orbital-ui/select-spacing-classification-390.jpg`.

@@ -66,6 +66,9 @@ evidence, disclosures, status messages and charts use the shared recipes in
 Scrollable tables have named, keyboard-focusable regions. Charts retain data
 disclosures and coverage explanations. Missing dates, sparse coverage, partial
 runs, locked workspaces and disabled runtime states remain explicit.
+Single-choice selects use a shared 16 px Platinum chevron positioned 12 px from
+the field edge, with 44 px of trailing text space. The native select semantics and
+option menus remain intact; forced-color mode restores the native indicator.
 
 Native application dialogs replace browser confirmation prompts for AI processing,
 cancellation/resume, dataset deletion and original-text export. They describe the
