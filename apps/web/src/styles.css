@@ -93,6 +93,7 @@ svg {
   box-shadow: 0 0 0 2px var(--oc-gunmetal);
 }
 button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
   background: var(--oc-graphite);
   color: var(--oc-platinum);
@@ -260,6 +261,13 @@ button:disabled {
 .primary-nav button[aria-current='page'] {
   background: var(--oc-deep-space-blue);
 }
+.primary-nav button:disabled {
+  cursor: not-allowed;
+}
+.navigation-hint {
+  font: 400 12px/18px var(--oc-font-sans);
+  color: var(--oc-platinum);
+}
 .primary-nav button[aria-current='page']::before {
   content: '';
   position: absolute;
@@ -296,8 +304,13 @@ button:disabled {
 }
 .background-options {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, minmax(44px, 1fr));
   gap: 4px;
+}
+.background-options button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .motion-control {
   margin-top: 8px;

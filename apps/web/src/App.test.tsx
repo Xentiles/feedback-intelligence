@@ -685,6 +685,17 @@ describe('dashboard journey', () => {
     expect(
       screen.getByText(/does not mean that no complaints/i),
     ).toBeInTheDocument()
+    const signals = screen.getByRole('button', { name: 'Signals' })
+    expect(signals).toBeDisabled()
+    expect(signals).toHaveAccessibleDescription(
+      'Live signals await calibration.',
+    )
+    fireEvent.click(signals)
+    expect(client.signal).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Demo' }))
+    await screen.findByRole('heading', { name: 'Observed signals' })
+    expect(signals).toBeEnabled()
+    expect(signals).not.toHaveAttribute('aria-describedby')
   })
 
   it('renders restricted evidence without exposing an evidence body', () => {

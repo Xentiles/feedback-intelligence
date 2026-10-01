@@ -43,6 +43,9 @@ navigation does not reset the page or its state.
 
 Essential text remains fully opaque. Primary actions have Platinum fills and
 Gunmetal text; secondary actions have dark fills and Platinum boundaries.
+Disabled buttons intentionally use 50% opacity to distinguish unavailable actions;
+their explanations remain fully opaque. Disabled Signals describes the applicable
+loading, source, empty-data, filter or live-calibration state.
 Destructive actions retain an explicit action label and orange leading boundary.
 Controls use 4 px radii; selected containers use 8 px; tables and rules remain
 square. Metrics use open groups and selective dividers instead of repeated boxed
@@ -81,6 +84,10 @@ existing state/nonce/identity/scope validation remain unchanged.
 The existing sand renderer mounts once in the shared shell, with intensity 1.25
 and speed 0.85. Its module is bundled by Vite; the poster remains a local static
 asset. Animate, Still and Flat are saved as nonsecret local preferences.
+These three controls use a single icon row (Play, Pause and a solid square), with
+accessible names, hover titles and programmatic pressed states. Destinations keep
+their visible navigation labels. Animation restrictions are explained in the title
+and background status text as well as through the disabled state.
 Reduced-motion settings disable animation; unavailable graphics use the poster.
 The renderer suspends when its document is hidden and destroys listeners and
 graphics on unmount. The backdrop is decorative, `aria-hidden`, and

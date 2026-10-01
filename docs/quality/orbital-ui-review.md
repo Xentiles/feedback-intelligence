@@ -96,3 +96,26 @@ keyboard selection from Connections returned to Overview, closed the menu and
 restored focus to its trigger. One background remained mounted. Local captures:
 `artifacts/orbital-ui/navigation-repair-1440.jpg` and
 `artifacts/orbital-ui/navigation-repair-390.jpg`.
+
+## Disabled affordances and compact background controls — v0.1.3
+
+Disabled buttons now use 50% opacity, with explanatory text at full opacity.
+Signals reports its current loading, unavailable source, empty dataset, filter or
+live-calibration reason without changing the backend eligibility gate. Animate,
+Still and Flat use a single row of accessible icon buttons with titles and pressed
+states, retaining saved preferences and reduced-motion/graphics restrictions.
+
+All 45 frontend tests passed, including the Live-to-Demo availability transition
+and all three icon actions. Formatting, lint, types and production build passed.
+Browser checks at 1440, 390 and 320 px found no document overflow; icons shared
+one row and had 44 px minimum heights. At 1440 px they were approximately 45 px
+wide; on phones they were 56 px wide. The short phone viewport scrolls within
+navigation, and keyboard activation reaches the icon controls. One backdrop/canvas
+remained mounted when changing modes. Disabled Signals measured opacity 0.5 in
+Live and 1.0 after returning to Demo.
+
+The running opt-in workbench has no configured v1 Showcase Live data connection;
+that source failure was shown explicitly and is separate from the mocked
+awaiting-calibration case. No live analytics or inference was enabled for this
+presentation change. Local captures: `artifacts/orbital-ui/compact-background-live-1440.jpg`
+and `artifacts/orbital-ui/compact-background-menu-390.jpg`.

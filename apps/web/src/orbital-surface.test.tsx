@@ -19,8 +19,28 @@ it('keeps one controller when its parent rerenders and destroys it on unmount', 
     <OrbitalSurface controlsTarget={target} loader={loader} />,
   )
   await screen.findByText('In motion')
+  for (const name of ['Animate', 'Still', 'Flat']) {
+    const button = screen.getByRole('button', { name })
+    expect(button).toHaveAttribute('title')
+    expect(button).toHaveTextContent('')
+    expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+  }
   view.rerender(<OrbitalSurface controlsTarget={target} loader={loader} />)
   expect(mount).toHaveBeenCalledTimes(1)
+  fireEvent.click(screen.getByRole('button', { name: 'Still' }))
+  expect(controller.setOptions).toHaveBeenCalledWith({
+    paused: true,
+    flat: false,
+  })
+  expect(screen.getByRole('button', { name: 'Still' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  fireEvent.click(screen.getByRole('button', { name: 'Animate' }))
+  expect(controller.setOptions).toHaveBeenCalledWith({
+    paused: false,
+    flat: false,
+  })
   fireEvent.click(screen.getByRole('button', { name: 'Flat' }))
   expect(controller.setOptions).toHaveBeenCalledWith({
     paused: true,

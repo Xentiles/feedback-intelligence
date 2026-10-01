@@ -482,6 +482,18 @@ function DashboardApp({
   const activeSignalId =
     view.name === 'signal' || view.name === 'detail' ? view.signalId : null
   const firstSignalId = overviewValue?.signals[0]?.id ?? activeSignalId
+  const signalsUnavailableReason = firstSignalId
+    ? undefined
+    : metadata.status === 'error' || overview.status === 'error'
+      ? 'Signals unavailable: source could not be loaded.'
+      : metadata.status === 'ready' && !metadata.data.availableRange
+        ? 'Signals unavailable: no feedback imported.'
+        : metadata.status === 'ready' &&
+            metadata.data.policyStatus === 'awaiting_calibration'
+          ? 'Live signals await calibration.'
+          : overview.status === 'ready'
+            ? 'No signals match these filters.'
+            : 'Loading signals…'
   const activeSource =
     metadata.status === 'ready' && filters
       ? (metadata.data.sources.find(
@@ -523,6 +535,12 @@ function DashboardApp({
                 visible && view.name !== 'overview' ? 'page' : undefined
               }
               disabled={!firstSignalId}
+              aria-describedby={
+                signalsUnavailableReason
+                  ? 'signals-unavailable-reason'
+                  : undefined
+              }
+              title={signalsUnavailableReason}
               onClick={() => {
                 if (!firstSignalId) return
                 activateShowcase()
@@ -534,6 +552,11 @@ function DashboardApp({
               <NavigationIcon name="Signals" />
               <span>Signals</span>
             </button>
+            {signalsUnavailableReason && (
+              <span id="signals-unavailable-reason" className="navigation-hint">
+                {signalsUnavailableReason}
+              </span>
+            )}
           </nav>
         )}
       </ShellSlot>

@@ -109,6 +109,26 @@ export function OrbitalSurface({
           <button
             key={value}
             type="button"
+            aria-label={
+              value === 'animate'
+                ? 'Animate'
+                : value === 'still'
+                  ? 'Still'
+                  : 'Flat'
+            }
+            title={
+              value === 'animate'
+                ? state.reduced
+                  ? 'Animate — unavailable with reduced motion'
+                  : state.renderer === 'poster'
+                    ? 'Animate — unavailable with graphics fallback'
+                    : state.renderer === 'loading'
+                      ? 'Animate — preparing graphics'
+                      : 'Animate background'
+                : value === 'still'
+                  ? 'Still texture'
+                  : 'Flat Graphite'
+            }
             aria-pressed={
               ((state.reduced || state.renderer === 'poster') &&
               mode === 'animate'
@@ -123,11 +143,27 @@ export function OrbitalSurface({
             }
             onClick={() => change(value)}
           >
-            {value === 'animate'
-              ? 'Animate'
-              : value === 'still'
-                ? 'Still'
-                : 'Flat'}
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              fill={value === 'flat' ? 'currentColor' : 'none'}
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path
+                d={
+                  value === 'animate'
+                    ? 'M8 5l11 7-11 7z'
+                    : value === 'still'
+                      ? 'M8 5v14 M16 5v14'
+                      : 'M4 4h16v16H4z'
+                }
+              />
+            </svg>
           </button>
         ))}
       </div>
