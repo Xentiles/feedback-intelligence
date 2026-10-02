@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://feedback-intelligence.local/contracts/workbench-classification/1.0.0",
+  "title": "Exploratory workbench classification",
+  "type": "object",
+  "required": ["schemaVersion", "topic", "sentiment", "actionable", "redactedText", "matches", "requestedModel", "resolvedModel", "inputTokens", "outputTokens", "latencyMs", "calibrated", "templateRevision"],
+  "properties": {
+    "schemaVersion": {"const": "workbench-classification/1.0.0"},
+    "topic": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,49}$"},
+    "sentiment": {"enum": ["positive", "negative", "neutral", "mixed", null]},
+    "actionable": {"type": "boolean"},
+    "redactedText": {"type": "string"},
+    "matches": {"type": "array", "items": {"type": "object", "required": ["topic", "phrases", "priority"], "properties": {"topic": {"type": "string"}, "phrases": {"type": "array", "items": {"type": "string"}}, "priority": {"type": "integer"}}, "additionalProperties": false}},
+    "sentimentMatches": {"type": "object"},
+    "reusedFromRun": {"type": "string", "format": "uuid"},
+    "redactions": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "inputStateSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "requestedModel": {"type": "string"},
+    "reasoningEffort": {"enum": [null, "none", "minimal", "low", "medium", "high", "xhigh", "max"]},
+    "resolvedModel": {"type": "string"},
+    "inputTokens": {"type": "integer", "minimum": 0},
+    "outputTokens": {"type": "integer", "minimum": 0},
+    "latencyMs": {"type": "integer", "minimum": 0},
+    "calibrated": {"const": false},
+    "templateRevision": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

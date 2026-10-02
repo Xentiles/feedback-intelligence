@@ -64,6 +64,7 @@ build/
 
 # Private design template; the web app contains its own runtime assets
 /orbital-clarity-v0.4/
+/.workbench-runtime/
 
 # Generated local output; reviewed fixtures/reports belong outside these folders
 **/generated/

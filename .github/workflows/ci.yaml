@@ -264,3 +264,28 @@ jobs:
       - name: Stop containers
         if: always()
         run: docker compose --profile '*' down --remove-orphans
+
+  workbench:
+    name: Workbench · import, rules, privacy and purge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Start isolated local runtime
+        run: python3 scripts/start_workbench.py
+      - name: Wait for the API and worker
+        run: |
+          curl --fail --retry 15 --retry-delay 1 --retry-all-errors --max-time 5 http://localhost:8081/api/v1/workbench/session
+          docker compose --env-file .workbench-runtime/environment -f compose.workbench.yaml exec -T workbench-worker python -c "import urllib.request; urllib.request.urlopen('http://localhost:8090/health')"
+      - name: Exercise real imports, idempotent runs, privacy, export and purge
+        run: python3 scripts/quality_workbench_check.py
+      - name: Check lease fencing, immutable results, roles and sample reuse
+        run: |
+          docker compose --env-file .workbench-runtime/environment -f compose.workbench.yaml run --rm --no-deps \
+            -v "$PWD/scripts:/tests:ro" --entrypoint python workbench-worker /tests/quality_workbench_storage.py
+      - name: Stop isolated runtime
+        if: always()
+        run: docker compose --env-file .workbench-runtime/environment -f compose.workbench.yaml down --remove-orphans

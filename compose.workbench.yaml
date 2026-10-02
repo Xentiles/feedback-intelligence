@@ -1,0 +1,111 @@
+name: feedback-intelligence-workbench
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "127.0.0.1:${WORKBENCH_PORT:-8081}:8080"
+    healthcheck:
+      test: [CMD, wget, --quiet, --spider, http://localhost:8080/api/v1/workbench/session]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    user: "${WORKBENCH_UID}:${WORKBENCH_GID}"
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      Workbench__Enabled: "true"
+      Workbench__Origin: "http://localhost:${WORKBENCH_PORT:-8081}"
+      Workbench__Callback: "http://127.0.0.1:${WORKBENCH_PORT:-8081}/auth/callback"
+      Workbench__KeysPath: /workbench/keys
+      Workbench__VaultPath: /workbench/vault
+      Workbench__OwnerCodeFile: /run/workbench/owner-code
+      Workbench__ServiceTokenFile: /run/workbench/service-token
+      Workbench__DatabaseFile: /run/workbench/database
+    volumes:
+      - ./.workbench-runtime/api:/run/workbench:ro
+      - ./.workbench-runtime/vault:/workbench
+    depends_on:
+      init:
+        condition: service_completed_successfully
+  workbench-worker:
+    build:
+      context: .
+      dockerfile: services/decision-worker/Dockerfile
+    user: "${WORKBENCH_UID}:${WORKBENCH_GID}"
+    entrypoint: [feedback-workbench]
+    environment:
+      WORKBENCH_API_DSN_FILE: /run/workbench/api-dsn
+      WORKBENCH_WORKER_DSN_FILE: /run/workbench/worker-dsn
+      WORKBENCH_PURGE_DSN_FILE: /run/workbench/purge-dsn
+      WORKBENCH_SERVICE_TOKEN_FILE: /run/workbench/service-token
+      WORKBENCH_BROKER_URL: http://api:8080
+      WORKBENCH_MAX_UPLOAD_BYTES: ${WORKBENCH_MAX_UPLOAD_BYTES:-26214400}
+      WORKBENCH_MAX_RECORDS: ${WORKBENCH_MAX_RECORDS:-10000}
+      WORKBENCH_MAX_TEXT_CHARS: ${WORKBENCH_MAX_TEXT_CHARS:-20000}
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: feedback_intelligence
+      CLICKHOUSE_PASSWORD_FILE: /run/workbench/clickhouse-password
+    volumes:
+      - ./.workbench-runtime/worker:/run/workbench:ro
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8090/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      init:
+        condition: service_completed_successfully
+      clickhouse:
+        condition: service_healthy
+    restart: unless-stopped
+  init:
+    build:
+      context: .
+      dockerfile: services/decision-worker/Dockerfile
+    user: "${WORKBENCH_UID}:${WORKBENCH_GID}"
+    entrypoint: [python, -m, feedback_intelligence_worker.workbench.bootstrap]
+    environment:
+      WORKBENCH_BOOTSTRAP_FILE: /run/bootstrap/settings
+    volumes:
+      - ./.workbench-runtime/bootstrap:/run/bootstrap:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: feedback_intelligence
+      POSTGRES_USER: feedback_intelligence
+      POSTGRES_PASSWORD: ${WORKBENCH_POSTGRES_PASSWORD}
+    volumes:
+      - workbench-postgres:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U feedback_intelligence"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.8
+    environment:
+      CLICKHOUSE_DB: feedback_intelligence
+      CLICKHOUSE_USER: feedback_intelligence
+      CLICKHOUSE_PASSWORD: ${WORKBENCH_CLICKHOUSE_PASSWORD}
+    volumes:
+      - workbench-clickhouse:/var/lib/clickhouse
+      - ./infra/clickhouse/migrations/003_workbench.sql:/docker-entrypoint-initdb.d/003_workbench.sql:ro
+    healthcheck:
+      test: [CMD, wget, --quiet, --spider, http://localhost:8123/ping]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  workbench-postgres:
+  workbench-clickhouse:

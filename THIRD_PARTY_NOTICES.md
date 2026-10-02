@@ -1,5 +1,12 @@
 # Third-party notices and release constraints
 
+## Self-hosted interface fonts
+
+Inter (The Inter Project Authors) and IBM Plex Mono (IBM Corp., reserved name
+"Plex") are served locally through pinned Fontsource packages. Both font families
+retain SIL Open Font License 1.1 terms. Copies are included in
+`LICENSES/Inter-OFL-1.1.txt` and `LICENSES/Plex-OFL-1.1.txt`.
+
 This file identifies material that is not relicensed by the repository's
 Apache-2.0 and CC BY 4.0 grants. It is an inventory aid, not a substitute for the
 applicable terms.

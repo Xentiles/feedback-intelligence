@@ -1,32 +1,115 @@
 # Feedback Intelligence
 
-**From customer feedback to evidence-backed signals.**
+**An interactive local feedback-classification tool and evidence-driven architecture showcase.**
 
-Classify feedback into typed decisions, inspect changes over time, and trace each
-signal back to the records and model output behind it.
+Import reviews or comments, validate their structure, classify them with editable
+keyword rules or an explicitly connected OpenAI account, and inspect the records
+behind each distribution and trend. The recorded showcase remains available
+without credentials.
 
-![Feedback Intelligence: synthetic SemIf dashboard](docs/assets/dashboard.jpg)
+Development checkpoint **v0.1.6**, toward v0.2.0. The published **v0.1.0** source
+release remains unchanged. Local workflow safeguards are implemented and tested;
+hosted multi-user operation and human-calibrated model quality remain later work.
 
-[Demo walkthrough](docs/demo-walkthrough.md) · [Architecture](docs/architecture.md) ·
-[Benchmark](docs/benchmark.md) · [Model & limitations](MODEL_CARD.md) ·
-[Release readiness](docs/release-readiness.md)
+![Current synthetic showcase in the Orbital Clarity interface](docs/assets/dashboard.jpg)
+
+[Interactive workbench guide](docs/workbench.md) · [Demo walkthrough](docs/demo-walkthrough.md) ·
+[Architecture](docs/architecture.md) · [Benchmark](docs/benchmark.md) ·
+[Model & limitations](MODEL_CARD.md) · [Release readiness](docs/release-readiness.md)
 
 ## Try it locally
 
-With Docker Desktop running, run from the repository root:
+With Docker Desktop running, start the interactive Workbench from the repository root:
+
+```sh
+python3 scripts/start_workbench.py
+```
+
+Open [localhost:8081/#workbench](http://localhost:8081/#workbench). Unlock it with
+the private code in `.workbench-runtime/api/owner-code`. The startup script
+provisions protected local configuration and isolated persistent storage; it does
+not print credentials. No external model connection is required for rules.
+
+For the original no-key recorded showcase:
 
 ```sh
 docker compose up --build
 ```
 
-Open [localhost:8080](http://localhost:8080), keep **Demo** selected, choose
-**SemIf**, then follow **Product defect → Explore signal → View decision**.
-No API key or external dataset is needed; the first build downloads dependencies.
+Open [localhost:8080](http://localhost:8080), keep **Demo** selected and choose
+SemIf, Rules baseline or Sol medium. The first build downloads dependencies.
+The three methods review the same 480 synthetic records, not 1,440 independent
+observations. English and Swedish records cover 15 monthly periods.
 
-The demo offers **480 synthetic records**, **three selectable decision sources**
-(SemIf, rules, and Sol medium), English and Swedish feedback, and **15 monthly
-periods**. These are alternative reviews of the same records, not 1,440 independent
-observations. Live analytics remain gated by unfinished human calibration.
+To add the reproducible larger rules scenario to the running Workbench:
+
+```sh
+python3 scripts/seed_workbench_demo.py
+```
+
+This scenario contains 10,000 records across 450 observed dates. It demonstrates
+larger cohorts and filtering; it does not expand the frozen model benchmark.
+
+## What you can do
+
+| Area | Current capabilities | Availability and boundaries |
+| --- | --- | --- |
+| Showcase | Overview → Signal Explorer → contributing records → immutable decision evidence; selectable recorded methods and frozen evaluations | No credentials; synthetic data. Live analytical eligibility remains calibration-gated. |
+| Datasets | CSV/TSV, XLSX, JSON arrays, JSONL and pasted lines; sheet selection, mapping, preview, validation and explicit import | Local owner session. Limits: 25 MiB, 10,000 records, 20,000 characters per text; no silent truncation. Missing dates remain missing. |
+| Classification | General/retail templates, editable topics and keywords, immutable revisions, deterministic priority and match explanations | Free local rules. Built-in sentiment supports English/Swedish; unsupported languages return unavailable sentiment. |
+| Connections | ChatGPT sign-in or separately selected API-key billing; account-specific model discovery and automatic refresh | GPT-6/GPT-6.1 and future models appear when listed for that account. Real-account classification verification remains pending. |
+| Model controls | Model-specific reasoning effort, Provider default, supported Low/Medium/High/Extra high/Max and None where available | Capability-aware choices; unknown capabilities use provider defaults. No silent model or billing fallback. |
+| Runs | Representative AI samples up to 25 records, explicit expansion, saved settings, durable partial results, cancel/resume and local history | AI requires connection, prepared-text preview and consent. Interrupted requests can consume additional usage when retried. |
+| Results | Coverage, topic/sentiment distributions, ratings, UTC volume, exploratory trends, run-wide filter menus, missing-value filters and pagination | Descriptive/exploratory analysis; missing coverage is unknown. Imported language/product/group metadata is not automatically inferred. |
+| Inspection | Hover/focus previews, pinned detail panels, phone sheets, explicit period/category drill-down and per-record provenance | Counts, denominators, rule matches, redactions and available metadata remain inspectable. |
+| Comparison | Shared-successful-record agreement for compatible dataset/template/protocol snapshots; model and effort shown | Whole-run comparison, independent of Explore filters. Accuracy/F1 require reference labels; agreement is not accuracy. |
+| Export & deletion | Filtered CSV/JSON with provenance; local dataset deletion with durable purge | Prepared text by default; original text requires confirmation. Deletion completes only after operational and analytical stores confirm purge. |
+
+## A usable workflow
+
+1. Open **Datasets** and upload/paste data. Map text and optional date, rating,
+   language, channel, product/group and source ID fields; review errors and exclusions.
+2. Open **Classification**, select a saved dataset and template revision, and run
+   free keyword rules. Edit the template to create a new immutable revision.
+3. Open **Results**. Hover or focus a metric/chart period, pin its details, then
+   select **View matching records** to inspect its evidence. Apply observed-value
+   filters and examine coverage before interpreting a rate.
+4. Optionally connect OpenAI, choose an account-listed model and supported
+   reasoning effort, review prepared text and approve a small sample. Expand only
+   after inspecting the sample and confirming the remaining processing.
+5. Compare compatible runs and export the selected cohort. Saved local history
+   remains until deleted; keep source files and exports separately as backups.
+
+![10,000-record synthetic Workbench results with inspection](docs/assets/workbench-results.jpg)
+
+## Architectural decisions demonstrated
+
+The project makes semantic model output one replaceable step in a durable workflow.
+Deterministic code owns validation, arithmetic, aggregation and statistical methods.
+Its evidence views make classifications and failure boundaries reviewable.
+
+| Component | Implemented responsibility |
+| --- | --- |
+| React + TypeScript | Shared responsive interface; mapping, configuration, inspection, evidence navigation and recovery states |
+| ASP.NET Core | Public API boundary, local sessions, same-origin/CSRF checks, OAuth, encrypted credentials and authenticated credential broker |
+| Python worker | Canonical imports, privacy preparation, rules/Responses adapters, leases, fencing, bounded retries and exploratory analysis |
+| PostgreSQL | Canonical records, immutable dataset/template/run snapshots and decisions, job/outbox durability and scoped service principals |
+| ClickHouse | Dedicated text-free, deduplicated analytical projections; exploratory Workbench results remain separate from calibrated live facts |
+| OpenTelemetry | Opt-in allow-listed operational telemetry and cross-service trace propagation without feedback bodies or credentials |
+
+Dataset/run scope prevents cross-cohort results from mixing. Idempotency and fencing
+protect against duplicate commands and expired workers. Immutable outputs and saved
+model/effort settings preserve provenance. A separate maintenance principal performs
+purge while ordinary application roles retain immutable-decision protections.
+
+Credentials remain server-side. External processing receives prepared approved
+fields, with no model tools or executable actions. Regex redaction is a bounded
+privacy layer, not a guarantee that arbitrary personal data is safe to send.
+
+![Recorded showcase and opt-in local Workbench architecture](docs/assets/architecture.svg)
+
+See [architecture](docs/architecture.md), [ADRs](docs/adr/README.md),
+[privacy boundaries](docs/privacy.md) and [verification evidence](docs/quality/model-controls-review.md).
 
 ## Recorded comparison
 
@@ -43,71 +126,13 @@ Agreement with the Sol-medium AI reference on synthetic feedback; **not human go
 See the [generated benchmark](docs/benchmark.md) for provenance and the
 [model card](MODEL_CARD.md) for intended use and limitations.
 
-## Follow the evidence
+## Recorded evidence journey
 
-![24-second still-frame walkthrough of the synthetic demo](docs/assets/demo.gif)
-
-A four-screen sequence from the running demo; this is a screenshot walkthrough,
-not a live recording. The [static walkthrough](docs/demo-walkthrough.md) offers
-the same content without animation.
-
-![Product-defect signal with monthly rates and contributing feedback](docs/assets/signal-explorer.jpg)
-
-The [short walkthrough](docs/demo-walkthrough.md) includes the evidence trace,
-model comparison, and the distinction between descriptive demo charts and the
-separate planted-incident detector evaluation.
-
+The [walkthrough](docs/demo-walkthrough.md) shows the current Showcase and
+Workbench interface. The historical [24-second still-frame sequence](docs/assets/demo.gif)
+records the original synthetic showcase; it is not a live recording of the current UI.
 Technology retail is an independent portfolio use case. This project is not
 commissioned, sponsored, endorsed, or used by Inet.
-
-## Project Status
-
-**Read-only evidence journey on persistent workflow storage.** The React application
-implements overview → signal explorer → contributing feedback → immutable decision
-detail. The ASP.NET Core API exposes versioned read surfaces with isolated live
-and illustrative-demo data sources. The Python package provides data adapters,
-deterministic generation, local redaction, recorded/local SemIf engines, a pinned
-structured-output LLM baseline, PostgreSQL jobs/outbox, and text-free ClickHouse
-projection.
-
-Decision-engine and trend-algorithm flags now use a versioned shared contract and
-typed registries. Unknown implementations fail during configuration instead of
-entering the workflow as doomed jobs.
-
-Confidence thresholds remain uncalibrated. The current live fixture correctly has
-processed records and zero eligible analytical facts, so the dashboard withholds
-analytical percentages rather than presenting a misleading zero. The deterministic
-7/28-day detector and a Beta-Binomial candidate are implemented and measured on the
-same planted incidents. The promotion gate retains the simpler detector because the
-candidate increases mean detection delay; live activation still requires a calibrated
-confidence policy. The opt-in HTTP
-ingestion path now creates idempotent PostgreSQL jobs consumed by a continuous
-lease-based worker. No human-gold quality, calibrated
-policy, statistical-significance, or real-traffic trend claim has been measured.
-Provider billing figures are owner-reported totals, separate from adapter token
-counters and estimates. An interim 480-record SemIf-versus-Sol agreement report is
-available in demo mode and explicitly excluded from human-gold and calibration claims.
-The descriptive demo can switch between three complete 480-record decision
-sources: local SemIf, the deterministic rules baseline, and the Sol-medium AI reference.
-Each preserves the original source dates and metadata for richer filtering,
-evidence inspection, and 15 monthly trend periods.
-
-## Architecture
-
-![Recorded demo and optional processing runtime](docs/assets/architecture.svg)
-
-| Component | Intended responsibility | Available now |
-| --- | --- | --- |
-| React + TypeScript + Vite | Presentation and evidence navigation | Dashboard, Signal Explorer, evidence/detail journey, explicit demo/live states |
-| ASP.NET Core | Validation, ingestion, queries, workflow orchestration | Health, versioned dashboard reads, and opt-in idempotent feedback ingestion |
-| Python worker | Dataset normalization, privacy boundary, decision adapters, policy, provenance, trend detection | Data/privacy/decision/evaluation/trend CLIs, simple-rate and Beta-Binomial detectors, persistent fixture pipeline, and continuous job/outbox consumer |
-| PostgreSQL | Canonical records, decisions, jobs/outbox, review state | Versioned operational schema, leases, immutable runs, outbox and ledger |
-| ClickHouse | Accepted signals and analytical aggregates | Text-free facts plus a retry-safe, provenance-partitioned daily detector-input view; uncalibrated signals are excluded |
-| OpenTelemetry | Sanitised traces and low-cardinality operational metrics | Opt-in API/worker instrumentation, W3C trace propagation, and allow-listing Collector |
-
-The planned decision layer keeps semantic model judgments behind a replaceable
-provider interface. Code owns workflow, arithmetic, aggregation, and trend detection.
-See [architecture](docs/architecture.md) and the [ADRs](docs/adr/README.md).
 
 ## Repository Structure
 
@@ -372,28 +397,20 @@ establish that arbitrary private data is production-safe.
 
 See [privacy boundaries](docs/privacy.md) and [security reporting](SECURITY.md).
 
-## Roadmap
+## Next milestones
 
-1. Complete human annotation and calibrate per-decision policies without inventing
-   global thresholds.
-2. Complete hosted-mode hardening with managed identity, separate LOGIN credentials,
-   TLS termination, and retention automation. API-key protection, fixed-window
-   ingestion limiting, privacy-filtered cross-service telemetry, and trace links
-   are implemented for the local/private runtime.
-3. Complete human-gold rule/SemIf/LLM scoring, then publish reviewed measured reports.
-   The interim AI-reference study includes complete SemIf/rules runs and a deliberately
-   closed 192-record LLM experiment.
-4. Validate and activate live trend inputs only after policy calibration.
+1. Complete owner-initiated real ChatGPT sign-in/classification acceptance and
+   broader browser/accessibility review; mocked CI does not establish provider admission.
+2. Complete human annotation, adjudication, calibration and locked-test scoring.
+   Keep exploratory AI-reference agreement separate from human-validated quality.
+3. Evaluate hosted multi-user boundaries, deployment credentials, TLS, backups,
+   retention and operational controls before public service deployment.
+4. Promote live analytical eligibility only after calibrated policy acceptance.
 
-The current vertical slice stops before calibrated routing and accepted live
-analytical facts. Product reads, deterministic trend detection, and the evaluated
-statistical candidate are implemented, including an explicit unavailable live state
-and reproducible detector promotion gate.
-
-Dashboard contracts, metric semantics, privacy boundaries, and local commands are
-documented in [dashboard read architecture](docs/dashboard-architecture.md). The
-design/token mapping and exact partial native-Figma status are recorded in
-[dashboard product design](docs/dashboard-design.md).
+The closed 192-record paid experiment stays closed. Source releases, local tool
+functionality, model quality and hosted readiness have separate acceptance gates.
+The shared interface and dated reviews are documented in
+[interface design](docs/dashboard-design.md) and [release readiness](docs/release-readiness.md).
 
 ## Licensing
 

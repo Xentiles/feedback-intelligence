@@ -55,6 +55,8 @@ class PublicationTests(unittest.TestCase):
             "Project Plan Documentation/plan.md",
             ".env",
             "nested/DELETME.md",
+            ".workbench-runtime/api/owner-code",
+            ".workbench-runtime/vault/private.credential",
             "data/external/olist/raw/reviews.csv",
             "data/processed/reviews.jsonl",
             "weights.gguf",

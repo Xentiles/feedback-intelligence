@@ -1,0 +1,11 @@
+BEGIN;
+REVOKE UPDATE ON workbench.datasets,workbench.runs,workbench.jobs FROM workbench_api;
+GRANT UPDATE(status) ON workbench.datasets TO workbench_api;
+GRANT UPDATE(status,completed_at) ON workbench.runs TO workbench_api;
+GRANT UPDATE(status,lease_token,leased_until,error_code) ON workbench.jobs TO workbench_api;
+REVOKE UPDATE ON workbench.jobs,workbench.runs,workbench.outbox FROM workbench_worker;
+GRANT UPDATE(status,attempt,lease_token,leased_until,error_code) ON workbench.jobs TO workbench_worker;
+GRANT UPDATE(status,completed_at) ON workbench.runs TO workbench_worker;
+GRANT UPDATE(status,attempt,lease_token,leased_until,error_code) ON workbench.outbox TO workbench_worker;
+INSERT INTO feedback.schema_migrations(version) VALUES('007_workbench_snapshot_permissions') ON CONFLICT DO NOTHING;
+COMMIT;

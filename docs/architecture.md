@@ -29,6 +29,39 @@ normalization, local privacy transformation, typed decisions, PostgreSQL workflo
 persistence, the text-free ClickHouse projection boundary, and the read-only
 dashboard → signal → evidence journey are implemented.
 
+## Interactive local Workbench
+
+The opt-in installation extends the recorded showcase with a separate local workflow:
+
+```text
+Upload/paste → preview/map/validate → PostgreSQL dataset snapshot
+            → immutable template/run (model, effort, privacy, protocol)
+            → leased Python rules or Responses processing → immutable results/outbox
+            → dedicated text-free ClickHouse projection
+            → React results, inspection, compatible comparison and filtered export
+```
+
+The .NET service owns local sessions, CSRF/origin checks, account registration,
+encrypted credentials, serialized refresh and an authenticated run-bound credential
+broker. Workers receive credentials only for their saved connection; browser state,
+job payloads and diagnostics never contain them. ChatGPT allowance and API billing
+remain separate, explicitly selected paths.
+
+Account catalogs supply model identity and display order. Additive capability
+metadata controls explicit reasoning choices; dated documented profiles fill known
+metadata gaps. Future account-listed models remain discoverable without assuming
+unknown capabilities. Run creation validates availability, while immutable model
+and effort settings protect sample reuse, resume and provenance.
+
+Exploratory Workbench classifications do not enter the policy-eligible legacy
+analytical path. Results use snapshot-consistent reads, run-wide facets, UTC cohorts
+and safe nested daily counters. Comparison uses shared successes with compatible
+dataset/template/protocol identities; agreement is not accuracy. A dedicated purge
+role hides/cancels a deleted dataset then confirms removal across stores.
+
+These are implemented local responsibilities, not hosted multi-user readiness.
+See the [Workbench guide](workbench.md) and dated quality reviews for evidence.
+
 ## Ownership
 
 React presents the product and never holds model credentials or database access.

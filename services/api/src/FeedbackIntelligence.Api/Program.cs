@@ -3,12 +3,17 @@ using System.Threading.RateLimiting;
 using FeedbackIntelligence.Api.Dashboard;
 using FeedbackIntelligence.Api.Ingestion;
 using FeedbackIntelligence.Api.Observability;
+using FeedbackIntelligence.Api.Workbench;
 using Microsoft.AspNetCore.RateLimiting;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 36 * 1024 * 1024);
+if (builder.Configuration.GetValue<bool>("Workbench:Enabled")) builder.Services.AddWorkbench(builder.Configuration);
+if (builder.Configuration.GetValue<bool>("Workbench:Enabled"))
+    builder.Logging.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Warning);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddProblemDetails();
@@ -40,6 +45,16 @@ builder.Services.AddRateLimiter(options =>
                 PermitLimit = Math.Clamp(ingestionOptions.RateLimitPermitLimit, 1, 10_000),
                 Window = TimeSpan.FromSeconds(
                     Math.Clamp(ingestionOptions.RateLimitWindowSeconds, 1, 3_600)),
+                QueueLimit = 0,
+            }));
+    options.AddPolicy("workbench", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 300,
+                Window = TimeSpan.FromMinutes(1),
                 QueueLimit = 0,
             }));
 });
@@ -86,6 +101,7 @@ app.UseRateLimiter();
 app.MapHealthChecks("/health");
 app.MapDashboardEndpoints();
 app.MapIngestionEndpoints();
+app.MapWorkbench();
 
 app.Run();
 

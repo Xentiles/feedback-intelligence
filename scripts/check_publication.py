@@ -30,6 +30,7 @@ REQUIRED = {
     "docs/assets/architecture.svg",
 }
 PRIVATE_DIRECTORIES = {
+    ".workbench-runtime",
     "Project Plan Documentation",
     "orbital-clarity-v0.4",
     ".aws",

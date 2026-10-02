@@ -1,0 +1,138 @@
+# Unified interface review — 2026-10-01
+
+Development checkpoint: `v0.1.1`, on the draft workbench branch toward `v0.2.0`.
+The published `v0.1.0` release remains unchanged.
+
+## Browser evidence
+
+The Codex in-app browser reviewed the real React interface through the
+development-only `apps/web/visual-review.html` entry. It injects deterministic
+showcase/workbench clients, preserving production authentication and making no
+external inference requests. This entry is absent from the production build.
+
+Captures covered 1440, 1024, 768, 390 and 320 CSS px for Overview, Signal Explorer,
+decision evidence, Datasets, Classification, Runs, Results and Connections.
+There was no document-level horizontal overflow at these widths. Embedded model
+and detector evaluations retain horizontally scrollable tables and data
+disclosures. Additional 390 px checks covered every workbench destination with
+empty, loading, failed, locked, disabled and partial fixture states.
+
+Ignored local captures are in `artifacts/orbital-ui/`, with names such as
+`overview-1440.jpg`, `classification-320.jpg`, `evidence-768.jpg`,
+`final-results-1440.jpg`, `ai-confirmation-390.jpg`, and
+`partial-results-390.jpg`. They contain synthetic fixtures only and are not
+published as proof of production analytics.
+
+Interaction checks exercised:
+
+- Phone menu focus on opening, Escape/focus restoration, closing after destination
+  selection, 44 px menu target, sticky access while scrolling, and inert page content.
+- Collapse/reopen and navigation retaining imports, edited templates and selected
+  runs; the automated suite also covers preserved showcase context and filters.
+- AI sample preview with explicit consent, Cancel-first modal focus, native Escape
+  denial and restored trigger focus; no inference request was submitted.
+- Running-run cancellation, resume and original-text-export confirmation cancellation, plus deletion
+  approval/cancellation in the automated fixture tests.
+- Failed sign-in returns to Connections with a fixed explanation and removes
+  the token-free error flag from the address.
+- Named table overflow regions receiving keyboard focus; ArrowRight scrolled the
+  620 px evidence table inside a 358 px container.
+- A single decorative backdrop/canvas across navigation; its frame counter
+  increased from 6 to 15 without reset when changing pages. Pointer events are
+  disabled on the backdrop. Lifecycle tests assert one controller and destruction.
+- Reduced-motion and poster fallback renderer configurations in the browser:
+  Animate was disabled, Still selected, and Flat remained available. The original
+  document visibility/reduced-motion listeners were preserved in the renderer.
+- Long identifiers in evidence/provenance, source information, dense evaluations,
+  empty results, partial coverage and disabled actions remained readable.
+
+The exact palette provides approximately 9.1:1 Platinum/Gunmetal text contrast,
+12.2:1 Platinum/Graphite and 10.4:1 Platinum/Deep Space Blue. Orange is used for
+nontext markers, not normal text. Foreground colors and font families were inspected
+in browser computed styles; the rail background was transparent.
+
+Review limits: this is one browser surface, not a cross-browser or assistive-
+technology certification. A 720 CSS px reflow check, equivalent to halving a
+1440 px viewport for 200% zoom, passed without horizontal overflow. Native browser
+zoom could not be changed on this review surface, so an actual 200% browser zoom
+check remains a manual follow-up. Reduced-motion and graphics failure were injected
+renderer states; the host operating-system preference was not changed. Hidden-page
+suspension was inspected in the unchanged renderer, not simulated by changing
+document visibility.
+
+## Regression and compatibility evidence
+
+- Frontend formatting, lint, types, production build and 43 tests passed.
+- API formatting and Release build passed with zero warnings/errors; 55 tests
+  passed and one optional database integration test was skipped. The new callback
+  test verifies a fixed, token-free failure redirect, with no external provider call.
+- All 132 Python worker tests passed after checkpoint version synchronization.
+- Public frozen benchmark generation check and seven publication regression tests
+  passed. Model decisions, calibration gates and frozen comparison artifacts did
+  not change.
+- The rebuilt local Docker installation passed upload, validation, idempotent
+  rules execution, prepared evidence, export and confirmed durable purge using
+  disposable acceptance data.
+
+Remote CI evidence is attached to the updated draft PR. Real owner-initiated
+ChatGPT sign-in and a separately approved small inference smoke run remain the
+workbench integration acceptance gate; this UI review does not close that gate.
+
+## Navigation repair — v0.1.2
+
+The original Showcase buttons were rendered through React portals. Their clicks
+did not pass through the shell slot's React capture handler, leaving the Workbench
+area visible. Overview and Signals now explicitly invoke the shell's Showcase
+activation action, which also closes the phone menu.
+
+Two regression cases failed on the original implementation and pass with the
+repair. The full frontend suite now has 45 passing tests; formatting, lint, types
+and production build also passed. Existing draft-preservation and phone-focus
+tests now include a Workbench-to-Showcase round trip.
+
+The rebuilt local website was checked at 1440 px: Overview and Signals both
+returned visibly to the Showcase from each of the five Workbench tabs. At 390 px,
+keyboard selection from Connections returned to Overview, closed the menu and
+restored focus to its trigger. One background remained mounted. Local captures:
+`artifacts/orbital-ui/navigation-repair-1440.jpg` and
+`artifacts/orbital-ui/navigation-repair-390.jpg`.
+
+## Disabled affordances and compact background controls — v0.1.3
+
+Disabled buttons now use 50% opacity, with explanatory text at full opacity.
+Signals reports its current loading, unavailable source, empty dataset, filter or
+live-calibration reason without changing the backend eligibility gate. Animate,
+Still and Flat use a single row of accessible icon buttons with titles and pressed
+states, retaining saved preferences and reduced-motion/graphics restrictions.
+
+All 45 frontend tests passed, including the Live-to-Demo availability transition
+and all three icon actions. Formatting, lint, types and production build passed.
+Browser checks at 1440, 390 and 320 px found no document overflow; icons shared
+one row and had 44 px minimum heights. At 1440 px they were approximately 45 px
+wide; on phones they were 56 px wide. The short phone viewport scrolls within
+navigation, and keyboard activation reaches the icon controls. One backdrop/canvas
+remained mounted when changing modes. Disabled Signals measured opacity 0.5 in
+Live and 1.0 after returning to Demo.
+
+The running opt-in workbench has no configured v1 Showcase Live data connection;
+that source failure was shown explicitly and is separate from the mocked
+awaiting-calibration case. No live analytics or inference was enabled for this
+presentation change. Local captures: `artifacts/orbital-ui/compact-background-live-1440.jpg`
+and `artifacts/orbital-ui/compact-background-menu-390.jpg`.
+
+## Shared dropdown spacing — v0.1.4
+
+Single-choice selects now draw one shared chevron with its 16 px icon box inset
+12 px from the field edge. A 44 px trailing padding area keeps selected text clear
+of the arrow. Native select elements and option menus are retained; forced-color
+mode restores native appearance rather than relying on the decorative SVG.
+
+Frontend formatting, lint, types, all 45 tests and production build passed.
+Browser checks covered Showcase filters, classification settings and nine upload
+mapping/language selects at desktop and phone widths. Computed styles confirmed
+the same inset and text padding. The 390 and 320 px views had no document overflow.
+Space opened the Engine menu, and ArrowDown/Enter changed its selected option.
+These interactions used isolated fixtures and made no inference requests.
+
+Local captures: `artifacts/orbital-ui/select-spacing-overview-1440.jpg` and
+`artifacts/orbital-ui/select-spacing-classification-390.jpg`.
