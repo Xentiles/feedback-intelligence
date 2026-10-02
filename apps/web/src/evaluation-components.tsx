@@ -5,6 +5,7 @@ import {
   StatusBadge,
 } from './dashboard-components'
 import { formatCount } from './dashboard-format'
+import { Inspectable } from './inspection-components'
 import type { EvaluationComparisonResponse } from './dashboard-types'
 
 export type EvaluationAsyncState =
@@ -67,6 +68,69 @@ export function EvaluationComparisonRegion({
     return null
 
   const placeholder = report.status === 'placeholder_pending_run'
+  const inspected = (
+    method: 'semif' | 'llm' | 'rules',
+    measure: string,
+    value: string,
+  ) => {
+    const model = report[method]!
+    const cost =
+      method === 'semif'
+        ? report.semifCost
+        : method === 'llm'
+          ? report.llmCost
+          : null
+    return (
+      <Inspectable
+        className="inspection-value"
+        detail={{
+          title: `${model.resolvedModel} · ${measure}`,
+          scopeLabel: 'Frozen AI-reference experiment',
+          description:
+            'Compared with an AI-reviewed reference, not human gold or calibrated production quality. The partial GPT-5.4 Mini cohort is not directly equivalent to the complete 480-record cohorts.',
+          fields: [
+            { label: 'Displayed measure', value },
+            { label: 'Requested model', value: model.requestedModel },
+            { label: 'Returned model', value: model.resolvedModel },
+            {
+              label: 'Reference',
+              value: `${report.reference!.model} · ${report.reference!.reasoning}`,
+            },
+            {
+              label: 'Successful records',
+              value: formatCount(
+                method === 'llm'
+                  ? (report.llmCost!.successfulRecords ?? 0)
+                  : report.successCount,
+              ),
+            },
+            {
+              label: 'Target records',
+              value: formatCount(
+                method === 'llm'
+                  ? (report.llmCost!.targetRecords ?? 0)
+                  : report.recordCount,
+              ),
+            },
+            {
+              label: 'Recorded usage scope',
+              value: cost?.scope ?? 'Local deterministic execution',
+            },
+            {
+              label: 'Status',
+              value: placeholder
+                ? 'Run pending'
+                : method === 'llm'
+                  ? 'Closed partial'
+                  : 'Complete',
+            },
+          ],
+        }}
+      >
+        {value}
+      </Inspectable>
+    )
+  }
   return (
     <section
       className="panel evaluation-comparison"
@@ -161,24 +225,68 @@ export function EvaluationComparisonRegion({
             </tr>
             <tr>
               <th scope="row">Topic accuracy</th>
-              <td>{formatScore(report.semifPrimaryTopic.accuracy)}</td>
-              <td>{formatScore(report.llmPrimaryTopic.accuracy)}</td>
-              <td>{formatScore(report.rulePrimaryTopic.accuracy)}</td>
+              <td>
+                {inspected(
+                  'semif',
+                  'Topic accuracy',
+                  formatScore(report.semifPrimaryTopic.accuracy),
+                )}
+              </td>
+              <td>
+                {inspected(
+                  'llm',
+                  'Topic accuracy',
+                  formatScore(report.llmPrimaryTopic.accuracy),
+                )}
+              </td>
+              <td>
+                {inspected(
+                  'rules',
+                  'Topic accuracy',
+                  formatScore(report.rulePrimaryTopic.accuracy),
+                )}
+              </td>
             </tr>
             <tr>
               <th scope="row">Topic macro-F1</th>
-              <td>{formatScore(report.semifPrimaryTopic.macroF1)}</td>
-              <td>{formatScore(report.llmPrimaryTopic.macroF1)}</td>
-              <td>{formatScore(report.rulePrimaryTopic.macroF1)}</td>
+              <td>
+                {inspected(
+                  'semif',
+                  'Topic macro-F1',
+                  formatScore(report.semifPrimaryTopic.macroF1),
+                )}
+              </td>
+              <td>
+                {inspected(
+                  'llm',
+                  'Topic macro-F1',
+                  formatScore(report.llmPrimaryTopic.macroF1),
+                )}
+              </td>
+              <td>
+                {inspected(
+                  'rules',
+                  'Topic macro-F1',
+                  formatScore(report.rulePrimaryTopic.macroF1),
+                )}
+              </td>
             </tr>
             <tr>
               <th scope="row">Measured tokens</th>
               <td>
-                {formatCount(report.semifCost.tokens)} tokens
+                {inspected(
+                  'semif',
+                  'Measured tokens',
+                  `${formatCount(report.semifCost.tokens)} tokens`,
+                )}
                 <small>Local inference input</small>
               </td>
               <td>
-                {formatCount(report.llmCost.tokens)} tokens
+                {inspected(
+                  'llm',
+                  'Measured tokens',
+                  `${formatCount(report.llmCost.tokens)} tokens`,
+                )}
                 <small>Experiment total</small>
               </td>
               <td>
@@ -189,11 +297,19 @@ export function EvaluationComparisonRegion({
             <tr>
               <th scope="row">Observed provider cost</th>
               <td>
-                {formatUsd(report.semifCost.costUsd)}
+                {inspected(
+                  'semif',
+                  'Observed provider cost',
+                  formatUsd(report.semifCost.costUsd),
+                )}
                 <small>No API charge · local execution</small>
               </td>
               <td>
-                {formatUsd(report.llmCost.costUsd)}
+                {inspected(
+                  'llm',
+                  'Observed provider cost',
+                  formatUsd(report.llmCost.costUsd),
+                )}
                 <small>192-record experiment</small>
               </td>
               <td>

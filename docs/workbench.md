@@ -32,13 +32,72 @@ Defaults and hard ceilings are 25 MiB, 10,000 records, and 20,000 text character
    Lower keyword priority numbers win; competing matches remain inspectable.
 5. Run free keyword classification, or connect ChatGPT/API billing and explicitly
    approve an up-to-25-record representative sample before a full run.
-6. Inspect coverage, distributions, daily counts, exploratory changes, record
+6. Inspect coverage, distributions, dated volume, exploratory changes, record
    evidence and matched-run disagreements. Export CSV/JSON with provenance.
 
 The separate recorded showcase preserves its 480-record SemIf/rules/Sol views
 and closed 192-record paid experiment. The larger 10,000-record rules scenario
 uses the deterministic generator; it does not create additional frozen model
 predictions or improve the measured benchmark.
+
+## Inspect and drill into results
+
+Results menus show observed topics, sentiment, language, product and group with
+counts across every successful record in the selected run. They default to **All**.
+Topics and sentiment come from saved decisions; other dimensions come from imported
+metadata. **Not supplied** and **Unavailable** are explicit missing selections,
+distinct from a literal product named `None`. Active filter chips and Clear all
+filters show the current cohort. Date bounds include both displayed UTC days;
+undated records are excluded only when a date bound is selected.
+
+Hover or keyboard focus previews a value. Click or Enter pins its counts, scope,
+coverage and provenance. Desktop inspection uses a nonmodal side panel; phones use
+a scrollable modal sheet. Escape dismisses details and restores focus. Period and
+category inspectors offer **View matching records**, which applies a filter and
+returns to the first evidence page. Record details show prepared text, supplied
+metadata and ratings, actionable outcomes, competing keyword matches, available
+sentiment matches, redactions and model identities.
+
+The responsive volume chart uses UTC calendar periods, from days through weeks,
+months, years and multi-year groups, with no more than 60 displayed periods.
+Underlying daily counts and nested topic counts remain available in the data
+disclosure. Unobserved dates have unknown coverage, never invented zero counts.
+Use Left/Right, Home/End and Enter to inspect chart periods by keyboard.
+
+Switching runs clears filters, evidence, inspections and analyses. Moving between
+views preserves the current workflow. Results keep their filter controls during
+refresh and provide retry actions after failures. Superseded results, trends,
+comparisons and exports cannot replace the newly selected scope.
+
+Trend detection cannot run with a topic filter: that would make every selected
+record belong to the topic and create a misleading 100% rate. Clear the topic
+filter first. Other filters define the cohort; sparse/unknown coverage remains
+unavailable. Comparisons are **whole-run shared-record agreement**, independent of
+Explore filters, and require compatible dataset, template and protocol snapshots.
+
+### Results interface and provenance
+
+`GET /api/v1/workbench/runs/{id}/results` retains categorical query parameters and
+adds `missing=sentiment,language,product,group`, `dateFrom=YYYY-MM-DD` and
+`dateTo=YYYY-MM-DD`. Conflicting value/missing selections and malformed or reversed
+dates produce validation errors. The same normalized selection applies to trends
+and exports. Results return:
+
+- `facets` for all five dimensions, each choice with `{value, label, count}`;
+  missing values use `null`.
+- `summary.dailySeries` with `{date, total, topics}`; topic IDs such as `date` and
+  `total` cannot overwrite daily metadata. Legacy `days` and `groups` remain.
+- `filters`, `readAt`, `page`, `pageSize: 50`, `filtered` and `returned`. Requested
+  pages are clamped to the available range, including an empty first page.
+
+Run counters, facets, summary and evidence use one repeatable-read PostgreSQL
+snapshot. Export includes every matching record across pages and records the
+normalized filters. Prepared text is the default; original text requires a local
+confirmation. JSON adds `analysisImplementation`; CSV appends `filters` and
+`analysis_implementation` columns. The corrected detector identity is
+`workbench-detectors/1.0.1`. Statistical thresholds, protocol hash and immutable
+classification snapshots remain unchanged; analysis identity includes the method,
+filters and cohort inputs.
 
 ## Boundaries and persistence
 
@@ -109,3 +168,6 @@ and interrupted/usage-limited streams. The ChatGPT integration must remain marke
 **live verification pending** until the owner completes a real sign-in and
 explicitly approves a small classification run. The implementation and mocked
 tests alone do not establish real account admission.
+
+See the [v0.1.5 Results review](quality/results-inspection-review.md) for browser,
+recovery, filtering and compatibility evidence and its limitations.

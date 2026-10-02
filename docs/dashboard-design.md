@@ -98,6 +98,23 @@ graphics on unmount. The backdrop is decorative, `aria-hidden`, and
 
 ## Verification
 
+Results and Showcase share an inspect-then-drill interaction: hover/focus previews
+essential counts or rate denominators; click/Enter pins a scoped inspector, with an
+explicit action to apply a period/category or inspect contributing records. The
+desktop panel is nonmodal; the phone sheet uses a native dialog with focus return.
+Tooltips stay within the viewport, and focused previews survive scroll/reflow.
+Unknown time coverage remains a gap. Workbench volume charts aggregate UTC calendar
+periods to at most 60 marks and retain their underlying daily disclosure. Showcase
+rate charts preserve unavailable periods and never connect lines across gaps.
+
+Wrapping action groups use 16 px gaps and 24 px top spacing, including run
+configuration, connections, analysis, comparison and export actions. Native Results
+menus use run-wide observed choices and explicit missing options. These additions
+retain the shared floating rail, palette, motion and consent boundaries.
+
+See the [v0.1.5 inspection review](quality/results-inspection-review.md) for the
+latest evidence.
+
 See the dated [browser and regression review](quality/orbital-ui-review.md) for
 actual captures, exercised states, test results and remaining review limits.
 Historical Figma captures and prior review reports remain historical evidence;

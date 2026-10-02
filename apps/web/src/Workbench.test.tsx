@@ -212,7 +212,9 @@ describe('workbench product journey', () => {
     expect(
       within(details).getByText(classification.redactedText),
     ).toBeInTheDocument()
-    expect(within(details).getByText('Not supplied')).toBeInTheDocument()
+    expect(
+      within(details).getByText('Recorded date').nextElementSibling,
+    ).toHaveTextContent('Not supplied')
     expect(
       requests.find((r) => r.path === '/imports/commit')?.body,
     ).toMatchObject({ acceptExclusions: true })

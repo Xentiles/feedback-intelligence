@@ -30,6 +30,7 @@ import {
 } from './application-shell'
 import { readRoute, type ApplicationRoute } from './application-routes'
 import { ConfirmationProvider } from './confirmation-dialog'
+import { InspectionProvider } from './inspection-components'
 import { type workbench as WorkbenchRequest } from './workbench-api'
 import { Workbench } from './Workbench'
 import type { OrbitalModule } from './orbital-surface'
@@ -504,189 +505,197 @@ function DashboardApp({
         : null
 
   return (
-    <div className="showcase-surface">
-      <ShellSlot name="title">
-        Showcase /{' '}
-        {view.name === 'overview'
-          ? 'Overview'
-          : view.name === 'signal'
-            ? 'Signal Explorer'
-            : 'Decision evidence'}
-      </ShellSlot>
-      <ShellSlot name="showcase">
-        {(activateShowcase) => (
-          <nav className="primary-nav" aria-label="Primary navigation">
-            <button
-              type="button"
-              aria-current={
-                visible && view.name === 'overview' ? 'page' : undefined
-              }
-              onClick={() => {
-                activateShowcase()
-                setView({ name: 'overview' })
-              }}
-            >
-              <NavigationIcon name="Overview" />
-              <span>Overview</span>
-            </button>
-            <button
-              type="button"
-              aria-current={
-                visible && view.name !== 'overview' ? 'page' : undefined
-              }
-              disabled={!firstSignalId}
-              aria-describedby={
-                signalsUnavailableReason
-                  ? 'signals-unavailable-reason'
-                  : undefined
-              }
-              title={signalsUnavailableReason}
-              onClick={() => {
-                if (!firstSignalId) return
-                activateShowcase()
+    <InspectionProvider
+      scope={JSON.stringify({ context, filters, view })}
+      active={visible}
+    >
+      <div className="showcase-surface">
+        <ShellSlot name="title">
+          Showcase /{' '}
+          {view.name === 'overview'
+            ? 'Overview'
+            : view.name === 'signal'
+              ? 'Signal Explorer'
+              : 'Decision evidence'}
+        </ShellSlot>
+        <ShellSlot name="showcase">
+          {(activateShowcase) => (
+            <nav className="primary-nav" aria-label="Primary navigation">
+              <button
+                type="button"
+                aria-current={
+                  visible && view.name === 'overview' ? 'page' : undefined
+                }
+                onClick={() => {
+                  activateShowcase()
+                  setView({ name: 'overview' })
+                }}
+              >
+                <NavigationIcon name="Overview" />
+                <span>Overview</span>
+              </button>
+              <button
+                type="button"
+                aria-current={
+                  visible && view.name !== 'overview' ? 'page' : undefined
+                }
+                disabled={!firstSignalId}
+                aria-describedby={
+                  signalsUnavailableReason
+                    ? 'signals-unavailable-reason'
+                    : undefined
+                }
+                title={signalsUnavailableReason}
+                onClick={() => {
+                  if (!firstSignalId) return
+                  activateShowcase()
+                  setSignal({ status: 'idle' })
+                  setEvidence({ status: 'idle' })
+                  setView({ name: 'signal', signalId: firstSignalId, page: 1 })
+                }}
+              >
+                <NavigationIcon name="Signals" />
+                <span>Signals</span>
+              </button>
+              {signalsUnavailableReason && (
+                <span
+                  id="signals-unavailable-reason"
+                  className="navigation-hint"
+                >
+                  {signalsUnavailableReason}
+                </span>
+              )}
+            </nav>
+          )}
+        </ShellSlot>
+        <ShellSlot name="context">
+          <div className="header-actions">
+            <ContextSwitch context={context} onChange={changeContext} />
+          </div>
+        </ShellSlot>
+
+        <div
+          className={`context-banner context-banner--${context}`}
+          role="status"
+        >
+          <strong>
+            {context === 'demo'
+              ? 'Demo — selectable synthetic decisions'
+              : 'Live — connected data'}
+          </strong>
+          <span>
+            {context === 'demo'
+              ? `${activeSource?.displayName ?? 'The selected 480-record method'} powers the overview, filters, and evidence.`
+              : 'Operational records are live. Analytics remain subject to the active calibration policy.'}
+          </span>
+        </div>
+
+        <main id="main" className="app-main">
+          {metadata.status === 'error' ? (
+            <>
+              <PageHeader
+                eyebrow="Dashboard"
+                title="Feedback Intelligence"
+                description="Read-only processing, analytics, and evidence trace."
+              />
+              <ErrorPanel
+                title="Source metadata could not be loaded"
+                message={metadata.message}
+                onRetry={() => {
+                  setMetadata({ status: 'idle' })
+                  setMetadataRetry((value) => value + 1)
+                }}
+              />
+            </>
+          ) : metadata.status !== 'ready' ? (
+            <>
+              <PageHeader
+                eyebrow="Dashboard"
+                title="Feedback Intelligence"
+                description="Read-only processing, analytics, and evidence trace."
+              />
+              <LoadingPanel label="Loading source metadata" />
+            </>
+          ) : view.name === 'overview' ? (
+            <OverviewView
+              context={context}
+              metadata={metadata.data}
+              filters={filters}
+              overview={overview}
+              trends={trends}
+              evaluation={evaluation}
+              onFilters={changeFilters}
+              onSelectSignal={(selectedSignalId) => {
                 setSignal({ status: 'idle' })
                 setEvidence({ status: 'idle' })
-                setView({ name: 'signal', signalId: firstSignalId, page: 1 })
+                setView({
+                  name: 'signal',
+                  signalId: selectedSignalId,
+                  page: 1,
+                })
               }}
-            >
-              <NavigationIcon name="Signals" />
-              <span>Signals</span>
-            </button>
-            {signalsUnavailableReason && (
-              <span id="signals-unavailable-reason" className="navigation-hint">
-                {signalsUnavailableReason}
-              </span>
-            )}
-          </nav>
-        )}
-      </ShellSlot>
-      <ShellSlot name="context">
-        <div className="header-actions">
-          <ContextSwitch context={context} onChange={changeContext} />
-        </div>
-      </ShellSlot>
-
-      <div
-        className={`context-banner context-banner--${context}`}
-        role="status"
-      >
-        <strong>
-          {context === 'demo'
-            ? 'Demo — selectable synthetic decisions'
-            : 'Live — connected data'}
-        </strong>
-        <span>
-          {context === 'demo'
-            ? `${activeSource?.displayName ?? 'The selected 480-record method'} powers the overview, filters, and evidence.`
-            : 'Operational records are live. Analytics remain subject to the active calibration policy.'}
-        </span>
-      </div>
-
-      <main id="main" className="app-main">
-        {metadata.status === 'error' ? (
-          <>
-            <PageHeader
-              eyebrow="Dashboard"
-              title="Feedback Intelligence"
-              description="Read-only processing, analytics, and evidence trace."
-            />
-            <ErrorPanel
-              title="Source metadata could not be loaded"
-              message={metadata.message}
+              onDemo={() => changeContext('demo')}
               onRetry={() => {
-                setMetadata({ status: 'idle' })
-                setMetadataRetry((value) => value + 1)
+                setOverview({ status: 'idle' })
+                setOverviewRetry((value) => value + 1)
+              }}
+              onRetryTrends={() => {
+                setTrends({ status: 'idle' })
+                setTrendsRetry((value) => value + 1)
+              }}
+              onRetryEvaluation={() => {
+                setEvaluation({ status: 'idle' })
+                setEvaluationRetry((value) => value + 1)
               }}
             />
-          </>
-        ) : metadata.status !== 'ready' ? (
-          <>
-            <PageHeader
-              eyebrow="Dashboard"
-              title="Feedback Intelligence"
-              description="Read-only processing, analytics, and evidence trace."
+          ) : view.name === 'signal' ? (
+            <SignalView
+              metadata={metadata.data}
+              filters={filters}
+              signal={signal}
+              evidence={evidence}
+              onFilters={changeFilters}
+              onBack={() => setView({ name: 'overview' })}
+              onPage={(page) => {
+                setEvidence({ status: 'idle' })
+                setView({ ...view, page })
+              }}
+              onOpen={(feedbackId, decisionId) => {
+                setDetail({ status: 'idle' })
+                setView({ ...view, name: 'detail', feedbackId, decisionId })
+              }}
+              onRetrySignal={() => {
+                setSignal({ status: 'idle' })
+                setSignalRetry((value) => value + 1)
+              }}
+              onRetryEvidence={() => {
+                setEvidence({ status: 'idle' })
+                setEvidenceRetry((value) => value + 1)
+              }}
             />
-            <LoadingPanel label="Loading source metadata" />
-          </>
-        ) : view.name === 'overview' ? (
-          <OverviewView
-            context={context}
-            metadata={metadata.data}
-            filters={filters}
-            overview={overview}
-            trends={trends}
-            evaluation={evaluation}
-            onFilters={changeFilters}
-            onSelectSignal={(selectedSignalId) => {
-              setSignal({ status: 'idle' })
-              setEvidence({ status: 'idle' })
-              setView({
-                name: 'signal',
-                signalId: selectedSignalId,
-                page: 1,
-              })
-            }}
-            onDemo={() => changeContext('demo')}
-            onRetry={() => {
-              setOverview({ status: 'idle' })
-              setOverviewRetry((value) => value + 1)
-            }}
-            onRetryTrends={() => {
-              setTrends({ status: 'idle' })
-              setTrendsRetry((value) => value + 1)
-            }}
-            onRetryEvaluation={() => {
-              setEvaluation({ status: 'idle' })
-              setEvaluationRetry((value) => value + 1)
-            }}
-          />
-        ) : view.name === 'signal' ? (
-          <SignalView
-            metadata={metadata.data}
-            filters={filters}
-            signal={signal}
-            evidence={evidence}
-            onFilters={changeFilters}
-            onBack={() => setView({ name: 'overview' })}
-            onPage={(page) => {
-              setEvidence({ status: 'idle' })
-              setView({ ...view, page })
-            }}
-            onOpen={(feedbackId, decisionId) => {
-              setDetail({ status: 'idle' })
-              setView({ ...view, name: 'detail', feedbackId, decisionId })
-            }}
-            onRetrySignal={() => {
-              setSignal({ status: 'idle' })
-              setSignalRetry((value) => value + 1)
-            }}
-            onRetryEvidence={() => {
-              setEvidence({ status: 'idle' })
-              setEvidenceRetry((value) => value + 1)
-            }}
-          />
-        ) : (
-          <DetailView
-            detail={detail}
-            onBack={() =>
-              setView({
-                name: 'signal',
-                signalId: view.signalId,
-                page: view.page,
-              })
-            }
-            onRetry={() => {
-              setDetail({ status: 'idle' })
-              setDetailRetry((value) => value + 1)
-            }}
-          />
-        )}
-      </main>
+          ) : (
+            <DetailView
+              detail={detail}
+              onBack={() =>
+                setView({
+                  name: 'signal',
+                  signalId: view.signalId,
+                  page: view.page,
+                })
+              }
+              onRetry={() => {
+                setDetail({ status: 'idle' })
+                setDetailRetry((value) => value + 1)
+              }}
+            />
+          )}
+        </main>
 
-      <footer className="app-footer">
-        Read-only dashboard · UTC intervals use [from, to exclusive)
-      </footer>
-    </div>
+        <footer className="app-footer">
+          Read-only dashboard · UTC intervals use [from, to exclusive)
+        </footer>
+      </div>
+    </InspectionProvider>
   )
 }
 
@@ -793,7 +802,11 @@ function OverviewView({
         <LoadingPanel label="Loading overview" />
       ) : (
         <>
-          <MetricGrid metrics={overview.data.metrics} />
+          <MetricGrid
+            metrics={overview.data.metrics}
+            filters={overview.data.filters}
+            scopeLabel={`${context} · Overview`}
+          />
           {context === 'live' &&
           metadata.policyStatus === 'awaiting_calibration' ? (
             <StatePanel
@@ -815,6 +828,11 @@ function OverviewView({
               <TimeSeriesPanel
                 title="Eligible signal rate"
                 series={overview.data.series}
+                onApplyPeriod={(from, toExclusive) => {
+                  if (filters) onFilters({ ...filters, from, toExclusive })
+                }}
+                range={filters ?? undefined}
+                scopeLabel={`${context} · ${overview.data.filters.sourceKey}`}
               />
               <SignalList
                 signals={overview.data.signals}
@@ -912,6 +930,14 @@ function SignalView({
   onRetrySignal: () => void
   onRetryEvidence: () => void
 }) {
+  const pendingPeriodEvidence = useRef(false)
+  useEffect(() => {
+    if (!pendingPeriodEvidence.current || evidence.status !== 'ready') return
+    pendingPeriodEvidence.current = false
+    const region = document.getElementById('contributing-evidence')
+    region?.scrollIntoView?.({ block: 'start' })
+    region?.focus({ preventScroll: true })
+  }, [evidence])
   return (
     <>
       <button className="breadcrumb" type="button" onClick={onBack}>
@@ -965,7 +991,11 @@ function SignalView({
               {formatDate(signal.data.filters.toExclusive)} (exclusive)
             </span>
           </div>
-          <MetricGrid metrics={signalMetrics(signal.data)} />
+          <MetricGrid
+            metrics={signalMetrics(signal.data)}
+            filters={signal.data.filters}
+            scopeLabel={`${metadata.context} · ${signal.data.method}`}
+          />
           {signal.data.signal.comparison ? (
             <p className="comparison-note">
               Comparison: {formatCount(signal.data.signal.comparison.numerator)}{' '}
@@ -979,6 +1009,14 @@ function SignalView({
             title={`${signal.data.signal.label} rate`}
             series={signal.data.series}
             availability={signal.data.signal.availability}
+            range={filters ?? undefined}
+            scopeLabel={`${metadata.context} · ${signal.data.filters.sourceKey} · ${signal.data.method}`}
+            onApplyPeriod={(from, toExclusive) => {
+              if (filters) {
+                pendingPeriodEvidence.current = true
+                onFilters({ ...filters, from, toExclusive })
+              }
+            }}
           />
         </>
       )}

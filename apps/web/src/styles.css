@@ -1,4 +1,5 @@
 @import './orbital-tokens.css';
+@import './inspection.css';
 @import '@fontsource-variable/inter/opsz.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 
@@ -71,8 +72,7 @@ small {
 }
 code,
 pre,
-.detail-list--code dd,
-.wb-evidence dd {
+.detail-list--code dd {
   font: 400 13px/20px var(--oc-font-mono);
   overflow-wrap: anywhere;
 }
@@ -460,6 +460,21 @@ button:disabled {
   gap: 16px;
   margin-top: 24px;
 }
+.wb-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.wb-actions--row {
+  margin-top: 0;
+}
+.wb-main :is(p, dd, td, small, code) {
+  overflow-wrap: anywhere;
+}
+#workbench-evidence,
+.table-region[tabindex] {
+  scroll-margin-top: 96px;
+}
 .wb-panel > button + button {
   margin-left: 16px;
 }
@@ -761,18 +776,6 @@ dd {
   stroke: var(--oc-gunmetal);
   stroke-width: 1.5;
 }
-.wb-timeline {
-  height: 180px;
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  margin-bottom: 24px;
-}
-.wb-timeline > div {
-  min-width: 1px;
-  flex: 1;
-  background: var(--oc-autumn-leaf);
-}
 .wb-distribution {
   display: grid;
   grid-template-columns: minmax(100px, 1fr) 2fr minmax(100px, 1fr);
@@ -924,16 +927,12 @@ td > small {
 .answer-row p {
   margin-bottom: 8px;
 }
-.evidence-body,
-.wb-evidence {
+.evidence-body {
   margin-top: 24px;
   padding: 24px;
   border-left: 2px solid var(--oc-autumn-leaf);
   border-radius: 0;
   background: var(--oc-deep-space-blue);
-}
-.wb-evidence dd {
-  margin-bottom: 16px;
 }
 .data-disclosure,
 details {

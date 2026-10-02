@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
+import { Inspectable } from './inspection-components'
+import { useInspection, type InspectionDetail } from './inspection-context'
 
 import {
   formatCount,
@@ -287,7 +289,15 @@ function availabilityText(availability: Availability) {
   return reasonLabels[availability.reason]
 }
 
-export function MetricCard({ metric }: { metric: Metric }) {
+export function MetricCard({
+  metric,
+  filters,
+  scopeLabel,
+}: {
+  metric: Metric
+  filters?: DashboardFilters
+  scopeLabel?: string
+}) {
   const available = metric.availability.state === 'available'
   const displayValue = !available
     ? '—'
@@ -309,7 +319,61 @@ export function MetricCard({ metric }: { metric: Metric }) {
           {availabilityText(metric.availability)}
         </StatusBadge>
       </div>
-      <p className="metric-card__value">{displayValue}</p>
+      <Inspectable
+        className="inspection-value metric-card__value"
+        detail={{
+          title: metric.label,
+          scopeLabel,
+          description:
+            'Selected source and applied filters. Availability and denominator govern this measure; descriptive values are not validated probabilities.',
+          fields: [
+            ...(filters
+              ? [
+                  { label: 'Source identity', value: filters.sourceKey },
+                  {
+                    label: 'UTC interval',
+                    value: `${filters.from} – ${filters.toExclusive} (exclusive)`,
+                  },
+                  {
+                    label: 'Applied dimensions',
+                    value:
+                      Object.entries(filters)
+                        .filter(
+                          ([key, value]) =>
+                            !['sourceKey', 'from', 'toExclusive'].includes(
+                              key,
+                            ) && value !== null,
+                        )
+                        .map(([key, value]) => `${key}: ${value}`)
+                        .join(' · ') || 'All dimensions',
+                  },
+                ]
+              : []),
+            { label: 'Displayed value', value: displayValue },
+            {
+              label: 'Availability',
+              value: availabilityText(metric.availability),
+            },
+            {
+              label: 'Numerator',
+              value:
+                metric.numerator === null
+                  ? 'Unavailable'
+                  : formatCount(metric.numerator),
+            },
+            {
+              label: 'Denominator',
+              value:
+                metric.denominator === null
+                  ? 'Unavailable'
+                  : formatCount(metric.denominator),
+            },
+            { label: 'Measure identifier', value: metric.id },
+          ],
+        }}
+      >
+        {displayValue}
+      </Inspectable>
       {metric.numerator !== null && metric.denominator !== null ? (
         <p className="metric-card__denominator">
           {metricDenominatorText(metric)}
@@ -345,11 +409,24 @@ function metricDenominatorText(metric: Metric) {
   }
 }
 
-export function MetricGrid({ metrics }: { metrics: Metric[] }) {
+export function MetricGrid({
+  metrics,
+  filters,
+  scopeLabel,
+}: {
+  metrics: Metric[]
+  filters?: DashboardFilters
+  scopeLabel?: string
+}) {
   return (
     <section className="metric-grid" aria-label="Overview metrics">
       {metrics.map((metric) => (
-        <MetricCard key={metric.id} metric={metric} />
+        <MetricCard
+          key={metric.id}
+          metric={metric}
+          filters={filters}
+          scopeLabel={scopeLabel}
+        />
       ))}
     </section>
   )
@@ -376,11 +453,20 @@ export function TimeSeriesPanel({
   title,
   series,
   availability,
+  range,
+  scopeLabel,
+  onApplyPeriod,
 }: {
   title: string
   series: SeriesPoint[]
   availability?: Availability
+  range?: { from: string; toExclusive: string }
+  scopeLabel?: string
+  onApplyPeriod?: (from: string, toExclusive: string) => void
 }) {
+  const { preview, clearPreview, inspect, previewId } = useInspection()
+  const chartRef = useRef<HTMLDivElement>(null)
+  const [selectedIndex, setSelectedIndex] = useState(0)
   if (availability?.state === 'unavailable') {
     return (
       <StatePanel
@@ -408,16 +494,103 @@ export function TimeSeriesPanel({
   const padX = 44
   const padTop = 22
   const padBottom = 42
-  const plot = availablePoints.map((point, index) => ({
-    data: point,
-    x:
-      availablePoints.length === 1
-        ? width / 2
-        : padX + (index / (availablePoints.length - 1)) * (width - padX * 2),
-    y: height - padBottom - (point.value / 100) * (height - padTop - padBottom),
-  }))
-  const line = smoothLinePath(plot)
-  const area = `${line} L ${plot.at(-1)!.x} ${height - padBottom} L ${plot[0]!.x} ${height - padBottom} Z`
+  const ordered = [...series].sort(
+    (a, b) => Date.parse(a.periodStart) - Date.parse(b.periodStart),
+  )
+  const firstTime = Date.parse(ordered[0]!.periodStart)
+  const lastTime = Date.parse(ordered.at(-1)!.periodStart)
+  const xFor = (point: SeriesPoint) =>
+    firstTime === lastTime
+      ? width / 2
+      : padX +
+        ((Date.parse(point.periodStart) - firstTime) / (lastTime - firstTime)) *
+          (width - padX * 2)
+  const plot = ordered
+    .filter(
+      (point): point is SeriesPoint & { value: number } => point.value !== null,
+    )
+    .map((point) => ({
+      data: point,
+      x: xFor(point),
+      y:
+        height -
+        padBottom -
+        (point.value / 100) * (height - padTop - padBottom),
+    }))
+  const segments: (typeof plot)[] = []
+  let segment: typeof plot = []
+  for (const point of ordered) {
+    const previous = segment.at(-1)?.data
+    const nextMonth = previous
+      ? new Date(Date.parse(previous.periodStart))
+      : null
+    if (nextMonth) nextMonth.setUTCMonth(nextMonth.getUTCMonth() + 1)
+    if (
+      point.value === null ||
+      (nextMonth && Date.parse(point.periodStart) > nextMonth.getTime())
+    ) {
+      if (segment.length) segments.push(segment)
+      segment = []
+    }
+    if (point.value !== null)
+      segment.push({
+        data: { ...point, value: point.value },
+        x: xFor(point),
+        y:
+          height -
+          padBottom -
+          (point.value / 100) * (height - padTop - padBottom),
+      })
+  }
+  if (segment.length) segments.push(segment)
+  const periodDetail = (point: SeriesPoint): InspectionDetail => {
+    const end = new Date(Date.parse(point.periodStart))
+    end.setUTCMonth(end.getUTCMonth() + 1)
+    const from = new Date(
+      Math.max(
+        Date.parse(point.periodStart),
+        range ? Date.parse(range.from) : -Infinity,
+      ),
+    ).toISOString()
+    const toExclusive = new Date(
+      Math.min(end.getTime(), range ? Date.parse(range.toExclusive) : Infinity),
+    ).toISOString()
+    return {
+      title: `${title} · ${formatDate(point.periodStart)}`,
+      scopeLabel,
+      description:
+        'Monthly UTC observations. Missing periods have unknown coverage; unavailable values are not zero. The rate uses eligible records only.',
+      fields: [
+        {
+          label: 'Rate',
+          value: point.value === null ? 'Unavailable' : formatRate(point.value),
+        },
+        {
+          label: 'Eligible denominator',
+          value: formatCount(point.eligibleCount),
+        },
+        {
+          label: 'UTC interval',
+          value: `${from} – ${toExclusive} (exclusive)`,
+        },
+        { label: 'Imported records', value: formatCount(point.importedCount) },
+        { label: 'Signal numerator', value: formatCount(point.topicNumerator) },
+      ],
+      action:
+        onApplyPeriod && Date.parse(from) < Date.parse(toExclusive)
+          ? {
+              label: 'Apply period filter',
+              onClick: () => onApplyPeriod(from, toExclusive),
+            }
+          : undefined,
+    }
+  }
+  const selectPeriod = (index: number) => {
+    const next = Math.max(0, Math.min(ordered.length - 1, index))
+    setSelectedIndex(next)
+    if (chartRef.current)
+      preview(periodDetail(ordered[next]!), chartRef.current)
+  }
   const average =
     availablePoints.reduce((sum, point) => sum + point.value, 0) /
     availablePoints.length
@@ -426,6 +599,23 @@ export function TimeSeriesPanel({
   const current = availablePoints.at(-1)?.value ?? 0
   const yTicks = [0, 25, 50, 75, 100]
   const labelInterval = Math.max(1, Math.ceil(plot.length / 7))
+  const summaryDetail = (label: string, value: string): InspectionDetail => ({
+    title: `${title} · ${label}`,
+    scopeLabel,
+    description:
+      'Descriptive summary of supplied available periods. Latest means the most recent available rate. Average is an unweighted mean of period rates, not a pooled record rate. Unknown and unavailable periods are excluded.',
+    fields: [
+      { label: 'Displayed value', value },
+      {
+        label: 'Available periods',
+        value: formatCount(availablePoints.length),
+      },
+      {
+        label: 'Unavailable supplied periods',
+        value: formatCount(series.length - availablePoints.length),
+      },
+    ],
+  })
 
   return (
     <section className="panel series-panel" aria-labelledby="series-title">
@@ -439,89 +629,203 @@ export function TimeSeriesPanel({
       <dl className="series-summary" aria-label={`${title} summary`}>
         <div>
           <dt>Latest</dt>
-          <dd>{formatRate(current)}</dd>
+          <dd>
+            <Inspectable
+              className="inspection-value"
+              detail={summaryDetail('Latest', formatRate(current))}
+            >
+              {formatRate(current)}
+            </Inspectable>
+          </dd>
         </div>
         <div>
           <dt>Average</dt>
-          <dd>{formatRate(average)}</dd>
+          <dd>
+            <Inspectable
+              className="inspection-value"
+              detail={summaryDetail('Average', formatRate(average))}
+            >
+              {formatRate(average)}
+            </Inspectable>
+          </dd>
         </div>
         <div>
           <dt>Observed range</dt>
           <dd>
-            {formatRate(minimum)}–{formatRate(maximum)}
+            <Inspectable
+              className="inspection-value"
+              detail={summaryDetail(
+                'Observed range',
+                `${formatRate(minimum)}–${formatRate(maximum)}`,
+              )}
+            >
+              {formatRate(minimum)}–{formatRate(maximum)}
+            </Inspectable>
           </dd>
         </div>
         <div>
           <dt>Periods</dt>
-          <dd>{availablePoints.length}</dd>
+          <dd>
+            <Inspectable
+              className="inspection-value"
+              detail={summaryDetail(
+                'Periods',
+                formatCount(availablePoints.length),
+              )}
+            >
+              {availablePoints.length}
+            </Inspectable>
+          </dd>
         </div>
       </dl>
-      <svg
-        className="series-chart"
-        viewBox={`0 0 ${width} ${height}`}
-        role="img"
-        aria-label={`${title}. ${availablePoints.length} observed periods. A data table follows.`}
+      <p className="chart-inspection-hint">
+        Hover or select the chart for period details. Use left/right arrows when
+        focused; Enter opens inspection.
+      </p>
+      <div
+        className="series-chart-inspector"
+        ref={chartRef}
+        tabIndex={0}
+        role="button"
+        aria-describedby={previewId}
+        aria-label={`Inspect ${title} periods. Use left and right arrow keys, Enter to open details.`}
+        onFocus={() => selectPeriod(selectedIndex)}
+        onBlur={clearPreview}
+        onPointerLeave={clearPreview}
+        onPointerMove={(event) => {
+          const box = event.currentTarget.getBoundingClientRect()
+          const x = ((event.clientX - box.left) / box.width) * width
+          const closest = ordered.reduce(
+            (best, point, index) =>
+              Math.abs(xFor(point) - x) < Math.abs(xFor(ordered[best]!) - x)
+                ? index
+                : best,
+            0,
+          )
+          selectPeriod(closest)
+        }}
+        onClick={(event) => {
+          const box = event.currentTarget.getBoundingClientRect()
+          const x = ((event.clientX - box.left) / box.width) * width
+          const index =
+            event.detail && box.width
+              ? ordered.reduce(
+                  (best, point, candidate) =>
+                    Math.abs(xFor(point) - x) <
+                    Math.abs(xFor(ordered[best]!) - x)
+                      ? candidate
+                      : best,
+                  0,
+                )
+              : Math.min(selectedIndex, ordered.length - 1)
+          if (chartRef.current)
+            inspect(periodDetail(ordered[index]!), chartRef.current)
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            event.preventDefault()
+            selectPeriod(selectedIndex + (event.key === 'ArrowLeft' ? -1 : 1))
+          } else if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            if (chartRef.current)
+              inspect(
+                periodDetail(
+                  ordered[Math.min(selectedIndex, ordered.length - 1)]!,
+                ),
+                chartRef.current,
+              )
+          }
+        }}
       >
-        <defs>
-          <linearGradient id="series-area-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="currentColor" stopOpacity="0.34" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0.02" />
-          </linearGradient>
-        </defs>
-        <g className="series-chart__grid">
-          {yTicks.map((tick) => {
-            const y =
-              height - padBottom - (tick / 100) * (height - padTop - padBottom)
+        <svg
+          className="series-chart"
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label={`${title}. ${availablePoints.length} observed periods. A data table follows.`}
+        >
+          <defs>
+            <linearGradient
+              id="series-area-gradient"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.34" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+          <g className="series-chart__grid">
+            {yTicks.map((tick) => {
+              const y =
+                height -
+                padBottom -
+                (tick / 100) * (height - padTop - padBottom)
+              return (
+                <g key={tick}>
+                  <line x1={padX} y1={y} x2={width - padX} y2={y} />
+                  <text x={padX - 10} y={y + 4} textAnchor="end">
+                    {tick}%
+                  </text>
+                </g>
+              )
+            })}
+          </g>
+          <line
+            className="series-chart__average"
+            x1={padX}
+            y1={
+              height -
+              padBottom -
+              (average / 100) * (height - padTop - padBottom)
+            }
+            x2={width - padX}
+            y2={
+              height -
+              padBottom -
+              (average / 100) * (height - padTop - padBottom)
+            }
+          />
+          {segments.map((values) => {
+            const line = smoothLinePath(values)
             return (
-              <g key={tick}>
-                <line x1={padX} y1={y} x2={width - padX} y2={y} />
-                <text x={padX - 10} y={y + 4} textAnchor="end">
-                  {tick}%
-                </text>
+              <g key={values[0]!.data.periodStart}>
+                <path
+                  className="series-chart__area"
+                  d={`${line} L ${values.at(-1)!.x} ${height - padBottom} L ${values[0]!.x} ${height - padBottom} Z`}
+                />
+                <path className="series-chart__line" d={line} />
               </g>
             )
           })}
-        </g>
-        <line
-          className="series-chart__average"
-          x1={padX}
-          y1={
-            height - padBottom - (average / 100) * (height - padTop - padBottom)
-          }
-          x2={width - padX}
-          y2={
-            height - padBottom - (average / 100) * (height - padTop - padBottom)
-          }
-        />
-        <path className="series-chart__area" d={area} />
-        <path className="series-chart__line" d={line} />
-        {plot.map((point, index) => (
-          <g className="series-chart__point" key={point.data.periodStart}>
-            <circle
-              cx={point.x}
-              cy={point.y}
-              r={index === plot.length - 1 ? 6 : 4}
-            >
-              <title>
-                {formatDate(point.data.periodStart)}:{' '}
-                {formatRate(point.data.value)} ·{' '}
-                {formatCount(point.data.topicNumerator)} of{' '}
-                {formatCount(point.data.eligibleCount)}
-              </title>
-            </circle>
-            {(index % labelInterval === 0 || index === plot.length - 1) && (
-              <text
-                className="series-chart__x-label"
-                x={point.x}
-                y={height - 14}
-                textAnchor="middle"
+          {plot.map((point, index) => (
+            <g className="series-chart__point" key={point.data.periodStart}>
+              <circle
+                cx={point.x}
+                cy={point.y}
+                r={index === plot.length - 1 ? 6 : 4}
               >
-                {formatMonth(point.data.periodStart)}
-              </text>
-            )}
-          </g>
-        ))}
-      </svg>
+                <title>
+                  {formatDate(point.data.periodStart)}:{' '}
+                  {formatRate(point.data.value)} ·{' '}
+                  {formatCount(point.data.topicNumerator)} of{' '}
+                  {formatCount(point.data.eligibleCount)}
+                </title>
+              </circle>
+              {(index % labelInterval === 0 || index === plot.length - 1) && (
+                <text
+                  className="series-chart__x-label"
+                  x={point.x}
+                  y={height - 14}
+                  textAnchor="middle"
+                >
+                  {formatMonth(point.data.periodStart)}
+                </text>
+              )}
+            </g>
+          ))}
+        </svg>
+      </div>
       <details className="data-disclosure">
         <summary>View chart data</summary>
         <div
@@ -538,6 +842,7 @@ export function TimeSeriesPanel({
                 <th scope="col">Eligible</th>
                 <th scope="col">Signal count</th>
                 <th scope="col">Rate</th>
+                <th scope="col">Details</th>
               </tr>
             </thead>
             <tbody>
@@ -548,6 +853,11 @@ export function TimeSeriesPanel({
                   <td>{formatCount(point.eligibleCount)}</td>
                   <td>{formatCount(point.topicNumerator)}</td>
                   <td>{formatRate(point.value)}</td>
+                  <td>
+                    <Inspectable detail={periodDetail(point)}>
+                      Inspect {formatDate(point.periodStart)}
+                    </Inspectable>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -768,6 +1078,7 @@ export function EvidenceTable({
         className="table-region"
         role="region"
         aria-label="Contributing feedback records"
+        id="contributing-evidence"
         tabIndex={0}
       >
         <table>

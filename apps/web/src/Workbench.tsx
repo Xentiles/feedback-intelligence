@@ -9,13 +9,10 @@ import {
   type Preview,
   type Validation,
   type Connection,
-  type Results,
-  type Evidence,
-  type Comparison,
-  type TrendResult,
 } from './workbench-api'
 import { type WorkbenchPage } from './application-routes'
 import { useConfirmation } from './confirmation-context'
+import { WorkbenchResults } from './WorkbenchResults'
 import { priceReference } from './workbench-pricing'
 
 type View = WorkbenchPage
@@ -44,7 +41,7 @@ export function Workbench({
   const workbench = client
   const confirm = useConfirmation()
   const [session, setSession] = useState<
-    'loading' | 'disabled' | 'locked' | 'ready'
+    'loading' | 'disabled' | 'locked' | 'ready' | 'error'
   >('loading')
   const [localView, setLocalView] = useState<View>(
     new URLSearchParams(window.location.search).has('connection')
@@ -60,6 +57,7 @@ export function Workbench({
       : '',
   )
   const [busy, setBusy] = useState(false)
+  const [workspaceLoadError, setWorkspaceLoadError] = useState('')
   const [datasets, setDatasets] = useState<Dataset[]>([])
   const [templates, setTemplates] = useState<Template[]>([])
   const [runs, setRuns] = useState<Run[]>([])
@@ -71,23 +69,15 @@ export function Workbench({
     [],
   )
   const [model, setModel] = useState('')
+  const [modelsState, setModelsState] = useState<
+    'idle' | 'loading' | 'ready' | 'empty' | 'error'
+  >('idle')
+  const [modelError, setModelError] = useState('')
+  const [modelRetry, setModelRetry] = useState(0)
+  const [sessionRetry, setSessionRetry] = useState(0)
   const [engine, setEngine] = useState('rules')
   const [consent, setConsent] = useState(false)
   const [selectedRun, setSelectedRun] = useState('')
-  const [results, setResults] = useState<Results | null>(null)
-  const [filters, setFilters] = useState({
-    topic: '',
-    sentiment: '',
-    language: '',
-    product: '',
-    group: '',
-    page: 1,
-  })
-  const [evidence, setEvidence] = useState<Evidence | null>(null)
-  const [compareId, setCompareId] = useState('')
-  const [comparison, setComparison] = useState<Comparison | null>(null)
-  const [trend, setTrend] = useState<TrendResult | null>(null)
-  const [originalExport, setOriginalExport] = useState(false)
   const [draft, setDraft] = useState<{ name: string; topics: Topic[] } | null>(
     null,
   )
@@ -99,6 +89,16 @@ export function Workbench({
       : '',
   )
   const requestKey = useRef(crypto.randomUUID())
+  const initialSelections = useRef(true)
+  const connectionPermitted = connections.some(
+    (connection) =>
+      connection.id === connectionId &&
+      (connection.mode === 'api' || connection.planEnabled),
+  )
+  const datasetReady = datasets.some(
+    (dataset) => dataset.id === datasetId && dataset.status === 'ready',
+  )
+  const templateReady = templates.some((template) => template.id === templateId)
 
   const task = async (fn: () => Promise<void>) => {
     setError('')
@@ -122,17 +122,38 @@ export function Workbench({
     setTemplates(t)
     setRuns(r)
     setConnections(c)
-    setDatasetId(
-      (id) => id || d.find((row) => row.status === 'ready')?.id || '',
+    setWorkspaceLoadError('')
+    const chooseDefaults = initialSelections.current
+    initialSelections.current = false
+    setDatasetId((id) =>
+      id
+        ? d.some((row) => row.id === id && row.status === 'ready')
+          ? id
+          : ''
+        : chooseDefaults
+          ? d.find((row) => row.status === 'ready')?.id || ''
+          : '',
     )
-    setTemplateId((id) => id || t[0]?.id || '')
+    setTemplateId((id) =>
+      id
+        ? t.some((row) => row.id === id)
+          ? id
+          : ''
+        : chooseDefaults
+          ? t[0]?.id || ''
+          : '',
+    )
+    setConnectionId((id) =>
+      c.some((row) => row.id === id && (row.mode === 'api' || row.planEnabled))
+        ? id
+        : '',
+    )
   }, [workbench])
   useEffect(() => {
     if (new URLSearchParams(window.location.search).has('connection'))
       window.history.replaceState(null, '', '/#workbench/connections')
     const expired = () => {
       setSession('locked')
-      setResults(null)
       setKey('')
       setWorkbenchCsrf('')
     }
@@ -151,19 +172,22 @@ export function Workbench({
         )
       })
       .catch((e) => {
-        if (!abort.signal.aborted) setError(String(e))
+        if (!abort.signal.aborted) {
+          setError(String(e))
+          setSession('error')
+        }
       })
     return () => {
       abort.abort()
       window.removeEventListener('workbench-session-expired', expired)
     }
-  }, [workbench])
+  }, [workbench, sessionRetry])
   useEffect(() => {
     if (session !== 'ready' || !visible) return
     let active = true
     const reload = () => {
       void refresh().catch((e) => {
-        if (active) setError(String(e))
+        if (active) setWorkspaceLoadError(String(e))
       })
     }
     reload()
@@ -174,8 +198,18 @@ export function Workbench({
     }
   }, [session, refresh, visible])
   useEffect(() => {
-    if (!connectionId) return
     const abort = new AbortController()
+    if (!connectionId || !connectionPermitted) {
+      void Promise.resolve().then(() => {
+        if (!abort.signal.aborted) {
+          setModels([])
+          setModel('')
+          setModelsState('idle')
+          setModelError('')
+        }
+      })
+      return () => abort.abort()
+    }
     void workbench<{ slug: string; displayName: string }[]>(
       `/connections/${connectionId}/models`,
       undefined,
@@ -185,45 +219,29 @@ export function Workbench({
       .then((m) => {
         if (abort.signal.aborted) return
         setModels(m)
+        setModelsState(m.length ? 'ready' : 'empty')
         setModel(m[0]?.slug || '')
       })
       .catch((e) => {
-        if (!abort.signal.aborted) setError(String(e))
+        if (!abort.signal.aborted) {
+          setModels([])
+          setModel('')
+          setModelError(String(e))
+          setModelsState('error')
+        }
       })
     return () => abort.abort()
-  }, [connectionId, workbench])
-  const query = new URLSearchParams(
-    Object.entries(filters).map(([name, value]) => [name, String(value)]),
-  ).toString()
-  useEffect(() => {
-    if (!selectedRun || session !== 'ready' || !visible) return
-    const abort = new AbortController()
-    let generation = 0
-    const reload = () => {
-      const current = ++generation
-      void workbench<Results>(
-        `/runs/${selectedRun}/results?${query}`,
-        undefined,
-        'GET',
-        abort.signal,
-      )
-        .then((data) => {
-          if (!abort.signal.aborted && generation === current)
-            setResults({ ...data, loadedQuery: query })
-        })
-        .catch((e) => {
-          if (!abort.signal.aborted) setError(String(e))
-        })
-    }
-    reload()
-    const interval = window.setInterval(reload, 5000)
-    return () => {
-      abort.abort()
-      window.clearInterval(interval)
-    }
-  }, [selectedRun, query, session, visible, workbench])
+  }, [connectionId, connectionPermitted, workbench, modelRetry])
+  const selectRun = (id: string) => {
+    setSelectedRun(id)
+    setView('Results')
+  }
 
-  const startRun = async (mode: 'sample' | 'full', sample?: Run) => {
+  const startRun = async (
+    mode: 'sample' | 'full',
+    sample?: Run,
+    externalConsent = consent,
+  ) => {
     const options = {
       datasetId: sample?.dataset_id || datasetId,
       templateId: sample?.template_id || templateId,
@@ -231,7 +249,7 @@ export function Workbench({
       connectionId: sample?.snapshot.connectionId || connectionId,
       model: sample?.snapshot.model || model,
       mode,
-      externalConsent: consent,
+      externalConsent,
       idempotencyKey: requestKey.current,
       sampleRunId: sample?.id,
     }
@@ -256,16 +274,7 @@ export function Workbench({
     }
     const run = await workbench<Run>('/runs', options)
     requestKey.current = crypto.randomUUID()
-    setSelectedRun(run.id)
-    setFilters({
-      topic: '',
-      sentiment: '',
-      language: '',
-      product: '',
-      group: '',
-      page: 1,
-    })
-    setView('Results')
+    selectRun(run.id)
     await refresh()
   }
 
@@ -290,9 +299,50 @@ export function Workbench({
             <button onClick={() => setNotice('')}>Got it</button>
           </div>
         )}
+        {session === 'ready' && workspaceLoadError && (
+          <div className="wb-error" role="alert">
+            <p>Workspace lists could not be refreshed. {workspaceLoadError}</p>
+            <div className="wb-actions">
+              <button
+                disabled={busy}
+                onClick={async () => {
+                  setBusy(true)
+                  try {
+                    await refresh()
+                  } catch (failure) {
+                    setWorkspaceLoadError(String(failure))
+                  } finally {
+                    setBusy(false)
+                  }
+                }}
+              >
+                Retry workspace data
+              </button>
+            </div>
+          </div>
+        )}
         {busy && <p role="status">Working on your local request…</p>}
         {session === 'loading' ? (
           <p role="status">Checking local workspace…</p>
+        ) : session === 'error' ? (
+          <section className="wb-panel">
+            <h2>Local workspace unavailable</h2>
+            <p>
+              Check that the local runtime is running, then retry the
+              connection.
+            </p>
+            <div className="wb-actions">
+              <button
+                onClick={() => {
+                  setError('')
+                  setSession('loading')
+                  setSessionRetry((value) => value + 1)
+                }}
+              >
+                Retry workspace connection
+              </button>
+            </div>
+          </section>
         ) : session === 'disabled' ? (
           <section className="wb-panel">
             <h2>Start the workbench runtime</h2>
@@ -370,7 +420,8 @@ export function Workbench({
                 client={workbench}
                 busy={busy}
                 task={task}
-                imported={async () => {
+                imported={async (dataset) => {
+                  setDatasetId(dataset.id)
                   await refresh()
                   setView('Classification')
                 }}
@@ -402,41 +453,43 @@ export function Workbench({
                             <td>{d.count.toLocaleString()}</td>
                             <td>{d.status}</td>
                             <td>
-                              <button
-                                disabled={d.status !== 'ready'}
-                                onClick={() => {
-                                  setDatasetId(d.id)
-                                  setView('Classification')
-                                }}
-                              >
-                                Use {d.name}
-                              </button>
-                              <button
-                                className="button--destructive"
-                                disabled={busy || d.status !== 'ready'}
-                                onClick={async () => {
-                                  if (
-                                    await confirm({
-                                      title: 'Delete dataset',
-                                      destructive: true,
-                                      confirmLabel: 'Delete dataset',
-                                      message: `Delete ${d.name} and all its runs and results? This permanently purges local data.`,
-                                    })
-                                  )
-                                    void task(async () => {
-                                      await workbench(
-                                        `/datasets/${d.id}`,
-                                        undefined,
-                                        'DELETE',
-                                      )
-                                      if (datasetId === d.id) setDatasetId('')
-                                      setSelectedRun('')
-                                      await refresh()
-                                    })
-                                }}
-                              >
-                                Delete {d.name}
-                              </button>
+                              <div className="wb-actions wb-actions--row">
+                                <button
+                                  disabled={d.status !== 'ready'}
+                                  onClick={() => {
+                                    setDatasetId(d.id)
+                                    setView('Classification')
+                                  }}
+                                >
+                                  Use {d.name}
+                                </button>
+                                <button
+                                  className="button--destructive"
+                                  disabled={busy || d.status !== 'ready'}
+                                  onClick={async () => {
+                                    if (
+                                      await confirm({
+                                        title: 'Delete dataset',
+                                        destructive: true,
+                                        confirmLabel: 'Delete dataset',
+                                        message: `Delete ${d.name} and all its runs and results? This permanently purges local data.`,
+                                      })
+                                    )
+                                      void task(async () => {
+                                        await workbench(
+                                          `/datasets/${d.id}`,
+                                          undefined,
+                                          'DELETE',
+                                        )
+                                        if (datasetId === d.id) setDatasetId('')
+                                        setSelectedRun('')
+                                        await refresh()
+                                      })
+                                  }}
+                                >
+                                  Delete {d.name}
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -480,6 +533,7 @@ export function Workbench({
                           requestKey.current = crypto.randomUUID()
                         }}
                       >
+                        <option value="">Choose template revision</option>
                         {templates.map((t) => (
                           <option key={t.id} value={t.id}>
                             {t.name} · {t.revision.slice(0, 8)}
@@ -520,6 +574,10 @@ export function Workbench({
                             value={connectionId}
                             onChange={(e) => {
                               setConnectionId(e.target.value)
+                              setModelsState(
+                                e.target.value ? 'loading' : 'idle',
+                              )
+                              setModelError('')
                               setModels([])
                               setModel('')
                               requestKey.current = crypto.randomUUID()
@@ -539,12 +597,26 @@ export function Workbench({
                         <label>
                           Available model
                           <select
+                            disabled={
+                              !connectionPermitted || modelsState !== 'ready'
+                            }
                             value={model}
                             onChange={(e) => {
                               setModel(e.target.value)
                               requestKey.current = crypto.randomUUID()
                             }}
                           >
+                            <option value="">
+                              {!connectionId
+                                ? 'Choose a connection first'
+                                : modelsState === 'loading'
+                                  ? 'Loading models…'
+                                  : modelsState === 'error'
+                                    ? 'Models unavailable'
+                                    : modelsState === 'empty'
+                                      ? 'No available models'
+                                      : 'Choose model'}
+                            </option>
                             {models.map((m) => (
                               <option key={m.slug} value={m.slug}>
                                 {m.displayName}
@@ -553,6 +625,29 @@ export function Workbench({
                           </select>
                         </label>
                       </div>
+                      {modelsState === 'error' && (
+                        <div role="alert">
+                          <p>{modelError}</p>
+                          <div className="wb-actions">
+                            <button
+                              disabled={busy}
+                              onClick={() => {
+                                setModelsState('loading')
+                                setModelError('')
+                                setModelRetry((value) => value + 1)
+                              }}
+                            >
+                              Retry model catalog
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {modelsState === 'empty' && (
+                        <p>
+                          No models are available from this connection. Review
+                          Connections or explicitly choose another account.
+                        </p>
+                      )}
                       <label className="wb-check">
                         <input
                           type="checkbox"
@@ -580,24 +675,30 @@ export function Workbench({
                       </p>
                     </>
                   )}
-                  <button
-                    className="button--primary"
-                    disabled={
-                      busy ||
-                      !datasetId ||
-                      !templateId ||
-                      (engine === 'openai' && (!model || !consent))
-                    }
-                    onClick={() => {
-                      void task(() =>
-                        startRun(engine === 'openai' ? 'sample' : 'full'),
-                      )
-                    }}
-                  >
-                    {engine === 'rules'
-                      ? 'Classify dataset with rules'
-                      : 'Test a representative sample (up to 25)'}
-                  </button>
+                  <div className="wb-actions" aria-label="Run actions">
+                    <button
+                      className="button--primary"
+                      disabled={
+                        busy ||
+                        !datasetReady ||
+                        !templateReady ||
+                        (engine === 'openai' &&
+                          (!connectionPermitted ||
+                            modelsState !== 'ready' ||
+                            !model ||
+                            !consent))
+                      }
+                      onClick={() => {
+                        void task(() =>
+                          startRun(engine === 'openai' ? 'sample' : 'full'),
+                        )
+                      }}
+                    >
+                      {engine === 'rules'
+                        ? 'Classify dataset with rules'
+                        : 'Test a representative sample (up to 25)'}
+                    </button>
+                  </div>
                 </section>
                 <section className="wb-panel">
                   <h2>Topics and keyword rules</h2>
@@ -739,67 +840,68 @@ export function Workbench({
                               {r.failed} failed
                             </td>
                             <td>
-                              <button
-                                onClick={() => {
-                                  setSelectedRun(r.id)
-                                  setView('Results')
-                                }}
-                              >
-                                Inspect {r.id.slice(0, 8)}
-                              </button>
-                              {['queued', 'running'].includes(r.status) && (
+                              <div className="wb-actions wb-actions--row">
                                 <button
-                                  className="button--destructive"
-                                  disabled={busy}
                                   onClick={() => {
-                                    void task(async () => {
-                                      if (
-                                        !(await confirm({
-                                          title: 'Cancel processing',
-                                          confirmLabel: 'Stop run',
-                                          message:
-                                            'Stop dispatching records? Successful results are retained. An in-flight model request may still consume usage.',
-                                        }))
-                                      )
-                                        return
-                                      await workbench(
-                                        `/runs/${r.id}/cancel`,
-                                        {},
-                                      )
-                                      await refresh()
-                                    })
+                                    selectRun(r.id)
                                   }}
                                 >
-                                  Cancel {r.id.slice(0, 8)}
+                                  Inspect {r.id.slice(0, 8)}
                                 </button>
-                              )}
-                              {['paused', 'cancelled', 'failed'].includes(
-                                r.status,
-                              ) && (
-                                <button
-                                  className="button--primary"
-                                  disabled={busy}
-                                  onClick={async () => {
-                                    if (
-                                      await confirm({
-                                        title: 'Resume unfinished records',
-                                        confirmLabel: 'Resume run',
-                                        message:
-                                          'Resume unfinished records? Interrupted OpenAI requests can consume additional usage.',
-                                      })
-                                    )
+                                {['queued', 'running'].includes(r.status) && (
+                                  <button
+                                    className="button--destructive"
+                                    disabled={busy}
+                                    onClick={() => {
                                       void task(async () => {
+                                        if (
+                                          !(await confirm({
+                                            title: 'Cancel processing',
+                                            confirmLabel: 'Stop run',
+                                            message:
+                                              'Stop dispatching records? Successful results are retained. An in-flight model request may still consume usage.',
+                                          }))
+                                        )
+                                          return
                                         await workbench(
-                                          `/runs/${r.id}/resume`,
-                                          { externalConsent: true },
+                                          `/runs/${r.id}/cancel`,
+                                          {},
                                         )
                                         await refresh()
                                       })
-                                  }}
-                                >
-                                  Resume {r.id.slice(0, 8)}
-                                </button>
-                              )}
+                                    }}
+                                  >
+                                    Cancel {r.id.slice(0, 8)}
+                                  </button>
+                                )}
+                                {['paused', 'cancelled', 'failed'].includes(
+                                  r.status,
+                                ) && (
+                                  <button
+                                    className="button--primary"
+                                    disabled={busy}
+                                    onClick={async () => {
+                                      if (
+                                        await confirm({
+                                          title: 'Resume unfinished records',
+                                          confirmLabel: 'Resume run',
+                                          message:
+                                            'Resume unfinished records? Interrupted OpenAI requests can consume additional usage.',
+                                        })
+                                      )
+                                        void task(async () => {
+                                          await workbench(
+                                            `/runs/${r.id}/resume`,
+                                            { externalConsent: true },
+                                          )
+                                          await refresh()
+                                        })
+                                    }}
+                                  >
+                                    Resume {r.id.slice(0, 8)}
+                                  </button>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -809,544 +911,26 @@ export function Workbench({
                 )}
               </section>
             )}
-            {view === 'Results' && (
-              <>
-                <label>
-                  Selected run
-                  <select
-                    value={selectedRun}
-                    onChange={(e) => {
-                      setSelectedRun(e.target.value)
-                      setEvidence(null)
-                      setComparison(null)
-                      setTrend(null)
-                      setFilters({
-                        topic: '',
-                        sentiment: '',
-                        language: '',
-                        product: '',
-                        group: '',
-                        page: 1,
-                      })
-                    }}
-                  >
-                    <option value="">Choose run</option>
-                    {runs.map((r) => (
-                      <option value={r.id} key={r.id}>
-                        {r.id.slice(0, 8)} · {r.snapshot.template.name} ·{' '}
-                        {r.snapshot.engine} · {r.status}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {results &&
-                results.run.id === selectedRun &&
-                results.loadedQuery === query ? (
-                  <>
-                    <section className="wb-panel">
-                      <h2>Processing and coverage</h2>
-                      <p>
-                        Run duration: {results.run.elapsedSeconds} seconds.
-                        Counts include the current filters.
-                      </p>
-                      {results.run.errors.length > 0 && (
-                        <details>
-                          <summary>
-                            Processing errors and interruptions (
-                            {results.run.errors.length} shown)
-                          </summary>
-                          {results.run.errors.map((e) => (
-                            <p key={e.record_id}>
-                              {e.record_id.slice(0, 8)} · {e.status} ·{' '}
-                              {e.error_code}. Inspect the import report or
-                              reconnect before explicitly resuming.
-                            </p>
-                          ))}
-                        </details>
-                      )}
-                      {results.run.snapshot.billingMode === 'api' &&
-                        priceReference(results.run.snapshot.model) && (
-                          <p>
-                            Estimated API cost for new successful records: $
-                            {priceReference(results.run.snapshot.model)!
-                              .cost(
-                                results.runUsage.inputTokens,
-                                results.runUsage.outputTokens,
-                              )
-                              .toFixed(4)}{' '}
-                            using rates reviewed{' '}
-                            {
-                              priceReference(results.run.snapshot.model)!
-                                .reviewedAt
-                            }
-                            . This is not an invoice; failed attempts and
-                            provider billing adjustments can add usage.{' '}
-                            {results.run.snapshot.mode === 'sample' &&
-                              results.run.succeeded > 0 && (
-                                <span>
-                                  Linear full-dataset estimate: $
-                                  {(
-                                    (priceReference(
-                                      results.run.snapshot.model,
-                                    )!.cost(
-                                      results.runUsage.inputTokens,
-                                      results.runUsage.outputTokens,
-                                    ) *
-                                      (datasets.find(
-                                        (d) => d.id === results.run.dataset_id,
-                                      )?.count || results.run.target)) /
-                                    results.run.succeeded
-                                  ).toFixed(2)}{' '}
-                                  from this sample; actual totals may differ.
-                                </span>
-                              )}
-                          </p>
-                        )}
-                      <div className="wb-metrics">
-                        <Metric
-                          label="Run coverage"
-                          value={`${results.run.succeeded} / ${results.run.target}`}
-                        />
-                        <Metric
-                          label="Filtered results"
-                          value={results.filtered.toLocaleString()}
-                        />
-                        <Metric
-                          label="Dated results"
-                          value={results.summary.dated.toLocaleString()}
-                        />
-                        <Metric
-                          label="Recorded tokens"
-                          value={`${results.runUsage.inputTokens.toLocaleString()} in / ${results.runUsage.outputTokens.toLocaleString()} out`}
-                        />
-                      </div>
-                      <p>
-                        {results.run.status} · {results.run.failed} failed ·{' '}
-                        {results.runUsage.reusedRecords} reused sample records ·{' '}
-                        {results.projectionPending} awaiting analytical
-                        projection. Undated records remain in distributions and
-                        evidence.
-                      </p>
-                      {results.run.snapshot.mode === 'sample' &&
-                        results.run.status === 'completed' && (
-                          <>
-                            <label className="wb-check">
-                              <input
-                                type="checkbox"
-                                checked={consent}
-                                onChange={(e) => setConsent(e.target.checked)}
-                              />
-                              Approve processing the remaining dataset with the
-                              same configuration.
-                            </label>
-                            <button
-                              className="button--primary"
-                              disabled={busy || !consent}
-                              onClick={() => {
-                                void task(() => startRun('full', results.run))
-                              }}
-                            >
-                              Run remaining dataset
-                            </button>
-                          </>
-                        )}
-                    </section>
-                    <section className="wb-panel">
-                      <h2>Explore classifications</h2>
-                      <div className="wb-grid">
-                        {(
-                          [
-                            'topic',
-                            'sentiment',
-                            'language',
-                            'product',
-                            'group',
-                          ] as const
-                        ).map((field) => (
-                          <label key={field}>
-                            {field}
-                            <input
-                              list={`wb-${field}`}
-                              value={filters[field]}
-                              onChange={(e) =>
-                                setFilters({
-                                  ...filters,
-                                  [field]: e.target.value,
-                                  page: 1,
-                                })
-                              }
-                            />
-                            <datalist id={`wb-${field}`}>
-                              {(field === 'topic'
-                                ? results.run.snapshot.template.topics
-                                    .map((t) => t.id)
-                                    .concat('unclassified')
-                                : field === 'sentiment'
-                                  ? ['positive', 'negative', 'mixed', 'neutral']
-                                  : results.groups[field] || ['en', 'sv']
-                              ).map((v) => (
-                                <option key={v} value={v} />
-                              ))}
-                            </datalist>
-                          </label>
-                        ))}
-                      </div>
-                      <div className="wb-grid">
-                        <Distribution
-                          title="Topics"
-                          values={results.summary.topics}
-                          total={results.summary.processed}
-                        />
-                        <Distribution
-                          title="Sentiment"
-                          values={results.summary.sentiments}
-                          total={results.summary.processed}
-                        />
-                      </div>
-                      <h3>Observed over time</h3>
-                      {results.summary.days.length ? (
-                        <div
-                          className="wb-timeline"
-                          role="img"
-                          aria-label={`Daily classified record volume over ${results.summary.days.length} observed dates. Missing dates are excluded.`}
-                        >
-                          {results.summary.days.map((day) => (
-                            <div
-                              key={day.date}
-                              title={`${day.date}: ${day.total} records`}
-                              style={{
-                                height: `${Math.max(2, (100 * day.total) / Math.max(...results.summary.days.map((d) => d.total)))}%`,
-                              }}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <p>No dated records; time analysis is unavailable.</p>
-                      )}
-                      <details>
-                        <summary>Daily counts and topic rates</summary>
-                        <div
-                          className="wb-table-wrap"
-                          role="region"
-                          aria-label="Daily counts table"
-                          tabIndex={0}
-                        >
-                          <table>
-                            <thead>
-                              <tr>
-                                <th>Date</th>
-                                <th>Records</th>
-                                <th>Topic rates</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {results.summary.days.map((d) => (
-                                <tr key={d.date}>
-                                  <td>{d.date}</td>
-                                  <td>{d.total}</td>
-                                  <td>
-                                    {Object.entries(d)
-                                      .filter(
-                                        ([k]) => k !== 'date' && k !== 'total',
-                                      )
-                                      .map(
-                                        ([k, n]) =>
-                                          `${k}: ${((100 * Number(n)) / d.total).toFixed(1)}% (${n}/${d.total})`,
-                                      )
-                                      .join(' · ')}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </details>
-                      <p>
-                        Rating coverage: {results.summary.ratingCount}/
-                        {results.summary.processed}. Normalized average:{' '}
-                        {results.summary.normalizedRatingMean === null
-                          ? 'unavailable'
-                          : `${(100 * results.summary.normalizedRatingMean).toFixed(1)}% of declared scales`}
-                        .
-                      </p>
-                    </section>
-                    <section className="wb-panel">
-                      <h2>Record evidence</h2>
-                      <div
-                        className="wb-table-wrap"
-                        role="region"
-                        aria-label="Classified record evidence table"
-                        tabIndex={0}
-                      >
-                        <table>
-                          <thead>
-                            <tr>
-                              <th>Source row</th>
-                              <th>Prepared feedback</th>
-                              <th>Topic</th>
-                              <th>Sentiment</th>
-                              <th>Evidence</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {results.rows.map((row) => (
-                              <tr key={row.id}>
-                                <td>{row.position}</td>
-                                <td>{row.text.slice(0, 160)}</td>
-                                <td>{row.result.topic}</td>
-                                <td>{row.result.sentiment || 'Unavailable'}</td>
-                                <td>
-                                  <button onClick={() => setEvidence(row)}>
-                                    Inspect row {row.position}
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="wb-actions">
-                        <button
-                          disabled={filters.page === 1}
-                          onClick={() =>
-                            setFilters({ ...filters, page: filters.page - 1 })
-                          }
-                        >
-                          Previous
-                        </button>
-                        <span>
-                          Page {filters.page} · {results.filtered} results
-                        </span>
-                        <button
-                          disabled={filters.page * 50 >= results.filtered}
-                          onClick={() =>
-                            setFilters({ ...filters, page: filters.page + 1 })
-                          }
-                        >
-                          Next
-                        </button>
-                      </div>
-                      {evidence && (
-                        <aside className="wb-evidence">
-                          <h3>Row {evidence.position}</h3>
-                          <p>{evidence.result.redactedText}</p>
-                          <dl>
-                            <dt>Source ID</dt>
-                            <dd>{evidence.sourceId}</dd>
-                            <dt>Recorded date</dt>
-                            <dd>{evidence.occurredAt || 'Not supplied'}</dd>
-                            <dt>Requested / resolved model</dt>
-                            <dd>
-                              {evidence.result.requestedModel} /{' '}
-                              {evidence.result.resolvedModel}
-                            </dd>
-                            <dt>Template revision</dt>
-                            <dd>{evidence.result.templateRevision}</dd>
-                          </dl>
-                          <h4>Matched rules and competing topics</h4>
-                          <p>
-                            Prepared input hash:{' '}
-                            {evidence.result.inputStateSha256 ||
-                              'Not recorded for this earlier preview run'}
-                          </p>
-                          <p>
-                            Detected redactions:{' '}
-                            {evidence.result.redactions
-                              ? Object.entries(evidence.result.redactions)
-                                  .map(([kind, count]) => `${kind}: ${count}`)
-                                  .join(', ') || 'none'
-                              : 'Not recorded for this earlier preview run'}
-                          </p>
-                          {evidence.result.matches.length ? (
-                            evidence.result.matches.map((m) => (
-                              <p key={m.topic}>
-                                {m.topic} · priority {m.priority}:{' '}
-                                {m.phrases.join(', ')}
-                              </p>
-                            ))
-                          ) : (
-                            <p>
-                              No keyword explanation; inspect the selected
-                              classification method.
-                            </p>
-                          )}
-                          <button onClick={() => setEvidence(null)}>
-                            Close record details
-                          </button>
-                        </aside>
-                      )}
-                    </section>
-                    <section className="wb-panel">
-                      <h2>Exploratory trend candidates</h2>
-                      <p>
-                        Compares the latest 7 days with the previous 28. Dates
-                        with no supplied observations have unknown coverage.
-                        These candidates are not calibrated business alerts.
-                      </p>
-                      {['simple_rate_change', 'candidate_statistical'].map(
-                        (method) => (
-                          <button
-                            key={method}
-                            disabled={busy}
-                            onClick={() => {
-                              void task(async () =>
-                                setTrend(
-                                  await workbench<TrendResult>(
-                                    `/runs/${selectedRun}/trends?${query}&method=${method}`,
-                                  ),
-                                ),
-                              )
-                            }}
-                          >
-                            {method === 'simple_rate_change'
-                              ? 'Simple rate change'
-                              : 'Beta-Binomial candidate'}
-                          </button>
-                        ),
-                      )}
-                      {trend && (
-                        <div>
-                          {trend.reason ||
-                            trend.candidates.map((c, i) => (
-                              <p key={i}>
-                                {c.series_id} · {c.direction} · {c.status} ·{' '}
-                                {c.reasons.join(', ')}
-                                {c.delta_pp === null
-                                  ? ''
-                                  : ` · ${c.delta_pp.toFixed(2)} percentage points`}
-                              </p>
-                            ))}
-                        </div>
-                      )}
-                    </section>
-                    <section className="wb-panel">
-                      <h2>Compare and export</h2>
-                      <label>
-                        Compare to run
-                        <select
-                          value={compareId}
-                          onChange={(e) => setCompareId(e.target.value)}
-                        >
-                          <option value="">Choose matching run</option>
-                          {runs
-                            .filter(
-                              (r) =>
-                                r.id !== selectedRun &&
-                                r.dataset_id === results.run.dataset_id &&
-                                r.snapshot.templateRevision ===
-                                  results.run.snapshot.templateRevision,
-                            )
-                            .map((r) => (
-                              <option key={r.id} value={r.id}>
-                                {r.id.slice(0, 8)} · {r.snapshot.model} ·{' '}
-                                {r.succeeded}/{r.target}
-                              </option>
-                            ))}
-                        </select>
-                      </label>
-                      <button
-                        disabled={busy || !compareId}
-                        onClick={() => {
-                          void task(async () =>
-                            setComparison(
-                              await workbench<Comparison>('/compare', {
-                                left: selectedRun,
-                                right: compareId,
-                              }),
-                            ),
-                          )
-                        }}
-                      >
-                        Compare shared records
-                      </button>
-                      {comparison && (
-                        <>
-                          <p>
-                            {comparison.label}:{' '}
-                            {comparison.agreement === null
-                              ? 'unavailable'
-                              : `${(100 * comparison.agreement).toFixed(1)}%`}{' '}
-                            across {comparison.shared} shared records.{' '}
-                            {comparison.disagreementCount} disagreements;
-                            left/right coverage {comparison.leftProcessed}/
-                            {comparison.rightProcessed}.
-                          </p>
-                          {comparison.disagreements.map((d) => (
-                            <details key={d.recordId}>
-                              <summary>
-                                {d.left.topic} ↔ {d.right.topic}
-                              </summary>
-                              <p>{d.text}</p>
-                              <p>
-                                Sentiment: {d.left.sentiment} ↔{' '}
-                                {d.right.sentiment}; actionable:{' '}
-                                {String(d.left.actionable)} ↔{' '}
-                                {String(d.right.actionable)}
-                              </p>
-                            </details>
-                          ))}
-                        </>
-                      )}
-                      <label className="wb-check">
-                        <input
-                          type="checkbox"
-                          checked={originalExport}
-                          onChange={(e) => setOriginalExport(e.target.checked)}
-                        />
-                        Include original text in this local export.
-                      </label>
-                      {['csv', 'json'].map((format) => (
-                        <button
-                          disabled={busy}
-                          key={format}
-                          onClick={() => {
-                            void task(async () => {
-                              if (
-                                originalExport &&
-                                !(await confirm({
-                                  title: 'Export original text',
-                                  confirmLabel: 'Export original text',
-                                  message:
-                                    'Export original text, including any private content? The local download will contain source feedback rather than only prepared text.',
-                                }))
-                              )
-                                return
-                              const file = await workbench<{
-                                filename: string
-                                content: string
-                              }>(
-                                `/runs/${selectedRun}/export?${query}&format=${format}&original=${originalExport}`,
-                              )
-                              const url = URL.createObjectURL(
-                                new Blob([file.content], {
-                                  type:
-                                    format === 'csv'
-                                      ? 'text/csv'
-                                      : 'application/json',
-                                }),
-                              )
-                              const link = document.createElement('a')
-                              link.href = url
-                              link.download = file.filename
-                              link.click()
-                              URL.revokeObjectURL(url)
-                            })
-                          }}
-                        >
-                          Export {format.toUpperCase()}
-                        </button>
-                      ))}
-                    </section>
-                  </>
-                ) : (
-                  <p role="status">
-                    {selectedRun
-                      ? 'Loading results…'
-                      : 'Choose a run to inspect results.'}
-                  </p>
-                )}
-              </>
-            )}
+            <section hidden={view !== 'Results'} aria-label="Results workspace">
+              <WorkbenchResults
+                key={selectedRun || 'none'}
+                runId={selectedRun}
+                runs={runs}
+                datasets={datasets}
+                client={workbench}
+                active={visible && view === 'Results'}
+                busy={busy}
+                onRunChange={selectRun}
+                onUnavailable={() => {
+                  setSelectedRun('')
+                  setNotice('This run or dataset is no longer available.')
+                }}
+                onClassify={() => setView('Classification')}
+                onRemaining={(run) => {
+                  void task(() => startRun('full', run, true))
+                }}
+              />
+            </section>
             {view === 'Connections' && (
               <>
                 <section className="wb-panel">
@@ -1357,28 +941,33 @@ export function Workbench({
                     plan usage are separate permissions. Usage consumes the
                     existing allowance.
                   </p>
-                  <button
-                    className="button--primary"
-                    disabled={busy}
-                    onClick={() => {
-                      void task(async () => {
-                        const result = await workbench<{ url: string }>(
-                          '/connections/chatgpt',
-                          {},
-                        )
-                        window.location.assign(result.url)
-                      })
-                    }}
+                  <div
+                    className="wb-actions"
+                    aria-label="ChatGPT connection actions"
                   >
-                    Continue with ChatGPT
-                  </button>
-                  <a
-                    href="https://chatgpt.com/settings/usage"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Manage usage ↗
-                  </a>
+                    <button
+                      className="button--primary"
+                      disabled={busy}
+                      onClick={() => {
+                        void task(async () => {
+                          const result = await workbench<{ url: string }>(
+                            '/connections/chatgpt',
+                            {},
+                          )
+                          window.location.assign(result.url)
+                        })
+                      }}
+                    >
+                      Continue with ChatGPT
+                    </button>
+                    <a
+                      href="https://chatgpt.com/settings/usage"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Manage usage ↗
+                    </a>
+                  </div>
                 </section>
                 <form
                   className="wb-panel"
@@ -1491,7 +1080,6 @@ export function Workbench({
                     await workbench('/session', undefined, 'DELETE')
                     setWorkbenchCsrf('')
                     setSession('locked')
-                    setResults(null)
                   })
                 }}
               >
@@ -1513,38 +1101,6 @@ function Metric({ label, value }: { label: string; value: string }) {
     <div>
       <span>{label}</span>
       <strong>{value}</strong>
-    </div>
-  )
-}
-function Distribution({
-  title,
-  values,
-  total,
-}: {
-  title: string
-  values: Record<string, number>
-  total: number
-}) {
-  return (
-    <div>
-      <h3>{title}</h3>
-      {Object.entries(values).map(([label, count]) => (
-        <div key={label} className="wb-distribution">
-          <span>{label}</span>
-          <meter
-            aria-label={`${title}: ${label}`}
-            min={0}
-            max={Math.max(total, 1)}
-            value={count}
-          >
-            {count}
-          </meter>
-          <span>
-            {count}/{total} · {total ? ((100 * count) / total).toFixed(1) : '0'}
-            %
-          </span>
-        </div>
-      ))}
     </div>
   )
 }
@@ -1622,7 +1178,7 @@ function ImportWizard({
 }: {
   busy: boolean
   task: (fn: () => Promise<void>) => Promise<void>
-  imported: () => Promise<void>
+  imported: (dataset: Dataset) => Promise<void>
   client: typeof defaultWorkbench
 }) {
   const workbench = client
@@ -1882,7 +1438,7 @@ function ImportWizard({
             disabled={busy || !confirmed || validation.summary.accepted === 0}
             onClick={() => {
               void task(async () => {
-                await workbench('/imports/commit', {
+                const dataset = await workbench<Dataset>('/imports/commit', {
                   name,
                   uploadId: preview!.uploadId,
                   options,
@@ -1892,7 +1448,7 @@ function ImportWizard({
                 setValidation(null)
                 setFile(null)
                 setPasted('')
-                await imported()
+                await imported(dataset)
               })
             }}
           >

@@ -13,6 +13,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -24,7 +25,11 @@ from feedback_intelligence_worker.synthetic.generator import SyntheticDatasetGen
 from feedback_intelligence_worker.synthetic.spec import load_generator_spec
 from feedback_intelligence_worker.workbench import openai
 from feedback_intelligence_worker.workbench.analysis import (
+    DETECTOR_IMPLEMENTATION,
     PROTOCOL_HASH,
+    filter_rows,
+    normalize_filters,
+    observed_facets,
     prepare,
     rule_classify,
     sample_records,
@@ -231,11 +236,11 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                 data["billingMode"] = connection["billingMode"]
             return repository.create_run(data)
         if len(parts) >= 2 and parts[0] == "runs":
-            run = repository.run(parts[1])
             if len(parts) == 2:
-                return run
+                return repository.run(parts[1])
             action = parts[2]
             if action in ("cancel", "resume") and method == "POST":
+                run = repository.run(parts[1])
                 if (
                     action == "resume"
                     and run["snapshot"]["engine"] == "openai"
@@ -245,55 +250,47 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                         "Confirm resume: interrupted requests may consume additional usage"
                     )
                 return repository.change_run(parts[1], action)
-            rows = repository.result_rows(parts[1])
-            run_usage = summarize(rows, run["target"])
-            for key in ("topic", "sentiment", "language", "group", "product"):
-                filter_value = query.get(key, [""])[0]
-                if filter_value:
-                    rows = [
-                        row
-                        for row in rows
-                        if str(
-                            row["result"].get(key)
-                            if key in ("topic", "sentiment")
-                            else row.get("groups", {}).get(key)
-                            if key in ("group", "product")
-                            else row.get(key)
-                        )
-                        == filter_value
-                    ]
+            selected_filters = normalize_filters(query)
+            if action == "trends" and selected_filters["topic"]:
+                raise ValueError(
+                    "Clear the topic filter before trend analysis "
+                    "to preserve topic-rate denominators"
+                )
+            read_at = datetime.now(UTC).isoformat()
+            run, all_rows, pending = repository.result_snapshot(parts[1])
+            run_usage = summarize(all_rows, run["target"])
+            rows = filter_rows(all_rows, selected_filters)
             if action == "results":
-                page = max(1, int(query.get("page", ["1"])[0]))
+                page_size = 50
+                page = min(
+                    max(1, int(query.get("page", ["1"])[0])),
+                    max(1, (len(rows) + page_size - 1) // page_size),
+                )
+                page_rows = rows[(page - 1) * page_size : page * page_size]
                 return {
                     "run": run,
                     "runUsage": run_usage,
                     "summary": summarize(rows, run["target"]),
-                    "rows": [
-                        {**row, "text": row["result"]["redactedText"]}
-                        for row in rows[(page - 1) * 50 : page * 50]
-                    ],
+                    "rows": [{**row, "text": row["result"]["redactedText"]} for row in page_rows],
                     "page": page,
+                    "readAt": read_at,
+                    "pageSize": page_size,
+                    "returned": len(page_rows),
                     "filtered": len(rows),
+                    "filters": selected_filters,
+                    "facets": observed_facets(all_rows, run["snapshot"]["template"]),
                     "groups": {
                         key: sorted(
-                            {
-                                str(r["groups"][key])
-                                for r in repository.result_rows(parts[1])
-                                if r["groups"].get(key)
-                            }
+                            {str(r["groups"][key]) for r in all_rows if r["groups"].get(key)}
                         )
                         for key in ("product", "group")
                     },
-                    "projectionPending": repository.one(
-                        (
-                            "SELECT count(*) AS n FROM workbench.outbox WHERE run_id=%s AND "
-                            "status<>'published'"
-                        ),
-                        (parts[1],),
-                    )["n"],
+                    "projectionPending": pending,
                 }
             if action == "trends":
-                return trends(rows, query.get("method", ["simple_rate_change"])[0])
+                return trends(
+                    rows, query.get("method", ["simple_rate_change"])[0], selected_filters
+                )
             if action == "export":
                 original = query.get("original", ["false"])[0] == "true"
                 exported = [
@@ -305,6 +302,8 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                     "run": run,
                     "summary": summarize(rows, run["target"]),
                     "originalTextIncluded": original,
+                    "filters": selected_filters,
+                    "analysisImplementation": DETECTOR_IMPLEMENTATION,
                     "records": exported,
                 }
                 if query.get("format", ["json"])[0] == "csv":
@@ -324,6 +323,8 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                         "requested_model",
                         "resolved_model",
                         "protocol_hash",
+                        "analysis_implementation",
+                        "filters",
                     ]
                     writer = csv.DictWriter(output, fieldnames=fields)
                     writer.writeheader()
@@ -343,6 +344,8 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                             row["result"]["requestedModel"],
                             row["result"]["resolvedModel"],
                             PROTOCOL_HASH,
+                            DETECTOR_IMPLEMENTATION,
+                            json.dumps(selected_filters, sort_keys=True),
                         ]
                         writer.writerow(
                             {

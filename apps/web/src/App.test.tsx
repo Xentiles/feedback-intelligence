@@ -15,7 +15,9 @@ import {
   DecisionDetail,
   EvidenceTable,
   SignalList,
+  TimeSeriesPanel,
 } from './dashboard-components'
+import { InspectionProvider } from './inspection-components'
 import type {
   EvaluationComparisonResponse,
   MetadataResponse,
@@ -70,6 +72,133 @@ function deferred<T>() {
 }
 
 describe('dashboard journey', () => {
+  it('applies a Signal Explorer period and focuses the refreshed contributing records', async () => {
+    const client = createClient()
+    render(<App client={client} />)
+    await screen.findByRole('heading', { name: 'Eligible signal rate' })
+    fireEvent.click(screen.getByRole('button', { name: 'Signals' }))
+    const chart = await screen.findByRole('button', {
+      name: /Inspect Illustrative delivery delay rate periods/,
+    })
+    await screen.findByRole('region', { name: 'Contributing feedback records' })
+    fireEvent.focus(chart)
+    fireEvent.keyDown(chart, { key: 'ArrowRight' })
+    fireEvent.keyDown(chart, { key: 'Enter' })
+    fireEvent.click(screen.getByRole('button', { name: 'Apply period filter' }))
+    await waitFor(() =>
+      expect(client.evidence).toHaveBeenLastCalledWith(
+        'demo',
+        expect.any(String),
+        expect.objectContaining({ from: '2026-05-08T00:00:00.000Z' }),
+        1,
+        expect.any(Number),
+        expect.anything(),
+      ),
+    )
+    await waitFor(() =>
+      expect(
+        screen.getByRole('region', { name: 'Contributing feedback records' }),
+      ).toHaveFocus(),
+    )
+  })
+
+  it('keeps the partial frozen-model cohort and AI-reference caveat in inspection details', async () => {
+    render(<App client={createClient()} />)
+    const table = await screen.findByRole('table', {
+      name: 'Tested models and methods',
+    })
+    const row = within(table).getByRole('row', { name: /Topic accuracy/ })
+    fireEvent.click(within(row).getAllByRole('button')[1]!)
+    const panel = screen.getByRole('complementary', { name: /Topic accuracy/ })
+    expect(panel).toHaveTextContent('not human gold')
+    expect(panel).toHaveTextContent('Closed partial')
+    expect(panel).toHaveTextContent('Successful records192')
+    fireEvent.click(
+      within(panel).getByRole('button', { name: 'Close inspection' }),
+    )
+    expect(within(row).getAllByRole('button')[1]).toHaveFocus()
+  })
+
+  it('inspects a period by keyboard and applies its UTC filter without losing dimensions', async () => {
+    const client = createClient()
+    render(<App client={client} />)
+    await screen.findByRole('heading', { name: 'Eligible signal rate' })
+    fireEvent.change(screen.getByLabelText('Language'), {
+      target: { value: 'en' },
+    })
+    await waitFor(() =>
+      expect(client.overview).toHaveBeenLastCalledWith(
+        'demo',
+        expect.objectContaining({ language: 'en' }),
+        expect.anything(),
+      ),
+    )
+    const chart = screen.getByRole('button', {
+      name: /Inspect Eligible signal rate periods/,
+    })
+    fireEvent.focus(chart)
+    expect(screen.getByRole('tooltip')).toHaveTextContent(
+      'Eligible denominator',
+    )
+    fireEvent.keyDown(chart, { key: 'ArrowRight' })
+    fireEvent.keyDown(chart, { key: 'Enter' })
+    const inspector = screen.getByRole('complementary', {
+      name: /Eligible signal rate/,
+    })
+    expect(inspector).toHaveTextContent('Monthly UTC observations')
+    fireEvent.click(
+      within(inspector).getByRole('button', { name: 'Apply period filter' }),
+    )
+    await waitFor(() =>
+      expect(client.overview).toHaveBeenLastCalledWith(
+        'demo',
+        expect.objectContaining({
+          language: 'en',
+          from: '2026-05-08T00:00:00.000Z',
+          toExclusive: '2026-06-01T00:00:00.000Z',
+        }),
+        expect.anything(),
+      ),
+    )
+    expect(
+      screen.queryByRole('complementary', { name: /Eligible signal rate/ }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('keeps unavailable periods on the time axis and does not join gaps', () => {
+    const base = demoOverview.series[0]!
+    const { container } = render(
+      <InspectionProvider scope="gap-test">
+        <TimeSeriesPanel
+          title="Gap chart"
+          series={[
+            { ...base, periodStart: '2026-01-01T00:00:00Z', value: 40 },
+            {
+              ...base,
+              periodStart: '2026-02-01T00:00:00Z',
+              eligibleCount: 0,
+              value: null,
+            },
+            { ...base, periodStart: '2026-03-01T00:00:00Z', value: 60 },
+          ]}
+        />
+      </InspectionProvider>,
+    )
+    const circles = container.querySelectorAll('.series-chart__point circle')
+    expect(circles).toHaveLength(2)
+    expect(circles[0]).toHaveAttribute('cx', '44')
+    expect(circles[1]).toHaveAttribute('cx', '676')
+    expect(container.querySelectorAll('.series-chart__line')).toHaveLength(2)
+    const chart = screen.getByRole('button', {
+      name: /Inspect Gap chart periods/,
+    })
+    fireEvent.focus(chart)
+    fireEvent.keyDown(chart, { key: 'ArrowRight' })
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Unavailable')
+    expect(screen.getByRole('tooltip')).toHaveTextContent(
+      'Eligible denominator0',
+    )
+  })
   it('collapses and reopens navigation without resetting the selected context', async () => {
     render(<App client={createClient()} />)
     await screen.findByRole('heading', { name: 'Imported feedback' })

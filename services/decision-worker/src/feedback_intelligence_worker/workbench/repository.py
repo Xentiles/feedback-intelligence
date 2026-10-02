@@ -294,17 +294,33 @@ class Repository:
                 raise ValueError("Unknown run action")
         return self.run(identity)
 
-    def result_rows(self, identity: str) -> list[dict[str, Any]]:
-        run = self.run(identity)
-        records = {r["id"]: r for r in self.records(str(run["dataset_id"]))}
+    def result_snapshot(self, identity: str) -> tuple[dict[str, Any], list[dict[str, Any]], int]:
+        """Read run counters, immutable decisions and projection state together."""
+        with self.db.transaction():
+            self.db.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY")
+            run = self.run(identity)
+            rows = self.result_rows(identity, run)
+            pending = int(
+                self.one(
+                    "SELECT count(*) AS n FROM workbench.outbox WHERE run_id=%s AND "
+                    "status<>'published'",
+                    (identity,),
+                )["n"]
+            )
+        return run, rows, pending
+
+    def result_rows(self, identity: str, run: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+        selected_run = self.run(identity) if run is None else run
+        self.dataset(str(selected_run["dataset_id"]))
         return [
-            {**records[str(r["record_id"])], "result": r["payload"]}
-            for r in self.db.execute(
+            {**self.record(row), "result": row["classification_payload"]}
+            for row in self.db.execute(
                 (
-                    "SELECT record_id,payload FROM workbench.results WHERE run_id=%s ORDER BY "
-                    "record_id"
+                    "SELECT r.*, s.payload AS classification_payload FROM workbench.results s "
+                    "JOIN workbench.records r ON r.dataset_id=%s AND r.id=s.record_id "
+                    "WHERE s.run_id=%s ORDER BY r.position,r.id"
                 ),
-                (identity,),
+                (selected_run["dataset_id"], identity),
             )
         ]
 

@@ -12,7 +12,7 @@ import {
   liveTrends,
   liveEvaluation,
 } from './test-fixtures'
-import type { workbench } from './workbench-api'
+import type { Evidence, Results, Run, workbench } from './workbench-api'
 
 export type FixtureState =
   | 'ready'
@@ -23,6 +23,12 @@ export type FixtureState =
   | 'disabled'
   | 'partial'
   | 'running'
+  | 'dense'
+  | 'results-error'
+  | 'results-loading'
+  | 'models-error'
+  | 'models-empty'
+  | 'session-error'
 export const visualDashboard: DashboardClient = {
   metadata: async (context) =>
     context === 'live' ? liveMetadata : demoMetadata,
@@ -121,16 +127,211 @@ const run = {
   },
 }
 
+function fixtureRows(count: number): Evidence[] {
+  return Array.from({ length: count }, (_, index) => {
+    const topic =
+      index % 11 === 0
+        ? 'unclassified'
+        : index % 4 === 0
+          ? 'quality'
+          : 'service'
+    const language =
+      index % 5 === 0 ? null : index % 4 === 0 ? 'fi' : index % 2 ? 'en' : 'sv'
+    const sentiment =
+      !language || language === 'fi'
+        ? null
+        : topic === 'quality'
+          ? 'negative'
+          : topic === 'unclassified'
+            ? 'neutral'
+            : 'positive'
+    const text =
+      topic === 'quality'
+        ? 'The product was broken and poor quality.'
+        : topic === 'unclassified'
+          ? 'We received the order.'
+          : `Great support. ${classification.redactedText}`
+    const product =
+      index % 7 === 0 ? 'None' : index % 5 === 0 ? '' : 'Example product'
+    const date = new Date(
+      Date.UTC(
+        count > 24 ? 2025 : 2026,
+        count > 24 ? 0 : 8,
+        1 + (index % (count > 24 ? 450 : 24)),
+      ),
+    )
+    return {
+      id: `record-${index}`,
+      position: index + 1,
+      sourceId: `review-${index + 1}`,
+      text,
+      occurredAt: count <= 24 && index === 0 ? null : date.toISOString(),
+      language,
+      groups: {
+        ...(product ? { product } : {}),
+        ...(index % 6 ? { group: 'Customer comments' } : {}),
+      },
+      rating: index % 5 ? { value: 4, min: 1, max: 5 } : null,
+      result: {
+        ...classification,
+        topic,
+        sentiment,
+        redactedText: text,
+        actionable: sentiment === 'negative',
+        matches:
+          topic === 'unclassified'
+            ? []
+            : [
+                {
+                  topic,
+                  phrases: [topic === 'quality' ? 'broken' : 'support'],
+                  priority: topic === 'quality' ? 1 : 0,
+                },
+              ],
+        sentimentMatches: {
+          positive: sentiment === 'positive' ? ['support'] : [],
+          negative: sentiment === 'negative' ? ['broken', 'poor'] : [],
+        },
+      },
+    }
+  })
+}
+function fixtureResults(
+  all: Evidence[],
+  runValue: Run,
+  search: URLSearchParams,
+): Results {
+  const missing = (search.get('missing') || '').split(',')
+  const get = (row: Evidence, field: string): string | null =>
+    field === 'topic' || field === 'sentiment'
+      ? row.result[field]
+      : field === 'language'
+        ? row.language
+        : row.groups[field] || null
+  const fields = ['topic', 'sentiment', 'language', 'product', 'group'] as const
+  const facets = Object.fromEntries(
+    fields.map((field) => {
+      const counts = new Map<string | null, number>()
+      for (const row of all) {
+        const value = get(row, field)
+        counts.set(value, (counts.get(value) || 0) + 1)
+      }
+      return [
+        field,
+        Array.from(counts, ([value, count]) => ({
+          value,
+          count,
+          label:
+            value === null
+              ? field === 'sentiment'
+                ? 'Unavailable'
+                : 'Not supplied'
+              : field === 'topic'
+                ? topics.find((topic) => topic.id === value)?.label || value
+                : value,
+        })),
+      ]
+    }),
+  ) as NonNullable<Results['facets']>
+  const rows = all.filter(
+    (row) =>
+      fields.every((field) =>
+        missing.includes(field)
+          ? get(row, field) === null
+          : !search.get(field) || get(row, field) === search.get(field),
+      ) &&
+      (!search.get('dateFrom') ||
+        (!!row.occurredAt &&
+          row.occurredAt.slice(0, 10) >= search.get('dateFrom')!)) &&
+      (!search.get('dateTo') ||
+        (!!row.occurredAt &&
+          row.occurredAt.slice(0, 10) <= search.get('dateTo')!)),
+  )
+  const countValues = (field: 'topic' | 'sentiment') =>
+    Object.fromEntries(
+      Array.from(
+        new Set(rows.map((row) => row.result[field] || 'unavailable')),
+        (value) => [
+          value,
+          rows.filter((row) => (row.result[field] || 'unavailable') === value)
+            .length,
+        ],
+      ),
+    )
+  const days = new Map<
+    string,
+    { date: string; total: number; topics: Record<string, number> }
+  >()
+  for (const row of rows)
+    if (row.occurredAt) {
+      const date = row.occurredAt.slice(0, 10)
+      const day = days.get(date) || { date, total: 0, topics: {} }
+      day.total++
+      day.topics[row.result.topic] = (day.topics[row.result.topic] || 0) + 1
+      days.set(date, day)
+    }
+  const dailySeries = Array.from(days.values()).sort((a, b) =>
+    a.date.localeCompare(b.date),
+  )
+  const page = Math.max(
+    1,
+    Math.min(Number(search.get('page') || 1), Math.ceil(rows.length / 50) || 1),
+  )
+  return {
+    run: runValue,
+    readAt: '2026-10-01T10:00:00Z',
+    facets,
+    filters: Object.fromEntries([
+      ...fields.map((field) => [field, search.get(field) || '']),
+      ['missing', missing.filter(Boolean)],
+      ['dateFrom', search.get('dateFrom') || ''],
+      ['dateTo', search.get('dateTo') || ''],
+    ]),
+    pageSize: 50,
+    returned: Math.min(50, Math.max(0, rows.length - (page - 1) * 50)),
+    runUsage: { inputTokens: 0, outputTokens: 0, reusedRecords: 0 },
+    summary: {
+      total: runValue.target,
+      processed: rows.length,
+      dated: rows.filter((row) => row.occurredAt).length,
+      topics: countValues('topic'),
+      sentiments: countValues('sentiment'),
+      dailySeries,
+      days: dailySeries.map((day) => ({
+        date: day.date,
+        total: day.total,
+        ...day.topics,
+      })),
+      ratingCount: rows.filter((row) => row.rating).length,
+      normalizedRatingMean: rows.some((row) => row.rating) ? 0.75 : null,
+      inputTokens: 0,
+      outputTokens: 0,
+      reusedRecords: 0,
+    },
+    rows: rows.slice((page - 1) * 50, page * 50),
+    page,
+    filtered: rows.length,
+    groups: {
+      product: ['Example product', 'None'],
+      group: ['Customer comments'],
+    },
+    projectionPending: 0,
+  }
+}
+
 // Injected only by tests and the development-only visual-review entry point.
 // This never changes production authentication or invokes external providers.
 export function visualWorkbench(
   state: FixtureState = 'ready',
 ): typeof workbench {
+  const recordCount = state === 'dense' ? 10000 : 24
+  const allRows = fixtureRows(recordCount)
   const partial = state === 'partial' || state === 'running'
   const shownRun = {
     ...run,
+    target: recordCount,
     status: state === 'running' ? 'running' : partial ? 'paused' : 'completed',
-    succeeded: partial ? 12 : 24,
+    succeeded: partial ? 12 : recordCount,
     errors:
       state === 'partial'
         ? [
@@ -143,6 +344,15 @@ export function visualWorkbench(
         : [],
   }
   return async <T>(path: string, body?: unknown): Promise<T> => {
+    if (state === 'session-error' && path === '/session')
+      throw new Error('Fixture: local workspace connection failed.')
+    if (state === 'results-error' && path.includes('/results'))
+      throw new Error('Fixture: results could not be loaded.')
+    if (state === 'results-loading' && path.includes('/results'))
+      return new Promise<T>(() => {})
+    if (state === 'models-error' && path.includes('/models'))
+      throw new Error('Fixture: model catalog could not be loaded.')
+    if (state === 'models-empty' && path.includes('/models')) return [] as T
     if (state === 'loading' && path === '/session')
       return new Promise<T>(() => {})
     if (state === 'error' && path !== '/session')
@@ -156,7 +366,8 @@ export function visualWorkbench(
         authenticated: state !== 'locked',
         csrf: 'visual-fixture-only',
       }
-    else if (path === '/datasets') result = state === 'empty' ? [] : [dataset]
+    else if (path === '/datasets')
+      result = state === 'empty' ? [] : [{ ...dataset, count: recordCount }]
     else if (path === '/templates') result = [template]
     else if (path === '/connections')
       result = [
@@ -177,48 +388,11 @@ export function visualWorkbench(
         prepared: [{ row: 1, redactedText: classification.redactedText }],
       }
     else if (path.startsWith('/runs/run/results'))
-      result = {
-        run: shownRun,
-        runUsage: { inputTokens: 0, outputTokens: 0, reusedRecords: 0 },
-        summary: {
-          total: 24,
-          processed: partial ? 12 : 24,
-          dated: partial ? 11 : 23,
-          topics: partial
-            ? { service: 8, quality: 3, unclassified: 1 }
-            : { service: 16, quality: 6, unclassified: 2 },
-          sentiments: partial
-            ? { positive: 8, negative: 3, mixed: 1 }
-            : { positive: 16, negative: 6, mixed: 2 },
-          days: Array.from({ length: partial ? 11 : 23 }, (_, i) => ({
-            date: `2026-09-${String(i + 1).padStart(2, '0')}`,
-            total: 1,
-            service: i < (partial ? 7 : 15) ? 1 : 0,
-            quality: i >= (partial ? 7 : 15) && i < (partial ? 10 : 21) ? 1 : 0,
-            unclassified: i >= (partial ? 10 : 21) ? 1 : 0,
-          })),
-          ratingCount: partial ? 10 : 20,
-          normalizedRatingMean: 0.72,
-          inputTokens: 0,
-          outputTokens: 0,
-          reusedRecords: 0,
-        },
-        rows: Array.from({ length: 6 }, (_, i) => ({
-          id: `record-${i}`,
-          position: i + 1,
-          sourceId: `review-${i + 1}`,
-          text: classification.redactedText,
-          occurredAt: i ? '2026-09-30T10:00:00Z' : null,
-          language: i % 2 ? 'en' : 'sv',
-          groups: { product: 'Example product', group: 'Customer comments' },
-          rating: { value: 4, min: 1, max: 5 },
-          result: { ...classification, topic: i === 4 ? 'quality' : 'service' },
-        })),
-        page: 1,
-        filtered: partial ? 12 : 24,
-        groups: { product: ['Example product'], group: ['Customer comments'] },
-        projectionPending: state === 'partial' ? 12 : 0,
-      }
+      result = fixtureResults(
+        partial ? allRows.slice(0, 12) : allRows,
+        shownRun,
+        new URLSearchParams(path.split('?')[1] || ''),
+      )
     else if (path === '/imports/preview')
       result = {
         uploadId: 'preview',

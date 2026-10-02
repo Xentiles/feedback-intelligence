@@ -6,7 +6,7 @@ import hashlib
 import json
 import re
 from collections import Counter, defaultdict
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, timedelta
 from functools import lru_cache
 from typing import Any
 
@@ -29,6 +29,101 @@ PROTOCOL = {
     "coverage": "observed_dates_only",
 }
 PROTOCOL_HASH = hashlib.sha256(json.dumps(PROTOCOL, sort_keys=True).encode()).hexdigest()
+DETECTOR_IMPLEMENTATION = "workbench-detectors/1.0.1"
+FILTER_FIELDS = ("topic", "sentiment", "language", "product", "group")
+NULLABLE_FILTER_FIELDS = ("sentiment", "language", "product", "group")
+
+
+def normalize_filters(query: dict[str, list[str]]) -> dict[str, Any]:
+    """Normalize a cohort selection without conflating literal values with absence."""
+    values: dict[str, Any] = {key: query.get(key, [""])[0] for key in FILTER_FIELDS}
+    missing = set(filter(None, query.get("missing", [""])[0].split(",")))
+    if missing - set(NULLABLE_FILTER_FIELDS):
+        raise ValueError("Missing-value filters support sentiment, language, product and group")
+    if any(values[key] for key in missing):
+        raise ValueError("Choose either a value or missing records for each filter")
+    values["missing"] = sorted(missing)
+    for key in ("dateFrom", "dateTo"):
+        value = query.get(key, [""])[0]
+        if value:
+            try:
+                parsed = date.fromisoformat(value)
+            except ValueError as error:
+                raise ValueError("Date filters must use YYYY-MM-DD") from error
+            if parsed.isoformat() != value:
+                raise ValueError("Date filters must use YYYY-MM-DD")
+        values[key] = value
+    if values["dateFrom"] and values["dateTo"] and values["dateFrom"] > values["dateTo"]:
+        raise ValueError("Start date must be on or before end date")
+    return values
+
+
+def facet_value(row: dict[str, Any], key: str) -> str | None:
+    value = (
+        row["result"].get(key)
+        if key in ("topic", "sentiment")
+        else row.get("groups", {}).get(key)
+        if key in ("product", "group")
+        else row.get(key)
+    )
+    return None if value is None or value == "" else str(value)
+
+
+def observed_day(row: dict[str, Any]) -> str | None:
+    value = row.get("occurredAt")
+    if not value:
+        return None
+    recorded = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if recorded.tzinfo is None:
+        raise ValueError("Recorded dates must include a timezone")
+    return recorded.astimezone(UTC).date().isoformat()
+
+
+def filter_rows(rows: list[dict[str, Any]], selection: dict[str, Any]) -> list[dict[str, Any]]:
+    def matches(row: dict[str, Any]) -> bool:
+        for key in FILTER_FIELDS:
+            value = facet_value(row, key)
+            if key in selection["missing"]:
+                if value is not None:
+                    return False
+            elif selection[key] and value != selection[key]:
+                return False
+        if selection["dateFrom"] or selection["dateTo"]:
+            day = observed_day(row)
+            if day is None:
+                return False
+            if selection["dateFrom"] and day < selection["dateFrom"]:
+                return False
+            if selection["dateTo"] and day > selection["dateTo"]:
+                return False
+        return True
+
+    return [row for row in rows if matches(row)]
+
+
+def observed_facets(
+    rows: list[dict[str, Any]], template: dict[str, Any]
+) -> dict[str, list[dict[str, Any]]]:
+    labels = {topic["id"]: topic["label"] for topic in template.get("topics", [])}
+    labels["unclassified"] = "Unclassified"
+    facets: dict[str, list[dict[str, Any]]] = {}
+    for key in FILTER_FIELDS:
+        counts = Counter(facet_value(row, key) for row in rows)
+        facets[key] = [
+            {
+                "value": value,
+                "label": "Unavailable"
+                if value is None and key == "sentiment"
+                else "Not supplied"
+                if value is None
+                else labels.get(value, value)
+                if key == "topic"
+                else value,
+                "count": counts[value],
+            }
+            for value in sorted(counts, key=lambda v: (v is None, v or ""))
+        ]
+    return facets
 
 
 @lru_cache(maxsize=4096)
@@ -239,19 +334,33 @@ def summarize(rows: list[dict[str, Any]], total: int) -> dict[str, Any]:
     topics = Counter(row["result"]["topic"] for row in rows)
     sentiments = Counter(row["result"].get("sentiment") for row in rows)
     days: dict[str, Counter[str]] = defaultdict(Counter)
+    day_totals: Counter[str] = Counter()
     ratings = [row["rating"] for row in rows if row.get("rating") is not None]
     for row in rows:
-        if row.get("occurredAt"):
-            day = str(row["occurredAt"])[:10]
-            days[day]["total"] += 1
+        day = observed_day(row)
+        if day:
+            day_totals[day] += 1
             days[day][row["result"]["topic"]] += 1
     return {
         "total": total,
         "processed": len(rows),
-        "dated": sum(d["total"] for d in days.values()),
+        "dated": sum(day_totals.values()),
         "topics": dict(topics),
         "sentiments": {"unavailable" if k is None else k: v for k, v in sentiments.items()},
-        "days": [{"date": day, **counts} for day, counts in sorted(days.items())],
+        # Keep the old flattened shape for existing clients, without allowing topic
+        # IDs to overwrite metadata. New clients use the complete nested series.
+        "days": [
+            {
+                "date": day,
+                "total": day_totals[day],
+                **{key: count for key, count in counts.items() if key not in ("date", "total")},
+            }
+            for day, counts in sorted(days.items())
+        ],
+        "dailySeries": [
+            {"date": day, "total": day_totals[day], "topics": dict(counts)}
+            for day, counts in sorted(days.items())
+        ],
         "ratingCount": len(ratings),
         "normalizedRatingMean": None
         if not ratings
@@ -273,20 +382,45 @@ def summarize(rows: list[dict[str, Any]], total: int) -> dict[str, Any]:
     }
 
 
-def trends(rows: list[dict[str, Any]], method: str) -> dict[str, Any]:
+def trends(
+    rows: list[dict[str, Any]], method: str, selection: dict[str, Any] | None = None
+) -> dict[str, Any]:
     if method not in ("simple_rate_change", "candidate_statistical"):
         raise ValueError("Unknown trend method")
+    selected_filters = selection if selection is not None else normalize_filters({})
+    if selected_filters["topic"]:
+        raise ValueError(
+            "Clear the topic filter before trend analysis to preserve topic-rate denominators"
+        )
+    identity = {
+        "protocol": PROTOCOL_HASH,
+        "implementation": DETECTOR_IMPLEMENTATION,
+        "method": method,
+        "filters": selected_filters,
+        "records": sorted(
+            (row["id"], observed_day(row) or "", row["result"]["topic"]) for row in rows
+        ),
+    }
+    provenance = {
+        "method": method,
+        "analysisId": hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest(),
+        "implementation": DETECTOR_IMPLEMENTATION,
+        "filters": selected_filters,
+        "protocolHash": PROTOCOL_HASH,
+        "exploratory": True,
+    }
     dated = [row for row in rows if row.get("occurredAt")]
     if not dated:
-        return {"method": method, "reason": "no_dated_records", "candidates": []}
+        return {**provenance, "reason": "no_dated_records", "candidates": []}
     counts: dict[date, Counter[str]] = defaultdict(Counter)
+    totals: Counter[date] = Counter()
     for row in dated:
-        day = date.fromisoformat(str(row["occurredAt"])[:10])
-        counts[day]["total"] += 1
+        day = date.fromisoformat(observed_day(row) or "")
+        totals[day] += 1
         counts[day][row["result"]["topic"]] += 1
     end = max(counts) + timedelta(days=1)
     config = DetectorConfig(
-        version=f"workbench/{method}/1.0.0",
+        version=f"workbench/{method}/1.0.1",
         current_days=7,
         baseline_days=28,
         min_current_eligible=10,
@@ -302,7 +436,7 @@ def trends(rows: list[dict[str, Any]], method: str) -> dict[str, Any]:
     candidates = []
     for topic in sorted({row["result"]["topic"] for row in dated}):
         observations = [
-            DailyObservation(topic, day, c[topic], c["total"])
+            DailyObservation(topic, day, c[topic], totals[day])
             for day, c in counts.items()
             if end - timedelta(days=35) <= day < end
         ]
@@ -316,20 +450,6 @@ def trends(rows: list[dict[str, Any]], method: str) -> dict[str, Any]:
             )
             candidates.append(result.to_dict())
     return {
-        "method": method,
-        "analysisId": hashlib.sha256(
-            json.dumps(
-                {
-                    "protocol": PROTOCOL_HASH,
-                    "method": method,
-                    "records": sorted(
-                        (row["id"], row.get("occurredAt"), row["result"]["topic"]) for row in rows
-                    ),
-                },
-                sort_keys=True,
-            ).encode()
-        ).hexdigest(),
-        "protocolHash": PROTOCOL_HASH,
-        "exploratory": True,
+        **provenance,
         "candidates": candidates,
     }

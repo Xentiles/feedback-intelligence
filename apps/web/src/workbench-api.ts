@@ -73,6 +73,7 @@ export type Run = {
   }
 }
 export type Classification = {
+  sentimentMatches?: { positive: string[]; negative: string[] }
   redactions?: Record<string, number>
   inputStateSha256?: string
   topic: string
@@ -100,6 +101,14 @@ export type Evidence = {
   result: Classification
 }
 export type Results = {
+  readAt?: string
+  facets?: Record<
+    'topic' | 'sentiment' | 'language' | 'product' | 'group',
+    { value: string | null; label: string; count: number }[]
+  >
+  filters?: Record<string, string | string[]>
+  pageSize?: number
+  returned?: number
   runUsage: { inputTokens: number; outputTokens: number; reusedRecords: number }
   loadedQuery?: string
   run: Run
@@ -111,6 +120,11 @@ export type Results = {
     topics: Record<string, number>
     sentiments: Record<string, number>
     days: { date: string; total: number; [key: string]: number | string }[]
+    dailySeries?: {
+      date: string
+      total: number
+      topics: Record<string, number>
+    }[]
     inputTokens: number
     outputTokens: number
     ratingCount: number
@@ -137,6 +151,9 @@ export type Comparison = {
   label: string
 }
 export type TrendResult = {
+  analysisId?: string
+  protocolHash?: string
+  implementation?: string
   method: string
   reason?: string
   candidates: {
@@ -146,10 +163,33 @@ export type TrendResult = {
     reasons: string[]
     delta_pp: number | null
     probability_of_direction?: number
+    current?: {
+      start: string
+      end_exclusive: string
+      accepted_count: number
+      eligible_count: number
+      rate: number | null
+    }
+    baseline?: {
+      start: string
+      end_exclusive: string
+      accepted_count: number
+      eligible_count: number
+      rate: number | null
+    }
+    detector_version?: string
   }[]
 }
 
 let csrf = ''
+export class WorkbenchError extends Error {
+  readonly status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'WorkbenchError'
+    this.status = status
+  }
+}
 export function setWorkbenchCsrf(value: string) {
   csrf = value
 }
@@ -173,10 +213,11 @@ export async function workbench<T>(
       error?: string
       detail?: string
     }
-    throw new Error(
+    throw new WorkbenchError(
       error.error ??
         error.detail ??
         `Request failed (${response.status}). Unlock the workspace or check the runtime.`,
+      response.status,
     )
   }
   return response.json() as Promise<T>
