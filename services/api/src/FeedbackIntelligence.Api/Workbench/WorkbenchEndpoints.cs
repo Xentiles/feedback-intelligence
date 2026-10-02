@@ -118,8 +118,11 @@ public static class WorkbenchEndpoints
                 var connectionId = body.GetProperty("connectionId").GetString()!;
                 if (operation == "validate-connection")
                 {
-                    var models = JsonSerializer.SerializeToElement(await connections.Models(connectionId));
-                    if (!models.EnumerateArray().Any(m => m.GetProperty("slug").GetString() == body.GetProperty("model").GetString())) return Results.BadRequest();
+                    var models = await connections.Models(connectionId);
+                    var selected = models.FirstOrDefault(m => m.slug == body.GetProperty("model").GetString());
+                    if (selected is null) return Results.BadRequest(new { error = "Selected model is no longer available from this connection" });
+                    if (body.TryGetProperty("reasoningEffort", out var effort) && !ModelCapabilities.AcceptsEffort(selected, effort))
+                        return Results.BadRequest(new { error = "Choose a supported reasoning effort for this model" });
                     return Results.Json(new { valid = true, billingMode = connections.BillingMode(connectionId) });
                 }
                 if (operation != "credential") return Results.NotFound();

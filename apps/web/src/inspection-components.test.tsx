@@ -8,6 +8,7 @@ import {
   within,
 } from '@testing-library/react'
 import { Inspectable, InspectionProvider } from './inspection-components'
+import { useInspection } from './inspection-context'
 
 beforeEach(() => {
   vi.stubGlobal(
@@ -32,6 +33,46 @@ describe('shared data inspection', () => {
     description: 'Successfully processed records.',
     fields: [{ label: 'Count', value: '18 / 24' }],
   }
+
+  it('anchors previews at pointer coordinates and flips/clamps at viewport edges', () => {
+    function Chart() {
+      const { preview } = useInspection()
+      return (
+        <button
+          onMouseMove={(event) =>
+            preview(detail, event.currentTarget, {
+              x: event.clientX,
+              y: event.clientY,
+            })
+          }
+        >
+          Chart
+        </button>
+      )
+    }
+    render(
+      <InspectionProvider scope="anchor">
+        <Chart />
+      </InspectionProvider>,
+    )
+    const chart = screen.getByRole('button', { name: 'Chart' })
+    fireEvent.mouseMove(chart, { clientX: 650, clientY: 400 })
+    expect(screen.getByRole('tooltip')).toHaveStyle({
+      left: '662px',
+      top: '412px',
+    })
+    fireEvent.mouseMove(chart, { clientX: 1000, clientY: 760 })
+    const tooltip = screen.getByRole('tooltip')
+    expect(parseFloat(tooltip.style.left)).toBeLessThan(1000)
+    expect(parseFloat(tooltip.style.top)).toBeLessThan(760)
+    vi.stubGlobal('innerWidth', 320)
+    vi.stubGlobal('innerHeight', 568)
+    fireEvent.mouseMove(chart, { clientX: 300, clientY: 560 })
+    expect(screen.getByRole('tooltip')).toHaveStyle({ left: '16px' })
+    expect(
+      parseFloat(screen.getByRole('tooltip').style.top),
+    ).toBeGreaterThanOrEqual(16)
+  })
 
   it('keeps a focused preview after automatic scrolling and clears a mouse-only preview', () => {
     render(

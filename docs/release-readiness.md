@@ -14,6 +14,19 @@ from Git and Docker publication; this is a public implementation status summary.
 - Apache-2.0 code and CC BY 4.0 authored-content scope, with third-party notices.
 - Existing component, contract, fixture-parity, and isolated integration CI jobs.
 
+## Current development checkpoint — v0.1.6
+
+The draft Workbench branch adds imports, immutable template revisions, durable rules
+and optional AI runs, explicit privacy/billing consent, exploratory results and
+inspection, matched comparisons, exports and confirmed deletion. It includes the
+shared Orbital interface, automatic account model refresh, model-specific reasoning
+effort and chart previews anchored beside the inspected data.
+
+Current evidence is recorded in [model controls and preview review](quality/model-controls-review.md).
+The v0.1.0 publication evidence below is historical and remains immutable. A new
+checkpoint's CI does not replace the real-account classification acceptance gate,
+human calibration, cross-browser review or hosted deployment controls.
+
 ## Verified source publication — 2026-09-20
 
 The `v0.1.0` tag identifies the single-root source-release commit. That exact

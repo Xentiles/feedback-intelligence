@@ -129,7 +129,31 @@ open-source OAuth flow. A verified identity alone does not authorize plan usage.
 Account registrations, issued client IDs, scopes and credentials remain separate.
 The server verifies state, nonce, signature, issuer, audience and expiry, uses a
 stable host ID, and serializes refresh-token renewal. The model picker reads the
-selected account's current catalog.
+selected account's current catalog. Connections and Classification share that catalog;
+listed GPT-6/GPT-6.1 models and future releases appear without a version whitelist.
+The picker refreshes on connection/view changes, every five minutes while visible,
+and after a stale window-focus return. **Refresh models** retries immediately.
+A failed refresh marks the previous list stale and blocks new AI processing.
+Selections are preserved while available; removed models require another choice.
+
+Choose **Reasoning effort** alongside the model. **Provider default** omits the
+API effort parameter; supported explicit values depend on the model. GPT-6.1 Sol
+and GPT-6 Astra support Low/Medium/High/Extra high/Max; GPT-6 Sol/Luna also support
+None. GPT-5.4 Mini/nano use their documented profile. Provider metadata takes
+precedence over dated local profiles; unknown capabilities allow provider-default
+processing without invented effort choices. See the official
+[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning).
+Higher effort can consume more usage and time; improved classification is not
+promised. API pricing remains a separately dated reference or unavailable.
+
+The server validates the model and effort before creating a run. Explicit effort
+is saved in the run snapshot and recorded output, consent preview and exports;
+samples and full runs must match it. Resume uses saved settings. Existing records
+without an effort field remain unchanged and are labeled not explicitly recorded.
+Comparisons show each configuration; different-effort agreement remains exploratory.
+The models endpoint adds optional `reasoningEfforts`, `capabilitySource` and
+`capabilityReviewedAt` fields. Run creation adds nullable `reasoningEffort`; null
+means Provider default. These additions require no database migration.
 
 API-key mode is separate API billing and must be explicitly selected. The tool
 never changes billing mode automatically. Dated standard-rate references for

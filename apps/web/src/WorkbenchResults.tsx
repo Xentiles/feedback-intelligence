@@ -23,6 +23,7 @@ import { useInspection, type InspectionDetail } from './inspection-context'
 import { WorkbenchTimeChart } from './workbench-time-chart'
 import { useConfirmation } from './confirmation-context'
 import { priceReference } from './workbench-pricing'
+import { effortLabel } from './use-model-catalog'
 
 type Client = typeof defaultClient
 type Props = {
@@ -390,7 +391,7 @@ function ResultsData({
     { label: 'Template revision', value: data.run.snapshot.templateRevision },
     {
       label: 'Method / model',
-      value: `${data.run.snapshot.engine} / ${data.run.snapshot.model}`,
+      value: `${data.run.snapshot.engine} / ${data.run.snapshot.model} / ${effortLabel(data.run.snapshot.reasoningEffort)} effort`,
     },
     { label: 'Protocol hash', value: data.run.snapshot.protocolHash },
     {
@@ -436,7 +437,7 @@ function ResultsData({
             },
             {
               label: 'Requested / resolved model',
-              value: `${row.result.requestedModel} / ${row.result.resolvedModel}`,
+              value: `${row.result.requestedModel} / ${row.result.resolvedModel} / ${effortLabel(row.result.reasoningEffort ?? data.run.snapshot.reasoningEffort)} effort`,
             },
             {
               label: 'Prepared input hash',
@@ -957,8 +958,9 @@ function ResultsData({
               )
               .map((run) => (
                 <option key={run.id} value={run.id}>
-                  {run.id.slice(0, 8)} · {run.snapshot.model} · {run.succeeded}/
-                  {run.target}
+                  {run.id.slice(0, 8)} · {run.snapshot.model} ·{' '}
+                  {effortLabel(run.snapshot.reasoningEffort)} effort ·{' '}
+                  {run.succeeded}/{run.target}
                 </option>
               ))}
           </select>
@@ -991,8 +993,14 @@ function ResultsData({
                 description:
                   'Shared successful records with matching topic, sentiment and actionable outcomes. Explore filters are not applied. Agreement is not accuracy.',
                 fields: [
-                  { label: 'Left run', value: data.run.id },
-                  { label: 'Right run', value: counterpart },
+                  {
+                    label: 'Left run',
+                    value: `${data.run.id} · ${data.run.snapshot.model} · ${effortLabel(data.run.snapshot.reasoningEffort)} effort`,
+                  },
+                  {
+                    label: 'Right run',
+                    value: `${counterpart} · ${props.runs.find((row) => row.id === counterpart)?.snapshot.model || ''} · ${effortLabel(props.runs.find((row) => row.id === counterpart)?.snapshot.reasoningEffort)} effort`,
+                  },
                   {
                     label: 'Dataset snapshot',
                     value: data.run.snapshot.datasetSnapshot,

@@ -1,6 +1,11 @@
 import { useRef, useState, type ReactNode } from 'react'
 import { Inspectable } from './inspection-components'
-import { useInspection, type InspectionDetail } from './inspection-context'
+import {
+  useInspection,
+  chartAnchor,
+  type PreviewAnchor,
+  type InspectionDetail,
+} from './inspection-context'
 
 import {
   formatCount,
@@ -585,11 +590,26 @@ export function TimeSeriesPanel({
           : undefined,
     }
   }
-  const selectPeriod = (index: number) => {
+  const selectPeriod = (index: number, anchor?: PreviewAnchor) => {
     const next = Math.max(0, Math.min(ordered.length - 1, index))
     setSelectedIndex(next)
     if (chartRef.current)
-      preview(periodDetail(ordered[next]!), chartRef.current)
+      preview(
+        periodDetail(ordered[next]!),
+        chartRef.current,
+        anchor ??
+          (() =>
+            chartAnchor(
+              chartRef.current?.querySelector('svg') ?? null,
+              xFor(ordered[next]!),
+              ordered[next]!.value === null
+                ? height - padBottom
+                : height -
+                    padBottom -
+                    (ordered[next]!.value! / 100) *
+                      (height - padTop - padBottom),
+            )),
+      )
   }
   const average =
     availablePoints.reduce((sum, point) => sum + point.value, 0) /
@@ -702,7 +722,7 @@ export function TimeSeriesPanel({
                 : best,
             0,
           )
-          selectPeriod(closest)
+          selectPeriod(closest, { x: event.clientX, y: event.clientY })
         }}
         onClick={(event) => {
           const box = event.currentTarget.getBoundingClientRect()

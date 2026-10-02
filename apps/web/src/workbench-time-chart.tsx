@@ -1,6 +1,11 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Inspectable } from './inspection-components'
-import { useInspection, type InspectionDetail } from './inspection-context'
+import {
+  useInspection,
+  chartAnchor,
+  type PreviewAnchor,
+  type InspectionDetail,
+} from './inspection-context'
 import {
   aggregateDailySeries,
   timeBucketLabel,
@@ -126,11 +131,24 @@ export function WorkbenchTimeChart({
       Math.min(buckets.length - 1, Math.floor((x - LEFT) / columnWidth)),
     )
   }
-  const show = (index: number) => {
+  const show = (index: number, anchor?: PreviewAnchor) => {
     const bucket = buckets[index]
     if (!bucket) return
     setSelectedIndex(index)
-    if (target.current) preview(detailFor(bucket), target.current)
+    if (target.current)
+      preview(
+        detailFor(bucket),
+        target.current,
+        anchor ??
+          (() =>
+            chartAnchor(
+              target.current?.querySelector('svg') ?? null,
+              LEFT + (index + 0.5) * columnWidth,
+              TOP +
+                PLOT_HEIGHT -
+                ((bucket.total ?? 0) / axisMaximum) * PLOT_HEIGHT,
+            )),
+      )
   }
 
   if (!buckets.length)
@@ -153,7 +171,9 @@ export function WorkbenchTimeChart({
         aria-describedby={[hintId, previewId].filter(Boolean).join(' ')}
         onFocus={() => show(selected)}
         onBlur={clearPreview}
-        onPointerMove={(event) => show(indexAt(event.clientX))}
+        onPointerMove={(event) =>
+          show(indexAt(event.clientX), { x: event.clientX, y: event.clientY })
+        }
         onPointerLeave={clearPreview}
         onClick={(event) => {
           const index = event.detail > 0 ? indexAt(event.clientX) : selected

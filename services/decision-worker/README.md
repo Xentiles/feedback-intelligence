@@ -1,5 +1,20 @@
 # Feedback Intelligence decision worker
 
+## Interactive Workbench processing
+
+The opt-in Workbench service normalizes mapped imports, prepares feedback at the
+privacy boundary, executes keyword rules or approved streamed Responses requests,
+and persists immutable classifications through dataset/run-scoped jobs. Run snapshots
+retain model, requested effort, privacy and protocol; sample reuse and resume keep
+those settings. Partial successes survive failures, and a separate maintenance role
+confirms purge across operational storage and text-free projections.
+
+Exploratory Results use snapshot-consistent facets, UTC cohorts and safe daily
+counters, separate from calibrated live analytics. See the
+[Workbench guide](../../docs/workbench.md) and
+[v0.1.6 verification](../../docs/quality/model-controls-review.md). This local tool
+and its mock tests do not establish hosted readiness or real-provider admission.
+
 This directory contains the executable Python data, privacy, and decision boundary
 for Feedback Intelligence. It provides canonical import, synthetic generation,
 recorded decisions, local SemIf, a structured-output LLM baseline, deterministic rules,

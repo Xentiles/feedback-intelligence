@@ -475,6 +475,10 @@ button:disabled {
 .table-region[tabindex] {
   scroll-margin-top: 96px;
 }
+.table-region,
+.wb-table-wrap {
+  position: relative;
+}
 .wb-panel > button + button {
   margin-left: 16px;
 }

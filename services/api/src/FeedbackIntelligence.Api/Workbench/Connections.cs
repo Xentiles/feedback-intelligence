@@ -205,9 +205,9 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
         finally { _gate.Release(); }
     }
 
-    public async Task<object> Models(string id) => await Catalog(Read(id) with { AccessToken = await Credential(id) });
+    public async Task<ModelCatalogEntry[]> Models(string id) => await Catalog(Read(id) with { AccessToken = await Credential(id) });
 
-    private async Task<object> Catalog(Profile profile)
+    private async Task<ModelCatalogEntry[]> Catalog(Profile profile)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, Resource + "/models");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", profile.AccessToken);
@@ -215,12 +215,12 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
         if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"Model catalog unavailable (HTTP {(int)response.StatusCode})");
         var data = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
         if (profile.Mode == "chatgpt") return data.GetProperty("models").EnumerateArray().Where(m => m.GetProperty("visibility").GetString() == "list")
-            .Select(m => new { slug = m.GetProperty("slug").GetString(), displayName = m.GetProperty("display_name").GetString() }).ToArray();
+            .Select(m => ModelCapabilities.Describe(m.GetProperty("slug").GetString()!, m.GetProperty("display_name").GetString()!, m)).ToArray();
         return data.GetProperty("data").EnumerateArray().Where(m =>
         {
             var name = m.GetProperty("id").GetString() ?? "";
             return (name.StartsWith("gpt-", StringComparison.Ordinal) || name.StartsWith('o')) && !name.Contains("image", StringComparison.Ordinal) && !name.Contains("audio", StringComparison.Ordinal) && !name.Contains("realtime", StringComparison.Ordinal);
-        }).Select(m => new { slug = m.GetProperty("id").GetString(), displayName = m.GetProperty("id").GetString() }).ToArray();
+        }).Select(m => ModelCapabilities.Describe(m.GetProperty("id").GetString()!, m.GetProperty("id").GetString()!, m)).ToArray();
     }
 
     public async Task<bool> Disconnect(string id)

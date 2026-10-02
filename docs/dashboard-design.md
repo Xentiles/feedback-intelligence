@@ -119,3 +119,16 @@ See the dated [browser and regression review](quality/orbital-ui-review.md) for
 actual captures, exercised states, test results and remaining review limits.
 Historical Figma captures and prior review reports remain historical evidence;
 they are not the current implementation contract.
+
+## Preview anchors and run settings — v0.1.6
+
+Pointer previews sit beside the hovered chart location; keyboard previews use the
+selected SVG point/bar, transformed into viewport coordinates. Measured preview
+size determines flipping and clamping. Pinned panels, explicit drill-down and focus
+return retain their previous behavior. Controls and charts use the same inspection
+provider; no additional background or animation is introduced.
+
+Classification shows a connection-scoped model picker and a separate reasoning
+selector. Connections exposes the same catalog and refresh status. Unknown or stale
+capabilities have explicit explanations; selection and billing do not silently
+change. The public screenshots use deterministic synthetic data with dated provenance.

@@ -549,6 +549,7 @@ function DashboardApp({
                 onClick={() => {
                   if (!firstSignalId) return
                   activateShowcase()
+                  if (view.name === 'signal') return
                   setSignal({ status: 'idle' })
                   setEvidence({ status: 'idle' })
                   setView({ name: 'signal', signalId: firstSignalId, page: 1 })

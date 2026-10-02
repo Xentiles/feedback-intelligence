@@ -192,6 +192,19 @@ def test_stream_requires_terminal_completion_and_no_secrets_in_output() -> None:
     assert result["resolvedModel"] == "resolved-model"
     assert result["inputTokens"] == 10
     request_body = json.loads(captured[0].data)
+    assert "reasoning" not in request_body
+    assert result["reasoningEffort"] is None
+    with patch("feedback_intelligence_worker.workbench.openai.urlopen", side_effect=reply):
+        effort_result = classify(
+            record(),
+            template,
+            "gpt-6.1-sol",
+            "secret-credential",
+            lambda: True,
+            reasoning_effort="high",
+        )
+    assert json.loads(captured[-1].data)["reasoning"] == {"effort": "high"}
+    assert effort_result["reasoningEffort"] == "high"
     assert request_body["store"] is False and request_body["stream"] is True
     assert "person@example.test" not in json.dumps(request_body)
     assert "secret-credential" not in json.dumps(result)

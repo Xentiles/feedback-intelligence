@@ -457,6 +457,20 @@ export function visualWorkbench(
     else if (path.includes('/models'))
       result = [
         { slug: 'demonstration-model', displayName: 'Demonstration model' },
+        {
+          slug: 'gpt-6.1-sol',
+          displayName: 'GPT-6.1 Sol · fixture',
+          reasoningEfforts: ['low', 'medium', 'high', 'xhigh', 'max'],
+          capabilitySource: 'documented',
+          capabilityReviewedAt: '2026-10-02',
+        },
+        {
+          slug: 'gpt-6-luna',
+          displayName: 'GPT-6 Luna · fixture',
+          reasoningEfforts: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+          capabilitySource: 'documented',
+          capabilityReviewedAt: '2026-10-02',
+        },
       ]
     else if (path.endsWith('/cancel') || path.endsWith('/resume')) result = run
     else if (path.includes('/export'))

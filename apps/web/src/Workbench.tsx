@@ -14,6 +14,7 @@ import { type WorkbenchPage } from './application-routes'
 import { useConfirmation } from './confirmation-context'
 import { WorkbenchResults } from './WorkbenchResults'
 import { priceReference } from './workbench-pricing'
+import { useModelCatalog, effortLabel } from './use-model-catalog'
 
 type View = WorkbenchPage
 const FIELDS = [
@@ -65,15 +66,6 @@ export function Workbench({
   const [datasetId, setDatasetId] = useState('')
   const [templateId, setTemplateId] = useState('')
   const [connectionId, setConnectionId] = useState('')
-  const [models, setModels] = useState<{ slug: string; displayName: string }[]>(
-    [],
-  )
-  const [model, setModel] = useState('')
-  const [modelsState, setModelsState] = useState<
-    'idle' | 'loading' | 'ready' | 'empty' | 'error'
-  >('idle')
-  const [modelError, setModelError] = useState('')
-  const [modelRetry, setModelRetry] = useState(0)
   const [sessionRetry, setSessionRetry] = useState(0)
   const [engine, setEngine] = useState('rules')
   const [consent, setConsent] = useState(false)
@@ -95,6 +87,26 @@ export function Workbench({
       connection.id === connectionId &&
       (connection.mode === 'api' || connection.planEnabled),
   )
+  const catalog = useModelCatalog(
+    workbench,
+    connectionId,
+    connectionPermitted,
+    visible &&
+      session === 'ready' &&
+      (view === 'Classification' || view === 'Connections'),
+  )
+  const {
+    models,
+    model,
+    effort,
+    status: modelsState,
+    error: modelError,
+  } = catalog
+  const effortInvalid =
+    !!effort &&
+    !models
+      .find((row) => row.slug === model)
+      ?.reasoningEfforts?.includes(effort)
   const datasetReady = datasets.some(
     (dataset) => dataset.id === datasetId && dataset.status === 'ready',
   )
@@ -197,41 +209,6 @@ export function Workbench({
       window.clearInterval(interval)
     }
   }, [session, refresh, visible])
-  useEffect(() => {
-    const abort = new AbortController()
-    if (!connectionId || !connectionPermitted) {
-      void Promise.resolve().then(() => {
-        if (!abort.signal.aborted) {
-          setModels([])
-          setModel('')
-          setModelsState('idle')
-          setModelError('')
-        }
-      })
-      return () => abort.abort()
-    }
-    void workbench<{ slug: string; displayName: string }[]>(
-      `/connections/${connectionId}/models`,
-      undefined,
-      'GET',
-      abort.signal,
-    )
-      .then((m) => {
-        if (abort.signal.aborted) return
-        setModels(m)
-        setModelsState(m.length ? 'ready' : 'empty')
-        setModel(m[0]?.slug || '')
-      })
-      .catch((e) => {
-        if (!abort.signal.aborted) {
-          setModels([])
-          setModel('')
-          setModelError(String(e))
-          setModelsState('error')
-        }
-      })
-    return () => abort.abort()
-  }, [connectionId, connectionPermitted, workbench, modelRetry])
   const selectRun = (id: string) => {
     setSelectedRun(id)
     setView('Results')
@@ -248,6 +225,9 @@ export function Workbench({
       engine: sample?.snapshot.engine || engine,
       connectionId: sample?.snapshot.connectionId || connectionId,
       model: sample?.snapshot.model || model,
+      reasoningEffort: sample
+        ? (sample.snapshot.reasoningEffort ?? null)
+        : effort || null,
       mode,
       externalConsent,
       idempotencyKey: requestKey.current,
@@ -267,7 +247,7 @@ export function Workbench({
         !(await confirm({
           title: 'Approve OpenAI processing',
           confirmLabel: `Process ${preview.selected} records`,
-          message: `Process ${preview.selected} records with ${options.model}? ${preview.blocked} are privacy-blocked; ${preview.reused} results will be reused. Prepared examples:\n\n${examples}\n\nApproved feedback will be sent to OpenAI using the selected connection. This consumes your plan allowance or API billing.`,
+          message: `Process ${preview.selected} records with ${options.model} · ${effortLabel(options.reasoningEffort)} effort? ${preview.blocked} are privacy-blocked; ${preview.reused} results will be reused. Prepared examples:\n\n${examples}\n\nApproved feedback will be sent to OpenAI using the selected connection. This consumes your plan allowance or API billing.`,
         }))
       )
         return
@@ -574,12 +554,6 @@ export function Workbench({
                             value={connectionId}
                             onChange={(e) => {
                               setConnectionId(e.target.value)
-                              setModelsState(
-                                e.target.value ? 'loading' : 'idle',
-                              )
-                              setModelError('')
-                              setModels([])
-                              setModel('')
                               requestKey.current = crypto.randomUUID()
                             }}
                           >
@@ -602,7 +576,7 @@ export function Workbench({
                             }
                             value={model}
                             onChange={(e) => {
-                              setModel(e.target.value)
+                              catalog.chooseModel(e.target.value)
                               requestKey.current = crypto.randomUUID()
                             }}
                           >
@@ -625,21 +599,74 @@ export function Workbench({
                           </select>
                         </label>
                       </div>
+                      <label>
+                        Reasoning effort
+                        <select
+                          value={effort}
+                          disabled={
+                            modelsState !== 'ready' ||
+                            !model ||
+                            (!models.find((row) => row.slug === model)
+                              ?.reasoningEfforts?.length &&
+                              !effort)
+                          }
+                          onChange={(event) => {
+                            catalog.chooseEffort(event.target.value)
+                            requestKey.current = crypto.randomUUID()
+                          }}
+                        >
+                          <option value="">Provider default</option>
+                          {effortInvalid && (
+                            <option value={effort} disabled>
+                              {effortLabel(effort)} · no longer available
+                            </option>
+                          )}
+                          {models
+                            .find((row) => row.slug === model)
+                            ?.reasoningEfforts?.map((value) => (
+                              <option key={value} value={value}>
+                                {effortLabel(value)}
+                              </option>
+                            ))}
+                        </select>
+                      </label>
+                      {effortInvalid && (
+                        <p role="alert">
+                          The selected effort is no longer supported. Choose an
+                          available effort or Provider default before
+                          processing.
+                        </p>
+                      )}
+                      <p>
+                        Higher reasoning effort can increase response time and
+                        usage; it does not guarantee better classifications.{' '}
+                        {model &&
+                          !models.find((row) => row.slug === model)
+                            ?.reasoningEfforts?.length &&
+                          'Explicit effort capabilities are unavailable for this model; provider defaults apply.'}
+                      </p>
+                      <div className="wb-actions">
+                        <button
+                          disabled={
+                            !connectionPermitted || modelsState === 'loading'
+                          }
+                          onClick={() => void catalog.refresh()}
+                        >
+                          Refresh models
+                        </button>
+                        <span>
+                          {catalog.refreshedAt
+                            ? `Last refreshed: ${new Date(catalog.refreshedAt).toLocaleTimeString()}`
+                            : 'Catalog not yet loaded'}
+                        </span>
+                      </div>
                       {modelsState === 'error' && (
                         <div role="alert">
-                          <p>{modelError}</p>
-                          <div className="wb-actions">
-                            <button
-                              disabled={busy}
-                              onClick={() => {
-                                setModelsState('loading')
-                                setModelError('')
-                                setModelRetry((value) => value + 1)
-                              }}
-                            >
-                              Retry model catalog
-                            </button>
-                          </div>
+                          <p>
+                            {modelError}{' '}
+                            {models.length > 0 &&
+                              'Previously listed models are stale; refresh before starting AI processing.'}
+                          </p>
                         </div>
                       )}
                       {modelsState === 'empty' && (
@@ -686,6 +713,7 @@ export function Workbench({
                           (!connectionPermitted ||
                             modelsState !== 'ready' ||
                             !model ||
+                            effortInvalid ||
                             !consent))
                       }
                       onClick={() => {
@@ -831,7 +859,8 @@ export function Workbench({
                             <td>
                               {r.snapshot.template.name}
                               <br />
-                              {r.snapshot.engine} · {r.snapshot.model}
+                              {r.snapshot.engine} · {r.snapshot.model} ·{' '}
+                              {effortLabel(r.snapshot.reasoningEffort)} effort
                             </td>
                             <td>{r.status}</td>
                             <td>
@@ -967,6 +996,67 @@ export function Workbench({
                     >
                       Manage usage ↗
                     </a>
+                  </div>
+                </section>
+                <section className="wb-panel">
+                  <h2>Account model catalog</h2>
+                  <label>
+                    Catalog connection
+                    <select
+                      value={connectionId}
+                      onChange={(event) => {
+                        setConnectionId(event.target.value)
+                        requestKey.current = crypto.randomUUID()
+                      }}
+                    >
+                      <option value="">Choose connection</option>
+                      {connections.map((connection) => (
+                        <option key={connection.id} value={connection.id}>
+                          {connection.label} ·{' '}
+                          {connection.mode === 'api'
+                            ? 'API billing'
+                            : 'ChatGPT plan'}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <p>
+                    Models are supplied by this connection, including eligible
+                    GPT-6/GPT-6.1 models and future releases. Choose model and
+                    effort in Classification.
+                  </p>
+                  {modelsState === 'loading' && (
+                    <p role="status">Refreshing account models…</p>
+                  )}
+                  {modelsState === 'error' && (
+                    <p role="alert">
+                      {modelError}. Previously listed models are stale.
+                    </p>
+                  )}
+                  {modelsState === 'empty' && (
+                    <p>No models are available from this connection.</p>
+                  )}
+                  <ul>
+                    {models.map((row) => (
+                      <li key={row.slug}>
+                        {row.displayName} · <code>{row.slug}</code>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="wb-actions">
+                    <button
+                      disabled={
+                        !connectionPermitted || modelsState === 'loading'
+                      }
+                      onClick={() => void catalog.refresh()}
+                    >
+                      Refresh models
+                    </button>
+                    <span>
+                      {catalog.refreshedAt
+                        ? `Last refreshed: ${new Date(catalog.refreshedAt).toLocaleTimeString()}`
+                        : 'Choose an authorized connection to load models'}
+                    </span>
                   </div>
                 </section>
                 <form

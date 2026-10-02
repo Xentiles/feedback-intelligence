@@ -199,6 +199,22 @@ describe('dashboard journey', () => {
       'Eligible denominator0',
     )
   })
+  it('retains loaded signal evidence when the active Signals navigation is selected again', async () => {
+    const client = createClient()
+    render(<App client={client} />)
+    await screen.findByRole('heading', { name: 'Imported feedback' })
+    const signals = screen.getByRole('button', { name: 'Signals' })
+    fireEvent.click(signals)
+    await screen.findByRole('heading', { name: 'Contributing feedback' })
+    fireEvent.click(signals)
+    expect(
+      screen.getByRole('heading', { name: 'Contributing feedback' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Loading signal' }),
+    ).not.toBeInTheDocument()
+  })
+
   it('collapses and reopens navigation without resetting the selected context', async () => {
     render(<App client={createClient()} />)
     await screen.findByRole('heading', { name: 'Imported feedback' })

@@ -153,6 +153,57 @@ describe('workbench recovery and prerequisites', () => {
     expect(fetch).not.toHaveBeenCalled()
   })
 
+  it('sends the selected model and supported effort only after prepared-text approval', async () => {
+    const fetch = forbidNetwork()
+    const ready = visualWorkbench()
+    const requests: { path: string; body: unknown }[] = []
+    const client: typeof workbench = async <T,>(
+      path: string,
+      body?: unknown,
+      method?: string,
+      signal?: AbortSignal,
+    ) => {
+      requests.push({ path, body })
+      return ready<T>(path, body, method, signal)
+    }
+    mountApp(client)
+    await chooseAI()
+    fireEvent.change(screen.getByRole('combobox', { name: 'Connection' }), {
+      target: { value: 'connection' },
+    })
+    await screen.findByRole('option', { name: 'GPT-6.1 Sol · fixture' })
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Available model' }),
+      { target: { value: 'gpt-6.1-sol' } },
+    )
+    const effort = screen.getByRole('combobox', { name: 'Reasoning effort' })
+    expect(
+      within(effort).queryByRole('option', { name: 'None' }),
+    ).not.toBeInTheDocument()
+    fireEvent.change(effort, { target: { value: 'high' } })
+    fireEvent.click(screen.getByRole('checkbox', { name: consentName }))
+    fireEvent.click(screen.getByRole('button', { name: sampleName }))
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Approve OpenAI processing',
+    })
+    expect(dialog).toHaveTextContent('gpt-6.1-sol · High effort')
+    expect(requests.some((row) => row.path === '/runs' && row.body)).toBe(false)
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: /Process .* records/ }),
+    )
+    await waitFor(() =>
+      expect(
+        requests.find((row) => row.path === '/runs' && row.body)?.body,
+      ).toEqual(
+        expect.objectContaining({
+          model: 'gpt-6.1-sol',
+          reasoningEffort: 'high',
+        }),
+      ),
+    )
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
   it.each(['models-error', 'models-empty'] as const)(
     'keeps AI processing disabled for %s and offers the appropriate recovery',
     async (state) => {
@@ -163,7 +214,7 @@ describe('workbench recovery and prerequisites', () => {
         target: { value: 'connection' },
       })
       if (state === 'models-error')
-        await screen.findByRole('button', { name: 'Retry model catalog' })
+        await screen.findByRole('button', { name: 'Refresh models' })
       else
         await screen.findByText(/No models are available from this connection/)
       fireEvent.click(screen.getByRole('checkbox', { name: consentName }))
@@ -197,7 +248,7 @@ describe('workbench recovery and prerequisites', () => {
       target: { value: 'connection' },
     })
     fireEvent.click(
-      await screen.findByRole('button', { name: 'Retry model catalog' }),
+      await screen.findByRole('button', { name: 'Refresh models' }),
     )
     await waitFor(() =>
       expect(

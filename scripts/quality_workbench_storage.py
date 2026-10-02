@@ -101,6 +101,71 @@ def main() -> None:
         copied = api.result_rows(str(full["id"]))
         assert len(copied) == 1 and copied[0]["result"]["reusedFromRun"] == identity
         assert len(api.result_rows(identity)) == 1
+        # Mocked AI settings exercise persistence/reuse, never provider inference.
+        ai_options = {
+            "datasetId": str(dataset["id"]),
+            "templateId": str(template["id"]),
+            "engine": "openai",
+            "mode": "sample",
+            "connectionId": str(uuid4()),
+            "model": "gpt-6.1-sol",
+            "reasoningEffort": "high",
+            "externalConsent": True,
+            "idempotencyKey": str(uuid4()),
+        }
+        with api.db.transaction():
+            ai = api.create_run(ai_options)
+            api.db.execute("UPDATE workbench.runs SET status='paused' WHERE id=%s", (ai["id"],))
+            assert api.create_run(ai_options)["id"] == ai["id"]
+        with worker.db.transaction():
+            worker.change_run(str(ai["id"]), "resume")
+            claim = worker.claim(str(ai["id"]))
+            assert claim is not None and claim["snapshot"]["reasoningEffort"] == "high"
+            answer = rule_classify(claim["record"], claim["snapshot"]["template"])
+            answer.update(
+                templateRevision=claim["snapshot"]["templateRevision"], reasoningEffort="high"
+            )
+            assert worker.finish(claim, answer)
+            worker.db.execute(
+                "UPDATE workbench.jobs SET status='failed' WHERE run_id=%s AND status='pending'",
+                (ai["id"],),
+            )
+            worker.db.execute(
+                "UPDATE workbench.runs SET status='completed' WHERE id=%s", (ai["id"],)
+            )
+        try:
+            api.create_run({**ai_options, "reasoningEffort": "medium"})
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("Changed effort reused an idempotency key")
+        try:
+            api.create_run(
+                {
+                    **ai_options,
+                    "mode": "full",
+                    "sampleRunId": str(ai["id"]),
+                    "reasoningEffort": "medium",
+                    "idempotencyKey": str(uuid4()),
+                }
+            )
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("Different-effort sample was reused")
+        with api.db.transaction():
+            expanded = api.create_run(
+                {
+                    **ai_options,
+                    "mode": "full",
+                    "sampleRunId": str(ai["id"]),
+                    "idempotencyKey": str(uuid4()),
+                }
+            )
+            api.db.execute(
+                "UPDATE workbench.runs SET status='paused' WHERE id=%s", (expanded["id"],)
+            )
+        assert api.result_rows(str(expanded["id"]))[0]["result"]["reasoningEffort"] == "high"
         api.mark_delete(str(dataset["id"]))
         print(
             "Scoped storage passed: distinct claims, expiry, fencing, immutable results, "

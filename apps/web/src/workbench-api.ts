@@ -42,6 +42,13 @@ export type Preview = {
   rows: Record<string, unknown>[]
   total: number
 }
+export type ModelOption = {
+  slug: string
+  displayName: string
+  reasoningEfforts?: string[] | null
+  capabilitySource?: 'catalog' | 'documented' | 'unknown'
+  capabilityReviewedAt?: string | null
+}
 export type Connection = {
   id: string
   mode: 'api' | 'chatgpt'
@@ -64,6 +71,7 @@ export type Run = {
     engine: string
     mode: string
     model: string
+    reasoningEffort?: string | null
     connectionId: string | null
     billingMode: string
     templateRevision: string
@@ -82,6 +90,7 @@ export type Classification = {
   redactedText: string
   matches: { topic: string; phrases: string[]; priority: number }[]
   requestedModel: string
+  reasoningEffort?: string | null
   resolvedModel: string
   inputTokens: number
   outputTokens: number

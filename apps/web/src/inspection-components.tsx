@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ButtonHTMLAttributes,
@@ -12,14 +13,38 @@ import {
   InspectionContext,
   useInspection,
   type InspectionDetail,
+  type PreviewAnchor,
 } from './inspection-context'
 
 type Pinned = { detail: InspectionDetail; trigger: HTMLElement | null }
 type Preview = {
   detail: InspectionDetail
   trigger: HTMLElement
+  anchor?: PreviewAnchor
   top: number
   left: number
+}
+
+function previewPosition(
+  trigger: HTMLElement,
+  anchor: PreviewAnchor | undefined,
+  width: number,
+  height: number,
+) {
+  const bounds = trigger.getBoundingClientRect()
+  const point = typeof anchor === 'function' ? anchor() : anchor
+  const x = point?.x ?? bounds.left
+  const y = point?.y ?? bounds.bottom
+  const left =
+    point && x + width + 12 > window.innerWidth - 16
+      ? x - width - 12
+      : x + (point ? 12 : 0)
+  const top =
+    y + height + 12 > window.innerHeight - 16 ? y - height - 12 : y + 12
+  return {
+    left: Math.max(16, Math.min(left, window.innerWidth - width - 16)),
+    top: Math.max(16, Math.min(top, window.innerHeight - height - 16)),
+  }
 }
 
 function DetailFields({ detail }: { detail: InspectionDetail }) {
@@ -67,6 +92,7 @@ export function InspectionProvider({
   const priorScope = useRef(scope)
   const titleId = useId()
   const previewId = useId()
+  const previewElement = useRef<HTMLDivElement>(null)
   const dismiss = useCallback(() => {
     const source = request.current?.trigger
     request.current = null
@@ -79,20 +105,21 @@ export function InspectionProvider({
   }, [])
   const clearPreview = useCallback(() => setPreview(null), [])
   const showPreview = useCallback(
-    (detail: InspectionDetail, trigger: HTMLElement) => {
+    (
+      detail: InspectionDetail,
+      trigger: HTMLElement,
+      anchor?: PreviewAnchor,
+    ) => {
       if (!active || request.current || restoringFocus.current) return
-      const bounds = trigger.getBoundingClientRect()
-      const width = Math.min(320, window.innerWidth - 32)
       setPreview({
         detail,
         trigger,
-        left: Math.max(
-          16,
-          Math.min(bounds.left, window.innerWidth - width - 16),
-        ),
-        top: Math.max(
-          16,
-          Math.min(bounds.bottom + 8, window.innerHeight - 260),
+        anchor,
+        ...previewPosition(
+          trigger,
+          anchor,
+          Math.min(320, window.innerWidth - 32),
+          260,
         ),
       })
     },
@@ -161,16 +188,14 @@ export function InspectionProvider({
           bounds.top >= window.innerHeight
         )
           return null
-        const width = Math.min(320, window.innerWidth - 32)
+        const size = previewElement.current?.getBoundingClientRect()
         return {
           ...current,
-          left: Math.max(
-            16,
-            Math.min(bounds.left, window.innerWidth - width - 16),
-          ),
-          top: Math.max(
-            16,
-            Math.min(bounds.bottom + 8, window.innerHeight - 260),
+          ...previewPosition(
+            current.trigger,
+            current.anchor,
+            size?.width || Math.min(320, window.innerWidth - 32),
+            size?.height || 260,
           ),
         }
       })
@@ -183,6 +208,32 @@ export function InspectionProvider({
       window.removeEventListener('scroll', reposition, true)
     }
   }, [pinned, preview, dismiss, active])
+
+  useLayoutEffect(() => {
+    if (!preview || !active) return
+    const element = previewElement.current
+    if (!element) return
+    const position = () => {
+      const bounds = element.getBoundingClientRect()
+      setPreview((current) => {
+        if (!current) return null
+        const next = previewPosition(
+          current.trigger,
+          current.anchor,
+          bounds.width || Math.min(320, window.innerWidth - 32),
+          bounds.height || 260,
+        )
+        return current.left === next.left && current.top === next.top
+          ? current
+          : { ...current, ...next }
+      })
+    }
+    position()
+    if (!window.ResizeObserver) return
+    const observer = new ResizeObserver(position)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [preview, active])
 
   const detail = pinned?.detail
   const panel = detail && (
@@ -236,6 +287,7 @@ export function InspectionProvider({
         preview &&
         createPortal(
           <div
+            ref={previewElement}
             id={previewId}
             role="tooltip"
             className="inspection-preview"

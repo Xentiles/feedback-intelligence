@@ -231,7 +231,11 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
             if data.get("engine") == "openai":
                 connection = fetch_json(
                     environment("WORKBENCH_BROKER_URL") + "/internal/workbench/validate-connection",
-                    {"connectionId": data.get("connectionId"), "model": data.get("model")},
+                    {
+                        "connectionId": data.get("connectionId"),
+                        "model": data.get("model"),
+                        "reasoningEffort": data.get("reasoningEffort"),
+                    },
                 )
                 data["billingMode"] = connection["billingMode"]
             return repository.create_run(data)
@@ -325,6 +329,7 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                         "protocol_hash",
                         "analysis_implementation",
                         "filters",
+                        "reasoning_effort",
                     ]
                     writer = csv.DictWriter(output, fieldnames=fields)
                     writer.writeheader()
@@ -346,6 +351,7 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
                             PROTOCOL_HASH,
                             DETECTOR_IMPLEMENTATION,
                             json.dumps(selected_filters, sort_keys=True),
+                            run["snapshot"].get("reasoningEffort"),
                         ]
                         writer.writerow(
                             {
@@ -555,6 +561,7 @@ def process_job(repository: Repository, job: dict[str, Any]) -> None:
                 credential["token"],
                 active,
                 credential["mode"],
+                snapshot.get("reasoningEffort"),
             )
         result["templateRevision"] = snapshot["templateRevision"]
         repository.finish(job, result)

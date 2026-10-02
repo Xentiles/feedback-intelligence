@@ -153,6 +153,12 @@ class Repository:
             raise ValueError(
                 "AI requires an explicit connection, model and external-processing consent"
             )
+        effort = options.get("reasoningEffort")
+        if effort is not None and (
+            engine != "openai"
+            or effort not in ("none", "minimal", "low", "medium", "high", "xhigh", "max")
+        ):
+            raise ValueError("Choose a supported AI reasoning effort")
         key = str(UUID(options["idempotencyKey"]))
         snapshot = {
             "datasetSnapshot": dataset["snapshot"],
@@ -167,6 +173,8 @@ class Repository:
             "sampleRunId": options.get("sampleRunId"),
             "billingMode": options.get("billingMode") if engine == "openai" else "none",
         }
+        if engine == "openai":
+            snapshot["reasoningEffort"] = effort
         records = self.records(dataset_id)
         selected = sample_records(records) if mode == "sample" else records
         identity = uuid4()
@@ -179,7 +187,12 @@ class Repository:
                 "SELECT * FROM workbench.runs WHERE idempotency_key=%s", (key,)
             ).fetchone()
             if existing:
-                if existing["snapshot"] != snapshot or str(existing["dataset_id"]) != dataset_id:
+                if {
+                    **existing["snapshot"],
+                    "reasoningEffort": existing["snapshot"].get("reasoningEffort"),
+                } != {**snapshot, "reasoningEffort": snapshot.get("reasoningEffort")} or str(
+                    existing["dataset_id"]
+                ) != dataset_id:
                     raise ValueError("Idempotency key already belongs to another run request")
                 return existing
             self.db.execute(
@@ -208,9 +221,10 @@ class Repository:
                     "protocolHash",
                     "privacyVersion",
                     "billingMode",
+                    "reasoningEffort",
                 ):
                     if (
-                        previous["snapshot"][field] != snapshot[field]
+                        previous["snapshot"].get(field) != snapshot.get(field)
                         or str(previous["dataset_id"]) != dataset_id
                     ):
                         raise ValueError("Sample and full run configurations must match")

@@ -37,6 +37,7 @@ def classify(
     credential: str,
     active: Callable[[], bool],
     billing_mode: str = "chatgpt",
+    reasoning_effort: str | None = None,
 ) -> dict[str, Any]:
     redacted, state, redactions = prepare(record)
     options = [topic["id"] for topic in template["topics"]] + ["unclassified"]
@@ -79,6 +80,8 @@ def classify(
             }
         },
     }
+    if reasoning_effort is not None:
+        body["reasoning"] = {"effort": reasoning_effort}
     if billing_mode == "api":
         body["max_output_tokens"] = 2048
     request = urllib.request.Request(
@@ -132,6 +135,7 @@ def classify(
             "matches": [],
             "calibrated": False,
             "requestedModel": model,
+            "reasoningEffort": reasoning_effort,
             "resolvedModel": completed.get("model", model),
             "inputTokens": usage.get("input_tokens", 0),
             "outputTokens": usage.get("output_tokens", 0),
