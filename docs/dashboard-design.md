@@ -1,139 +1,134 @@
-# Dashboard product design specification
+# Unified Orbital Clarity interface
 
-This is the implementation reference for the portions of the native design that
-could not be authored after the Figma Starter-plan MCP quota was reached. It does
-not replace or claim completion of the native Figma deliverable.
+The recorded showcase and interactive local workbench share one application shell,
+one semantic token sheet, and one background controller. This replaces the former
+sidebar panel and separate workbench styling. The private design packet is excluded
+from Git and build contexts; only necessary runtime assets and token definitions
+are copied into the application.
+
+## Navigation decision
+
+Desktop reserves 184 px on the left for independent surfaced controls with icons
+and visible labels. The rail itself is transparent: no continuous panel, enclosing
+border, glass effect, or full-height background. Showcase and Workbench have small
+section labels. Active destinations combine a 2 px Autumn Leaf marker with
+`aria-current="page"`; selected context/background choices use `aria-pressed`.
+
+Collapse/reopen, applicable Demo/Live choices, and background preferences live in
+this system. Dataset, template, model, and run selections stay on their pages.
+The showcase keeps its evidence journey and embedded evaluation regions.
+
+Below 768 px, a sticky 44 px menu button and independently surfaced current-page
+label replace the rail. Opening the menu focuses its first link and makes the
+underlying content inert and visually hidden, leaving the backdrop visible between
+controls. The menu scrolls within the viewport. Escape restores focus to the menu
+button; selecting a destination closes it and returns focus. Views and background
+remain mounted when switching areas, so navigation does not discard drafts,
+selected records, filters, or runs. Page changes return to the top; collapsing
+navigation does not reset the page or its state.
+
+`#workbench` remains an alias for Datasets. Named workbench routes use
+`#workbench/datasets`, `/classification`, `/runs`, `/results`, and `/connections`.
+`#showcase` returns to the showcase. In-page anchors do not select another area.
 
 ## Foundations
 
-The interface uses Inter and a compact, technical workspace layout. Dark mode is
-the default: near-black canvas, lifted charcoal surfaces, cool gray text, and a
-violet accent limited to brand, selection, focus, and the primary chart. Light mode
-uses the same semantic tokens and is available from the persistent header toggle.
-Green, amber, red, and blue remain reserved for semantic states. Charts pair color
-with labels, summary values, axis labels, and an accessible table.
-
-| Figma semantic token | CSS variable | Purpose |
+| Role | Exact palette | Use |
 | --- | --- | --- |
-| `color/background/canvas` | `--fi-color-background-canvas` | Application background |
-| `color/background/surface` | `--fi-color-background-surface` | Cards and panels |
-| `color/background/subtle` | `--fi-color-background-subtle` | Secondary regions |
-| `color/text/primary` | `--fi-color-text-primary` | Primary text |
-| `color/text/secondary` | `--fi-color-text-secondary` | Supporting text |
-| `color/accent/default` | `--fi-color-accent-default` | Selection and primary actions |
-| `color/accent/subtle` | `--fi-color-accent-subtle` | Selected backgrounds |
-| `color/status/success` | `--fi-color-status-success` | Available or complete |
-| `color/status/warning` | `--fi-color-status-warning` | Uncalibrated or insufficient |
-| `color/status/danger` | `--fi-color-status-danger` | Error or restricted |
-| `color/status/info` | `--fi-color-status-info` | Neutral information |
+| Canvas | Graphite `#2C2C2C` | Shared backdrop and still/flat states |
+| Surface | Gunmetal `#404040` | Floating controls, fields, selected reading surfaces |
+| Context | Deep Space Blue `#28384E` | Active destinations and explanatory states |
+| Accent | Autumn Leaf `#E86823` | Nontext active/error markers and chart marks |
+| Text/boundary | Platinum `#EDF0F5` | Essential text, control boundaries, primary fills |
 
-Spacing follows `4, 8, 12, 16, 24, 32, 40, 48px`; radii are `6, 10, 14px`.
-Cards use borders first and restrained elevation only for a selected detail panel.
+Essential text remains fully opaque. Primary actions have Platinum fills and
+Gunmetal text; secondary actions have dark fills and Platinum boundaries.
+Disabled buttons intentionally use 50% opacity to distinguish unavailable actions;
+their explanations remain fully opaque. Disabled Signals describes the applicable
+loading, source, empty-data, filter or live-calibration state.
+Destructive actions retain an explicit action label and orange leading boundary.
+Controls use 4 px radii; selected containers use 8 px; tables and rules remain
+square. Metrics use open groups and selective dividers instead of repeated boxed
+tiles. Editable sections use opaque surfaces where these improve interaction.
 
-## Component mapping
+Spacing uses 4/8/12/16/24/32/48/64 px. Inter is self-hosted with optical size 14
+and weights 400/500/600. IBM Plex Mono is self-hosted for technical identifiers.
+Body is 16/24, labels 14/20, captions 12/18, headings 32/40 (28/36 narrow),
+24/32 and 18/26, data 24/32, and identifiers 13/20. Upstream font licenses are
+preserved in `LICENSES/Inter-OFL-1.1.txt` and `LICENSES/Plex-OFL-1.1.txt`.
+Focus uses a 2 px Platinum outline with 2 px Gunmetal separation.
 
-| Design component | React component | Required states |
-| --- | --- | --- |
-| Application navigation | `AppShell`, `NavItem` | default, selected, focus |
-| Presentation context | `ContextSwitch` | live, demo, disabled/loading |
-| Filter toolbar | `FilterBar` | ready, unsupported dimension, loading |
-| Metric card | `MetricCard` | available, unavailable, loading |
-| Eligibility label | `StatusBadge` | illustrative, available, withheld, restricted |
-| Time series | `TimeSeriesPanel` | ready, empty, unavailable, loading, error |
-| Evidence list | `EvidenceTable` | ready, empty, loading, error |
-| Evidence details | `DecisionDetail` | permitted synthetic, restricted live |
-| Explanatory state | `StatePanel` | uncalibrated, insufficient, source unavailable |
+## Shared recipes and state boundaries
 
-## Desktop screens
+Fields, validation reports, topic editors, navigation, tables, metrics, pagination,
+evidence, disclosures, status messages and charts use the shared recipes in
+`apps/web/src/styles.css` and semantic tokens in `orbital-tokens.css`.
+Scrollable tables have named, keyboard-focusable regions. Charts retain data
+disclosures and coverage explanations. Missing dates, sparse coverage, partial
+runs, locked workspaces and disabled runtime states remain explicit.
+Single-choice selects use a shared 16 px Platinum chevron positioned 12 px from
+the field edge, with 44 px of trailing text space. The native select semantics and
+option menus remain intact; forced-color mode restores the native indicator.
 
-### Overview — illustrative demo
+Native application dialogs replace browser confirmation prompts for AI processing,
+cancellation/resume, dataset deletion and original-text export. They describe the
+action, focus Cancel first, contain keyboard focus while open, support Escape,
+and return focus on completion. Existing privacy preview, consent checkboxes and
+backend validation remain required; a cancelled dialog never submits the action.
 
-- Compact top navigation: product identity, Overview/Signals, context switch.
-- Persistent violet `Demo — selectable synthetic decisions` banner below navigation.
-- Three-way decision-source control for SemIf, rules baseline, and Sol medium; the
-  selected 480-record output drives the overview, filters, and evidence journey.
-- Header light/dark control persists the selected theme locally.
-- Source identity, actual fixture range, and supported filters.
-- Four metric cards: imported feedback; classified records; analytical coverage;
-  observed issue rate. Each shows a raw count or numerator/denominator.
-- Time-series panel with a fixed 0–100% scale, grid, average guide, gradient area,
-  smooth line, visible period labels, summary statistics, and a tabular disclosure.
-- Observed signal list ordered by absolute descriptive change. Rows show current
-  numerator/denominator, rate, comparison, and `Observed change` wording.
-- Data-readiness panel explains illustrative eligibility and links to live context.
+Failed OAuth callbacks redirect to the configured local application with only
+`connection=error`. Connections presents a fixed explanation and removes the flag
+from the address. Codes, tokens, provider error descriptions and arbitrary return
+destinations never enter this redirect. The failed authorization verdict and
+existing state/nonce/identity/scope validation remain unchanged.
 
-### Overview — live uncalibrated
+## Material and motion
 
-- Same shell and filters, with `Live — connected data` identification.
-- Operational counts are populated when the data stores are reachable.
-- Analytical cards use an em dash and `Unavailable — awaiting calibration`.
-- A full-width state panel explains that absence of eligible evidence is not
-  absence of complaints and offers the explicit demo switch.
-- No signal rows, percentages, zero-value chart, or positive/negative conclusion.
-- An empty connected database shows `No imported feedback yet`, omits the date
-  controls, and does not invent a source identity or analytical conclusion.
+The existing sand renderer mounts once in the shared shell, with intensity 1.25
+and speed 0.85. Its module is bundled by Vite; the poster remains a local static
+asset. Animate, Still and Flat are saved as nonsecret local preferences.
+These three controls use a single icon row (Play, Pause and a solid square), with
+accessible names, hover titles and programmatic pressed states. Destinations keep
+their visible navigation labels. Animation restrictions are explained in the title
+and background status text as well as through the disabled state.
+Reduced-motion settings disable animation; unavailable graphics use the poster.
+The renderer suspends when its document is hidden and destroys listeners and
+graphics on unmount. The backdrop is decorative, `aria-hidden`, and
+`pointer-events:none`. Foreground controls do not animate.
 
-### Signal Explorer
+## Verification
 
-- Breadcrumb back to Overview while preserving filters.
-- Signal name, definition, current range, and `Illustrative scenario` status.
-- Summary cards for numerator, eligible denominator, coverage, and observed delta.
-- Time-series panel with topic numerator, eligible denominator, and rate; accessible
-  period table directly below. An observed delta appears only with an explicit
-  comparison range and both comparison counts.
-- Contributing-feedback table ordered by occurrence descending and stable ID.
-  Columns: date, safe excerpt/status, channel, product if supported, inclusion.
-- Pagination is bounded, labeled, and resets after filter changes.
+Results and Showcase share an inspect-then-drill interaction: hover/focus previews
+essential counts or rate denominators; click/Enter pins a scoped inspector, with an
+explicit action to apply a period/category or inspect contributing records. The
+desktop panel is nonmodal; the phone sheet uses a native dialog with focus return.
+Tooltips stay within the viewport, and focused previews survive scroll/reflow.
+Unknown time coverage remains a gap. Workbench volume charts aggregate UTC calendar
+periods to at most 60 marks and retain their underlying daily disclosure. Showcase
+rate charts preserve unavailable periods and never connect lines across gaps.
 
-### Feedback and decision detail
+Wrapping action groups use 16 px gaps and 24 px top spacing, including run
+configuration, connections, analysis, comparison and export actions. Native Results
+menus use run-wide observed choices and explicit missing options. These additions
+retain the shared floating rail, palette, motion and consent boundaries.
 
-- Back link preserves explorer signal and filters.
-- Record identity and source metadata appear before evidence.
-- Synthetic evidence body is visible only in demo. Live mode shows a restricted
-  evidence panel with no empty body placeholder.
-- Curated typed answers show question label, value, primitive, confidence label,
-  and eligibility reason. They are not represented as independent reviews.
-- Provenance lists immutable decision ID, schema, model, policy status, trace ID,
-  and decision time. It excludes raw metadata, outbox payloads, and worker errors.
+See the [v0.1.5 inspection review](quality/results-inspection-review.md) for the
+latest evidence.
 
-## Narrow adaptation
+See the dated [browser and regression review](quality/orbital-ui-review.md) for
+actual captures, exercised states, test results and remaining review limits.
+Historical Figma captures and prior review reports remain historical evidence;
+they are not the current implementation contract.
 
-At widths below 760px, navigation wraps, metric cards form one column, filter
-controls remain full-width and labeled, and tables become horizontally scrollable
-inside a named region. Detail panels enter normal document flow. No information is
-hidden solely to make the layout fit.
+## Preview anchors and run settings — v0.1.6
 
-## Interaction and accessibility
+Pointer previews sit beside the hovered chart location; keyboard previews use the
+selected SVG point/bar, transformed into viewport coordinates. Measured preview
+size determines flipping and clamping. Pinned panels, explicit drill-down and focus
+return retain their previous behavior. Controls and charts use the same inspection
+provider; no additional background or animation is introduced.
 
-- All controls use native buttons, links, labels, selects, and tables.
-- Focus uses a 3px violet outline with 2px offset. Pointer targets are at least 40px.
-- Context changes abort stale requests and reset filters, page, signal, and evidence.
-- Filter changes reset evidence pagination. Back navigation preserves filters.
-- Loading retains the page title and uses text plus skeletons. Errors name the
-  failed region and expose one working retry button.
-- `prefers-reduced-motion` removes nonessential transitions.
-
-## Native Figma status
-
-Dark dashboard capture:
-[Feedback Intelligence — Dark Dashboard](https://www.figma.com/design/yjr5kUzT0Oc4aUJu918FYr?node-id=1-2)
-
-- Captured node: `1:2`
-- Source: running 480-record dashboard at the desktop breakpoint
-- Includes the dark header, enlarged filter set, four metric cards, summary strip,
-  and the new monthly time-series visualization
-- Capture is an editable raw-frame reference; reusable component authoring remains
-  in the original design-system file
-
-File: [Feedback Intelligence — Dashboard Journey](https://www.figma.com/design/e17DkQwfrHNrZRRMUrRJRP)
-
-- Foundations/documentation frame: `1:65`
-- Navigation Item component set: `2:13`
-- Native variables: 48 across `FI / Primitives` and `FI / Semantic`
-- Native text styles: 8 Inter styles; elevation styles: 1
-- Native metadata and render review completed for `1:65`
-- Remaining components and screens: blocked by the Figma Starter-plan MCP call quota
-
-Native Figma review does not establish that the implemented browser layout matches.
-Browser visual and interaction verification remains deferred by the milestone's
-no-browser-automation constraint.
+Classification shows a connection-scoped model picker and a separate reasoning
+selector. Connections exposes the same catalog and refresh status. Unknown or stale
+capabilities have explicit explanations; selection and billing do not silently
+change. The public screenshots use deterministic synthetic data with dated provenance.

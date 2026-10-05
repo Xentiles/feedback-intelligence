@@ -1,5 +1,21 @@
 # Feedback Intelligence API
 
+## Local Workbench API
+
+The opt-in runtime adds `/api/v1/workbench` for owner sessions, import preview and
+commit, dataset/template/run management, results, comparison, export and deletion.
+The API owns same-origin/CSRF protections, encrypted credentials, ChatGPT OAuth and
+an authenticated run-bound worker credential broker. Public connection responses
+contain opaque identities and catalog metadata, never provider credentials.
+
+The account catalog is dynamic, preserving model names/order and exposing optional
+supported reasoning efforts with their source. Run creation validates selected
+model/effort against the connection before persistence. ChatGPT plan usage and API
+billing remain separately selected. Two existing owner-created 25-record ChatGPT samples completed successfully
+for specific model/effort settings; CI uses mocked providers. This does not establish
+universal model availability or hosted readiness. See the [Workbench guide](../../docs/workbench.md)
+for endpoints, runtime setup and local/hosted boundaries.
+
 ASP.NET Core .NET 10 API for Feedback Intelligence. It preserves the standard health endpoint, exposes a versioned read journey from metadata to immutable evidence, and provides an opt-in feedback ingestion boundary for private/local runtimes.
 
 Every dashboard request requires an explicit `context=demo|live` value. The demo

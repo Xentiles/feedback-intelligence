@@ -5,6 +5,7 @@ import {
   StatusBadge,
 } from './dashboard-components'
 import { formatCount, formatDate, formatRate } from './dashboard-format'
+import { Inspectable } from './inspection-components'
 import type {
   TrendEvaluationResult,
   TrendGateReason,
@@ -51,12 +52,55 @@ function signed(value: number, suffix: string) {
   return `${value > 0 ? '+' : ''}${oneDecimal.format(value)}${suffix}`
 }
 
-function windowMeasure(window: TrendWindow) {
+function windowMeasure(
+  window: TrendWindow,
+  label: string,
+  result: TrendEvaluationResult,
+  response: TrendOverviewResponse,
+) {
   return (
     <div className="trend-window">
-      <strong>
-        {formatCount(window.numerator)} / {formatCount(window.denominator)}
-      </strong>
+      <Inspectable
+        className="inspection-value"
+        detail={{
+          title: label,
+          scopeLabel: `Synthetic detector evaluation · ${result.seriesId}`,
+          description:
+            'Raw support for the recorded detector window. These synthetic exploratory results do not establish production significance or calibrated classification correctness.',
+          fields: [
+            {
+              label: 'UTC interval',
+              value: `${window.range.from} – ${window.range.toExclusive} (exclusive)`,
+            },
+            { label: 'Numerator', value: formatCount(window.numerator) },
+            { label: 'Denominator', value: formatCount(window.denominator) },
+            {
+              label: 'Rate',
+              value:
+                window.rate === null ? 'Unavailable' : formatRate(window.rate),
+            },
+            {
+              label: 'Method',
+              value: `${response.method.id} · ${response.method.version}`,
+            },
+            {
+              label: 'Configuration checksum',
+              value: response.method.configurationChecksum,
+            },
+            { label: 'Evaluation identity', value: result.evaluationId },
+            {
+              label: 'Recorded gates',
+              value: result.gateReasons
+                .map((reason) => gateLabels[reason])
+                .join(' · '),
+            },
+          ],
+        }}
+      >
+        <strong>
+          {formatCount(window.numerator)} / {formatCount(window.denominator)}
+        </strong>
+      </Inspectable>
       <span>{formatRate(window.rate)}</span>
       <small>
         {formatDate(window.range.from)}–{formatDate(window.range.toExclusive)}
@@ -96,7 +140,42 @@ function TrendSummary({ response }: { response: TrendOverviewResponse }) {
       {metrics.map((metric) => (
         <div key={metric.label}>
           <dt>{metric.label}</dt>
-          <dd>{metric.value}</dd>
+          <dd>
+            <Inspectable
+              className="inspection-value"
+              detail={{
+                title: metric.label,
+                scopeLabel: 'Synthetic detector evaluation',
+                description:
+                  'Measured against planted synthetic incidents. These values are local evaluation evidence, not real-world performance guarantees.',
+                fields: [
+                  { label: 'Value', value: metric.value },
+                  {
+                    label: 'Planted incidents',
+                    value: formatCount(summary.plantedIncidentCount),
+                  },
+                  {
+                    label: 'Alert episodes',
+                    value: formatCount(summary.alertEpisodeCount),
+                  },
+                  {
+                    label: 'Evaluable series-days',
+                    value: formatCount(summary.evaluableSeriesDayCount),
+                  },
+                  {
+                    label: 'Method',
+                    value: `${response.method.id} · ${response.method.version}`,
+                  },
+                  {
+                    label: 'Configuration checksum',
+                    value: response.method.configurationChecksum,
+                  },
+                ],
+              }}
+            >
+              {metric.value}
+            </Inspectable>
+          </dd>
         </div>
       ))}
     </dl>
@@ -142,8 +221,22 @@ function EvaluationTable({ response }: { response: TrendOverviewResponse }) {
                     {sentenceCase(result.state)}
                   </StatusBadge>
                 </td>
-                <td>{windowMeasure(result.current)}</td>
-                <td>{windowMeasure(result.baseline)}</td>
+                <td>
+                  {windowMeasure(
+                    result.current,
+                    `${descriptor?.signalLabel ?? result.seriesId} · Current window`,
+                    result,
+                    response,
+                  )}
+                </td>
+                <td>
+                  {windowMeasure(
+                    result.baseline,
+                    `${descriptor?.signalLabel ?? result.seriesId} · Baseline window`,
+                    result,
+                    response,
+                  )}
+                </td>
                 <td>
                   <div className="trend-change">
                     <strong>{signed(result.deltaPoints, ' pp')}</strong>

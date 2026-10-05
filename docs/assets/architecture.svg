@@ -1,66 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
-  <title id="title">Feedback Intelligence architecture: recorded demo and optional processing runtime</title>
-  <desc id="desc">The no-key demo uses React, the ASP.NET Core read API, and frozen synthetic JSON fixtures. The optional runtime uses authenticated ingestion, PostgreSQL jobs, Python privacy transformation, replaceable decision engines, immutable PostgreSQL decisions and outbox, and text-free ClickHouse projection. Live eligibility requires calibration.</desc>
-  <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#d18a54"/></marker>
-    <style>
-      text {font-family: Arial, sans-serif; fill: #ededed;}
-      .eyebrow {font-size:14px; letter-spacing:1.8px; fill:#e3ad85;}
-      .label {font-size:19px; font-weight:600;}
-      .detail {font-size:15px; fill:#d0d0d0;}
-      .box {fill:#303943; stroke:#72808e; stroke-width:1; rx:8;}
-      .link {stroke:#d18a54; stroke-width:2; fill:none; marker-end:url(#arrow);}
-    </style>
-  </defs>
-  <rect width="1200" height="680" rx="12" fill="#202225"/>
-  <text x="40" y="51" font-size="28" font-weight="600">From feedback to inspectable decisions</text>
-  <text x="40" y="82" class="detail">Two execution paths share the same product contracts. The demo requires no model credentials.</text>
-  <text x="40" y="128" class="eyebrow">DEFAULT / RECORDED SYNTHETIC DEMO</text>
-  <rect class="box" x="40" y="151" width="300" height="105"/>
-  <text class="label" x="60" y="184">React dashboard</text>
-  <text class="detail" x="60" y="213">Overview → signal → evidence</text>
-  <text class="detail" x="60" y="236">Read-only presentation</text>
-  <rect class="box" x="450" y="151" width="300" height="105"/>
-  <text class="label" x="470" y="184">ASP.NET Core read API</text>
-  <text class="detail" x="470" y="213">Versioned dashboard contracts</text>
-  <text class="detail" x="470" y="236">Separate demo and live contexts</text>
-  <rect class="box" x="860" y="151" width="300" height="105"/>
-  <text class="label" x="880" y="184">Frozen JSON fixtures</text>
-  <text class="detail" x="880" y="213">SemIf / rules / Sol reference</text>
-  <text class="detail" x="880" y="236">480 synthetic records per source</text>
-  <path class="link" marker-start="url(#arrow)" d="M350 203H440"/>
-  <path class="link" marker-start="url(#arrow)" d="M760 203H850"/>
-  <text x="40" y="314" class="eyebrow">OPT-IN / LOCAL PROCESSING RUNTIME</text>
-  <rect class="box" x="40" y="337" width="200" height="135"/>
-  <text class="label" x="56" y="369">API + PostgreSQL</text>
-  <text class="detail" x="56" y="399">Authenticated ingestion</text>
-  <text class="detail" x="56" y="423">Canonical records</text>
-  <text class="detail" x="56" y="447">Leased processing jobs</text>
-  <rect class="box" x="270" y="337" width="200" height="135"/>
-  <text class="label" x="286" y="369">Python privacy</text>
-  <text class="detail" x="286" y="399">Local redaction</text>
-  <text class="detail" x="286" y="423">Allow-listed model state</text>
-  <text class="detail" x="286" y="447">Body-free diagnostics</text>
-  <rect class="box" x="500" y="337" width="200" height="135"/>
-  <text class="label" x="516" y="369">Decision engine</text>
-  <text class="detail" x="516" y="399">Fixture / SemIf / rules</text>
-  <text class="detail" x="516" y="423">Optional pinned LLM</text>
-  <text class="detail" x="516" y="447">Fourteen typed answers</text>
-  <rect class="box" x="730" y="337" width="200" height="135"/>
-  <text class="label" x="746" y="369">PostgreSQL</text>
-  <text class="detail" x="746" y="399">Immutable decisions</text>
-  <text class="detail" x="746" y="423">Model/schema provenance</text>
-  <text class="detail" x="746" y="447">Outbox + projection ledger</text>
-  <rect class="box" x="960" y="337" width="200" height="135"/>
-  <text class="label" x="976" y="369">ClickHouse</text>
-  <text class="detail" x="976" y="399">Accepted, text-free facts</text>
-  <text class="detail" x="976" y="423">Detector inputs</text>
-  <text class="detail" x="976" y="447">Live reads through API</text>
-  <path class="link" d="M242 404H266"/><path class="link" d="M472 404H496"/>
-  <path class="link" d="M702 404H726"/><path class="link" d="M932 404H956"/>
-  <rect x="40" y="502" width="1120" height="132" rx="8" fill="#2c2c2c" stroke="#d18a54"/>
-  <text x="60" y="533" class="label">Confidence policy is a gate, not a label on a chart</text>
-  <text x="60" y="560" class="detail">Projection eligibility remains blocked by unfinished human calibration. Demo eligibility is explicitly illustrative.</text>
-  <text x="60" y="586" class="detail">Deterministic code owns aggregation and trends; the planted-incident backtest is separate from model-quality evaluation.</text>
-  <text x="60" y="612" class="detail">Optional OpenTelemetry exports sanitized operational metadata. PostgreSQL retains the evidence and decision lineage.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="860" viewBox="0 0 1200 860" role="img" aria-labelledby="title desc">
+<title id="title">Feedback Intelligence: recorded showcase and interactive local Workbench</title>
+<desc id="desc">One React interface serves a frozen no-key showcase and an opt-in local tool. The API owns sessions, OAuth and a credential vault. PostgreSQL stores dataset, template and run snapshots plus leased jobs and immutable results. Python prepares feedback and executes rules or approved model inference. An outbox projects text-free exploratory results to ClickHouse. Hosted readiness and human calibration are separate gates.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#E86823"/></marker><style>text{font-family:Inter,Arial,sans-serif;fill:#EDF0F5}.title{font-size:28px;font-weight:600}.label{font-size:19px;font-weight:600}.note{font-size:15px}.section{font-size:14px;letter-spacing:1.5px}.box{fill:#404040;stroke:#EDF0F5;stroke-width:1;rx:8}.line{fill:none;stroke:#E86823;stroke-width:2;marker-end:url(#arrow)}</style></defs>
+<rect width="1200" height="860" fill="#2C2C2C"/>
+<text x="40" y="52" class="title">From feedback to inspectable decisions</text>
+<text x="40" y="82" class="note">Local tool and recorded showcase • explicit privacy, execution and evidence boundaries</text>
+<rect class="box" x="40" y="118" width="1120" height="90"/>
+<text x="60" y="151" class="label">Shared React + TypeScript interface</text>
+<text x="60" y="182" class="note">Datasets → classification → runs → results → inspect / compare / export • responsive floating navigation</text>
+<text x="40" y="251" class="section">RECORDED SHOWCASE / NO CREDENTIALS</text>
+<rect class="box" x="40" y="274" width="300" height="105"/>
+<text x="60" y="306" class="label">Evidence journey</text><text x="60" y="334" class="note">Overview → signals → decisions</text><text x="60" y="359" class="note">Hover/focus, pin, explicit drill-down</text>
+<rect class="box" x="450" y="274" width="300" height="105"/>
+<text x="470" y="306" class="label">.NET dashboard reads</text><text x="470" y="334" class="note">Versioned contracts and provenance</text><text x="470" y="359" class="note">Live eligibility stays calibration-gated</text>
+<rect class="box" x="860" y="274" width="300" height="105"/>
+<text x="880" y="306" class="label">Frozen synthetic fixtures</text><text x="880" y="334" class="note">480 records • SemIf / rules / Sol</text><text x="880" y="359" class="note">192 successful paid comparison cases</text>
+<path class="line" d="M345 326H440"/><path class="line" d="M755 326H850"/>
+<text x="40" y="426" class="section">OPT-IN LOCAL WORKBENCH / OWNER SESSION</text>
+<rect class="box" x="40" y="450" width="300" height="118"/>
+<text x="60" y="482" class="label">.NET API boundary</text><text x="60" y="510" class="note">Session, origin/CSRF, OAuth, vault</text><text x="60" y="535" class="note">Account catalog + effort validation</text><text x="60" y="556" class="note">Authenticated run-bound broker</text>
+<rect class="box" x="450" y="450" width="300" height="118"/>
+<text x="470" y="482" class="label">PostgreSQL canonical store</text><text x="470" y="510" class="note">Dataset / template / run snapshots</text><text x="470" y="535" class="note">Leases, fencing, immutable results</text><text x="470" y="556" class="note">Idempotent jobs + outbox</text>
+<rect class="box" x="860" y="450" width="300" height="118"/>
+<text x="880" y="482" class="label">Python processing</text><text x="880" y="510" class="note">Map, validate, prepare/redact</text><text x="880" y="535" class="note">Rules / approved Responses calls</text><text x="880" y="556" class="note">Model + effort retained per run</text>
+<path class="line" d="M345 509H440"/><path class="line" d="M755 509H850"/>
+<rect class="box" x="40" y="616" width="300" height="110"/>
+<text x="60" y="648" class="label">Inspection and export</text><text x="60" y="675" class="note">PostgreSQL reads, UTC cohorts</text><text x="60" y="700" class="note">Shared-success agreement ≠ accuracy</text>
+<rect class="box" x="450" y="616" width="300" height="110"/>
+<text x="470" y="648" class="label">ClickHouse projection</text><text x="470" y="675" class="note">Text-free, deduplicated, run-scoped</text><text x="470" y="700" class="note">Exploratory facts kept separate</text>
+<rect class="box" x="860" y="616" width="300" height="110"/>
+<text x="880" y="648" class="label">Recovery and maintenance</text><text x="880" y="675" class="note">Partial successes, cancel / resume</text><text x="880" y="700" class="note">Dedicated role + confirmed purge</text>
+<path class="line" d="M600 574V604"/><path class="line" d="M550 574V590H190V604"/><path class="line" d="M1010 574V604"/>
+<text x="40" y="779" class="note">Diagnostics: allow-listed telemetry • no credentials or feedback bodies</text>
+<text x="40" y="809" class="note">Separate gates: model-specific AI evidence, human calibration, cross-browser coverage and hosted deployment</text>
+<text x="40" y="837" class="note">v0.2.0 • 2026-10-05 • the 10,000-record rules scenario does not expand the frozen model benchmark</text>
 </svg>

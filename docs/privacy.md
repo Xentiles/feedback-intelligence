@@ -101,3 +101,36 @@ telemetry filtering exist, but managed identity, separate deployment credentials
 TLS termination, retention automation, authenticated telemetry storage, and broader
 evaluated privacy fixtures remain necessary before real-data or hosted operation.
 These practices alone do not establish legal compliance.
+
+## Local Workbench boundary
+
+Uploads and persistent results belong to the user-owned local installation, protected
+by its owner session, same-origin/CSRF checks and restricted filesystem/database
+roles. Ordinary application roles cannot rewrite decisions or purge immutable results.
+A dedicated maintenance principal handles deletion after work is cancelled/fenced,
+including source files, restricted text and analytical projections.
+
+Rules and external engines both receive prepared text through the shared boundary.
+External processing requires a preview and explicit consent; models receive no tools
+or executable actions. Credentials stay in the encrypted server vault and are brokered
+only to the run's connection. Model catalog requests transmit no feedback content.
+Diagnostics omit feedback bodies and provider credentials.
+
+Exports use prepared text by default and include cohort/run/template/model/effort
+provenance; exporting original text requires a separate local confirmation. Uploaded
+language/product/group metadata is never silently inferred. Local persistence is
+not backup, legal compliance, calibrated quality or hosted authorization.
+
+## v0.2.0 local installation authority
+
+Workbench provider credentials are encrypted in the server-side vault; the API
+process also holds the installation keys. Browser state, run payloads, exports and
+telemetry exclude provider tokens. Local sessions use HttpOnly/SameSite cookies,
+exact-origin mutation checks and CSRF. Parser children receive only bounded input
+and explicitly allowed environment settings, never provider or database secrets.
+
+Separate database LOGINs protect ordinary SQL operations. The trusted combined
+worker holds API, worker and purge credentials, so these are not separate OS
+security principals. Original-text confirmation is an explicit owner UI safeguard,
+not a separate server authorization identity. Uploaded data and results persist
+until durable deletion; a local backup remains the owner's responsibility.

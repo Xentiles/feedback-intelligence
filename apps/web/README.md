@@ -1,5 +1,19 @@
 # Feedback Intelligence web
 
+## Interactive local Workbench
+
+The same shell now provides Datasets, Classification, Runs, Results and Connections.
+It supports staged imports, immutable template revisions, durable rule/model runs,
+observed-value filters, UTC charts, pinned inspection, comparison and exports.
+Connections and Classification share an automatically refreshed account catalog;
+model-specific reasoning effort is saved per run. Provider defaults and unknown
+capabilities remain explicit. No model credentials enter browser storage.
+
+The default Showcase remains no-key and recorded. Start the executable local tool
+with `python3 scripts/start_workbench.py` from the repository root. See the
+[Workbench guide](../../docs/workbench.md), [design](../../docs/dashboard-design.md)
+and [v0.2.0 release review](../../docs/quality/v0.2.0-release-review.md).
+
 React and TypeScript dashboard for Feedback Intelligence. The default presentation
 context is the deterministic synthetic demo; the context control can switch to the
 connected read-only API without mixing or caching data between the two.

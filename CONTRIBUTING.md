@@ -52,6 +52,16 @@ Run the relevant component checks after updating. Keep model/schema/policy upgra
 separate from ordinary tooling upgrades; they need measured compatibility and
 evaluation evidence once implemented.
 
+The optional SemIf package pins historical PyTorch 2.10.0 upstream. v0.2.0 uses
+explicit uv overrides for fixed PyTorch/Accelerate versions. Verify the isolated
+MLX/adapter import when updating those overrides; importing must not load weights
+or initiate inference. Preserve historical evaluated identities in frozen artifacts.
+
+Workbench upload changes must cover admitted subprocess parsing, bounded output,
+borrowed-preview retention and the Docker/Linux memory probe. Run
+`tests/test_workbench_import_limits.py` with the worker package checks and the
+isolated local Workbench acceptance before claiming compatibility.
+
 ## Data and secrets
 
 Keep real credentials in ignored local configuration. Never introduce a client-side

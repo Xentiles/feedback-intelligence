@@ -6,6 +6,23 @@ An independent portfolio demonstration of typed feedback classification, explici
 uncertainty, deterministic analytics, and evidence navigation. The committed demo
 uses synthetic retail feedback. It is suitable for inspecting the implementation
 and reproducing recorded evaluations, not for automated customer decisions.
+The local Workbench also accepts user-provided feedback for exploratory rules or
+explicitly approved model classification; its general/retail templates are editable.
+Its outputs are not human-calibrated decisions.
+
+## Interactive configuration
+
+Workbench connections discover account-specific models, including eligible GPT-6
+and GPT-6.1 variants, and refresh their catalog automatically. Model-specific effort
+is selectable and saved with each run. Provider default does not assert a known
+returned effort; legacy runs have no retroactively inferred configuration.
+
+New models and effort settings are operational options, not additions to the frozen
+benchmark below. Their accuracy, calibration and latency have not been established
+by that study. Real-account classification verification remains pending; ordinary
+CI exercises mocked catalog and streaming behavior without paid inference.
+The 10,000-record rules scenario demonstrates scale and inspection rather than
+measured generalization. See [Workbench](docs/workbench.md).
 
 ## Evaluated configuration
 

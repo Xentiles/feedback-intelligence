@@ -1,5 +1,29 @@
 # Feedback Intelligence decision worker
 
+## Interactive Workbench processing
+
+The opt-in Workbench service normalizes mapped imports, prepares feedback at the
+privacy boundary, executes keyword rules or approved streamed Responses requests,
+and persists immutable classifications through dataset/run-scoped jobs. Run snapshots
+retain model, requested effort, privacy and protocol; sample reuse and resume keep
+those settings. Partial successes survive failures, and a separate maintenance role
+confirms purge across operational storage and text-free projections.
+
+Exploratory Results use snapshot-consistent facets, UTC cohorts and safe daily
+counters, separate from calibrated live analytics. See the
+[Workbench guide](../../docs/workbench.md) and
+[v0.2.0 release verification](../../docs/quality/v0.2.0-release-review.md). This local tool
+and its mock tests do not establish hosted readiness or universal provider admission.
+
+Uploads use a single admitted parser subprocess, 30-second timeout and 64 MiB
+retained/transfer limits. Linux Docker enforces a 512 MiB child address-space cap.
+Line/XLSX formats stream; JSON rows accept scalar cells. See the Workbench guide
+for combined limits, validation errors and native macOS qualifications.
+
+The optional SemIf upstream pin is overridden with fixed PyTorch/Accelerate
+versions in uv.lock. The MLX import path is verified without model loading;
+historical evaluated identities remain frozen.
+
 This directory contains the executable Python data, privacy, and decision boundary
 for Feedback Intelligence. It provides canonical import, synthetic generation,
 recorded decisions, local SemIf, a structured-output LLM baseline, deterministic rules,
