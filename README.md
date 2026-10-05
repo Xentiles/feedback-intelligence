@@ -7,7 +7,7 @@ keyword rules or an explicitly connected OpenAI account, and inspect the records
 behind each distribution and trend. The recorded showcase remains available
 without credentials.
 
-Development checkpoint **v0.1.7**, toward v0.2.0. The published **v0.1.0** source
+Development checkpoint **v0.1.8**, toward v0.2.0. The published **v0.1.0** source
 release remains unchanged. Local workflow safeguards are implemented and tested;
 hosted multi-user operation and human-calibrated model quality remain later work.
 

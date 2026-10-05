@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "feedback-intelligence-worker"
-version = "0.1.7"
+version = "0.1.8"
 description = "Decision-worker foundation for Feedback Intelligence"
 readme = "README.md"
 license = "Apache-2.0"

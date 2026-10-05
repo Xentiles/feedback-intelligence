@@ -208,6 +208,61 @@ describe('workbench recovery and prerequisites', () => {
     expect(fetch).not.toHaveBeenCalled()
   })
 
+  it('starts a 10,000-record rules run without retained AI settings or external consent', async () => {
+    const fetch = forbidNetwork()
+    const ready = visualWorkbench('dense')
+    const requests: { path: string; body: unknown }[] = []
+    const client: typeof workbench = async <T,>(
+      path: string,
+      body?: unknown,
+      method?: string,
+      signal?: AbortSignal,
+    ) => {
+      requests.push({ path, body })
+      return ready<T>(path, body, method, signal)
+    }
+    mountApp(client)
+    await chooseAI()
+    fireEvent.change(screen.getByRole('combobox', { name: 'Connection' }), {
+      target: { value: 'connection' },
+    })
+    await screen.findByRole('option', { name: 'GPT-6.1 Sol · fixture' })
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Available model' }),
+      { target: { value: 'gpt-6.1-sol' } },
+    )
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Reasoning effort' }),
+      { target: { value: 'high' } },
+    )
+    fireEvent.change(screen.getByRole('combobox', { name: 'Engine' }), {
+      target: { value: 'rules' },
+    })
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Classify dataset with rules' }),
+    )
+    await waitFor(() =>
+      expect(
+        requests.find((row) => row.path === '/runs' && row.body),
+      ).toBeDefined(),
+    )
+    const body = requests.find((row) => row.path === '/runs' && row.body)!
+      .body as Record<string, unknown>
+    expect(body).toEqual(
+      expect.objectContaining({ engine: 'rules', mode: 'full' }),
+    )
+    for (const key of [
+      'model',
+      'connectionId',
+      'reasoningEffort',
+      'externalConsent',
+      'sampleRunId',
+    ])
+      expect(body).not.toHaveProperty(key)
+    expect(requests.some((row) => row.path === '/runs/preview')).toBe(false)
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
   it('explains a terminal ChatGPT renewal failure and opens Connections without enabling processing', async () => {
     const ready = visualWorkbench()
     const client: typeof workbench = async <T,>(

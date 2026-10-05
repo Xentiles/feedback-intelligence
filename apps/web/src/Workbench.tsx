@@ -219,19 +219,24 @@ export function Workbench({
     sample?: Run,
     externalConsent = consent,
   ) => {
+    const runEngine = sample?.snapshot.engine || engine
     const options = {
       datasetId: sample?.dataset_id || datasetId,
       templateId: sample?.template_id || templateId,
-      engine: sample?.snapshot.engine || engine,
-      connectionId: sample?.snapshot.connectionId || connectionId,
-      model: sample?.snapshot.model || model,
-      reasoningEffort: sample
-        ? (sample.snapshot.reasoningEffort ?? null)
-        : effort || null,
+      engine: runEngine,
       mode,
-      externalConsent,
       idempotencyKey: requestKey.current,
-      sampleRunId: sample?.id,
+      ...(runEngine === 'openai'
+        ? {
+            connectionId: sample?.snapshot.connectionId || connectionId,
+            model: sample?.snapshot.model || model,
+            reasoningEffort: sample
+              ? (sample.snapshot.reasoningEffort ?? null)
+              : effort || null,
+            externalConsent,
+            sampleRunId: sample?.id,
+          }
+        : {}),
     }
     if (options.engine === 'openai') {
       const preview = await workbench<{
