@@ -14,18 +14,27 @@ from Git and Docker publication; this is a public implementation status summary.
 - Apache-2.0 code and CC BY 4.0 authored-content scope, with third-party notices.
 - Existing component, contract, fixture-parity, and isolated integration CI jobs.
 
-## Current development checkpoint — v0.1.6
+## Current local-tool source release — v0.2.0
 
-The draft Workbench branch adds imports, immutable template revisions, durable rules
+The Workbench implementation adds imports, immutable template revisions, durable rules
 and optional AI runs, explicit privacy/billing consent, exploratory results and
 inspection, matched comparisons, exports and confirmed deletion. It includes the
 shared Orbital interface, automatic account model refresh, model-specific reasoning
 effort and chart previews anchored beside the inspected data.
 
-Current evidence is recorded in [model controls and preview review](quality/model-controls-review.md).
+Current evidence and remaining limitations are recorded in the
+[v0.2.0 release review](quality/v0.2.0-release-review.md). Earlier model-control
+evidence remains in its [dated review](quality/model-controls-review.md).
 The v0.1.0 publication evidence below is historical and remains immutable. A new
-checkpoint's CI does not replace the real-account classification acceptance gate,
-human calibration, cross-browser review or hosted deployment controls.
+checkpoint's CI does not replace human calibration or hosted deployment controls.
+Two owner-created 25-record ChatGPT samples completed for specific configurations;
+this is not universal model admission or classification-quality evidence.
+
+The release uses a squash commit after the unchanged v0.1.0 root. Public tags and
+releases are v0.1.0 and v0.2.0; intermediate development history is retained in a
+protected local branch/bundle. Old PR commit links may remain accessible. The
+v0.2.0 tag is assigned only after all seven main CI jobs succeed. See
+[PR #1](https://github.com/Xentiles/feedback-intelligence/pull/1) for exact checks.
 
 ## Verified source publication — 2026-09-20
 

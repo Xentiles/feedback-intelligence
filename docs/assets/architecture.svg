@@ -32,6 +32,6 @@
 <text x="880" y="648" class="label">Recovery and maintenance</text><text x="880" y="675" class="note">Partial successes, cancel / resume</text><text x="880" y="700" class="note">Dedicated role + confirmed purge</text>
 <path class="line" d="M600 574V604"/><path class="line" d="M550 574V590H190V604"/><path class="line" d="M1010 574V604"/>
 <text x="40" y="779" class="note">Diagnostics: allow-listed telemetry • no credentials or feedback bodies</text>
-<text x="40" y="809" class="note">Separate gates: real-account AI acceptance, human calibration, cross-browser review and hosted deployment</text>
-<text x="40" y="837" class="note">v0.1.6 • 2026-10-02 • the 10,000-record rules scenario does not expand the frozen model benchmark</text>
+<text x="40" y="809" class="note">Separate gates: model-specific AI evidence, human calibration, cross-browser coverage and hosted deployment</text>
+<text x="40" y="837" class="note">v0.2.0 • 2026-10-05 • the 10,000-record rules scenario does not expand the frozen model benchmark</text>
 </svg>

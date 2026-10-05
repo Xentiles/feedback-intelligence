@@ -12,7 +12,7 @@ capabilities remain explicit. No model credentials enter browser storage.
 The default Showcase remains no-key and recorded. Start the executable local tool
 with `python3 scripts/start_workbench.py` from the repository root. See the
 [Workbench guide](../../docs/workbench.md), [design](../../docs/dashboard-design.md)
-and [v0.1.6 review](../../docs/quality/model-controls-review.md).
+and [v0.2.0 release review](../../docs/quality/v0.2.0-release-review.md).
 
 React and TypeScript dashboard for Feedback Intelligence. The default presentation
 context is the deterministic synthetic demo; the context control can switch to the

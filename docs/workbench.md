@@ -188,10 +188,12 @@ This exercises the real local API, PostgreSQL worker, projection and purge using
 synthetic test records. Ordinary CI makes no paid inference calls. Unit tests
 cover import formats, validation, redaction, rules, sampling, unknown time
 coverage, OAuth claims/signatures, encrypted credentials, replay, plan scopes,
-and interrupted/usage-limited streams. The ChatGPT integration must remain marked
-**live verification pending** until the owner completes a real sign-in and
-explicitly approves a small classification run. The implementation and mocked
-tests alone do not establish real account admission.
+and interrupted/usage-limited streams. Existing owner-created ChatGPT samples provide bounded live evidence: 25/25
+successes with gpt-5.6-luna at Low effort and 25/25 with gpt-5.6-sol at Provider
+default. Requested and returned model identities matched. This does not verify
+every available model, account, effort or subscription; ordinary CI uses mocks.
+No additional sign-in or inference was initiated for the v0.2.0 release. See the
+[release review](quality/v0.2.0-release-review.md).
 
 See the [v0.1.5 Results review](quality/results-inspection-review.md) for browser,
 recovery, filtering and compatibility evidence and its limitations.
@@ -208,3 +210,28 @@ credentials and allow retry; no fallback to API billing occurs.
 The app displays only allow-listed error codes and app-owned recovery text. Provider
 response bodies and credentials remain outside UI diagnostics. Reconnecting does
 not start classification or establish that real inference has been verified.
+
+## v0.2.0 import resource boundary
+
+The existing 25 MiB, 10,000-record and 20,000-text-character ceilings remain.
+JSON/JSONL/NDJSON support scalar-valued objects (strings, numbers, booleans, null);
+nested cells, duplicate keys and nonfinite numbers are rejected. Line formats and
+XLSX rows are streamed, preserving missing dates and original source hashes.
+
+Before decoding, one parser slot and a preview cache slot must be available. The
+parser is a fresh credential-free subprocess with a 30-second wall timeout,
+including output transfer. Linux Docker enforces a 512 MiB child address-space
+ceiling. Native macOS has timeout/structural limits but no claimed equivalent
+address-space enforcement; Docker is the supported bounded installation.
+
+Each retained Python preview graph and serialized child transfer is capped at
+64 MiB. Four previews expire after ten minutes; previews borrowed by validation
+or commit remain counted until the operation releases them. Workbook metadata
+entries are capped at 1 MiB; streamed XML is limited to two million elements and
+32 levels. Macros, external links, encrypted entries, formulas and XML entities
+remain unsupported. Combined resource ceilings can reject files below individual
+byte/row limits: split the file or remove columns. No truncation is performed.
+
+Busy admission returns a retryable HTTP 429. Other invalid/resource-limited imports
+return a safe validation error. The internal command envelope also has bounded
+structure and four admitted handlers; health remains separately available.

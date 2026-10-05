@@ -1049,7 +1049,10 @@ export function Workbench({
                   )}
                   {modelsState === 'error' && (
                     <p role="alert">
-                      {modelError}. Previously listed models are stale.
+                      {modelError.replace(/[.!?]$/, '')}.{' '}
+                      {models.length
+                        ? 'Previously listed models are stale.'
+                        : 'Refresh models to try again.'}
                     </p>
                   )}
                   {modelsState === 'empty' && (

@@ -66,8 +66,9 @@ up-to-25-record sample. Inspect before explicitly expanding to remaining records
 
 The settings screenshot uses a deterministic mock connection and makes no external
 request. Unknown effort capabilities use Provider default; available models and
-plan access depend on the actual account. Real-account classification verification
-remains pending. See the [Workbench guide](workbench.md) for persistence, billing,
+plan access depend on the actual account. Two existing owner-created 25-record
+ChatGPT samples completed for specific settings; no new paid run is part of the
+v0.2.0 verification. This does not establish every catalog model. See the [Workbench guide](workbench.md) for persistence, billing,
 privacy and interrupted-run boundaries.
 
 ## Phone layout
@@ -79,7 +80,9 @@ Inspection uses a modal sheet on phones and a nonmodal side panel on desktop.
 
 ## Capture notes
 
-Refreshed on 2026-10-02. Showcase images use the rebuilt local Docker application's
+The Workbench Results inspector image was refreshed on 2026-10-05 from the
+development-only dense synthetic fixture at 1440 × 1000. Other images were
+captured on 2026-10-02. Showcase images use the rebuilt local Docker application's
 recorded synthetic SemIf decisions at 1440 × 1000, with a 390 × 844 phone capture.
 Workbench images use the development-only deterministic 10,000-record Results
 fixture and mock model catalog, not uploaded user data or measured provider output.

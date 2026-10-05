@@ -118,3 +118,13 @@ uses rules with no credential connection or reasoning effort. Frontend checks an
 The v0.1.9 documentation correction restores this historical review after an
 accidental README duplication during the preceding checkpoint. Runtime behavior
 is unchanged.
+
+## v0.2.0 evidence addendum — 2026-10-05
+
+The earlier pending-admission statements above describe their original checkpoints.
+The current audit inspected existing owner-created ChatGPT run metadata: 25/25
+successes for gpt-5.6-luna at Low effort and 25/25 for gpt-5.6-sol at Provider
+default, with matching requested/returned model identities. No new inference or
+authorization was initiated. This is bounded configuration evidence, not universal
+model eligibility, model quality or hosted acceptance. Current release checks and
+limitations are in the [v0.2.0 review](v0.2.0-release-review.md).

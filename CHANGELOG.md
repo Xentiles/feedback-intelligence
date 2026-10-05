@@ -3,7 +3,7 @@
 The initial publication includes the privacy-boundary and CI repairs documented
 in [the pre-publication security review](docs/quality/security-review.md).
 
-## Unreleased — 0.2.0 workbench
+## 0.2.0 — 2026-10-05
 
 - Opt-in local upload workbench for CSV/XLSX/JSON/JSONL and pasted reviews.
 - Versioned topic templates, explainable keywords, durable run history,
@@ -12,7 +12,21 @@ in [the pre-publication security review](docs/quality/security-review.md).
   vault, ChatGPT OAuth and explicitly selected OpenAI API billing.
 - Dedicated deduplicated analytical projection and durable dataset purge.
 - Deterministic 10,000-record rules scenario alongside the frozen showcase.
-- Live ChatGPT admission and inference verification remain pending owner sign-in.
+- Unified Orbital Clarity floating navigation, accessible inspectors and dialogs,
+  populated filters, responsive UTC charts, automatic catalogs and reasoning effort.
+- Isolated, admitted upload parsing with structure, timeout, memory and preview limits.
+- Fixed pytest and optional model dependency overrides, with recorded compatibility.
+- Existing owner-created ChatGPT samples verify two 25-record local configurations;
+  they do not establish every model, human-gold quality or hosted readiness.
+- Updated documentation and a verified local archive of development checkpoints.
+
+### Compatibility and limits
+
+No new database migration or contract version. Existing datasets/runs and frozen
+benchmarks are preserved. Nested JSON cells, duplicate JSON keys and excessive
+parser resources now produce explicit validation errors. Human calibration, hosted
+authorization and legacy analytical follow-ups remain separate gates. Local
+checkpoints are preserved outside public branches; v0.1.0 remains immutable.
 
 ## 0.1.0 — 2026-09-20
 

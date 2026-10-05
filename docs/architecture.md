@@ -59,6 +59,17 @@ and safe nested daily counters. Comparison uses shared successes with compatible
 dataset/template/protocol identities; agreement is not accuracy. A dedicated purge
 role hides/cancels a deleted dataset then confirms removal across stores.
 
+Owner-selected imports pass through admitted, credential-free parser subprocesses,
+with streamed line/XLSX handling and bounded JSON structure, output and retained
+previews. Parsing shares neither provider credentials nor durable-worker state.
+Linux Docker enforces the child memory ceiling; native macOS has narrower
+resource guarantees. See the Workbench guide for exact limits.
+
+Separate PostgreSQL LOGINs enforce SQL capabilities, but the combined trusted
+worker holds API/worker/purge DSNs. Likewise the API reads both vault ciphertext
+and its installation keys. These are local at-rest and connection boundaries,
+not isolation from a compromised API, worker or OS owner.
+
 These are implemented local responsibilities, not hosted multi-user readiness.
 See the [Workbench guide](workbench.md) and dated quality reviews for evidence.
 

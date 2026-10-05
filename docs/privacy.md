@@ -120,3 +120,17 @@ Exports use prepared text by default and include cohort/run/template/model/effor
 provenance; exporting original text requires a separate local confirmation. Uploaded
 language/product/group metadata is never silently inferred. Local persistence is
 not backup, legal compliance, calibrated quality or hosted authorization.
+
+## v0.2.0 local installation authority
+
+Workbench provider credentials are encrypted in the server-side vault; the API
+process also holds the installation keys. Browser state, run payloads, exports and
+telemetry exclude provider tokens. Local sessions use HttpOnly/SameSite cookies,
+exact-origin mutation checks and CSRF. Parser children receive only bounded input
+and explicitly allowed environment settings, never provider or database secrets.
+
+Separate database LOGINs protect ordinary SQL operations. The trusted combined
+worker holds API, worker and purge credentials, so these are not separate OS
+security principals. Original-text confirmation is an explicit owner UI safeguard,
+not a separate server authorization identity. Uploaded data and results persist
+until durable deletion; a local backup remains the owner's responsibility.

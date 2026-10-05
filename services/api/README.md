@@ -11,8 +11,9 @@ contain opaque identities and catalog metadata, never provider credentials.
 The account catalog is dynamic, preserving model names/order and exposing optional
 supported reasoning efforts with their source. Run creation validates selected
 model/effort against the connection before persistence. ChatGPT plan usage and API
-billing remain separately selected. Real-account classification acceptance remains
-pending; CI uses mocked providers. See the [Workbench guide](../../docs/workbench.md)
+billing remain separately selected. Two existing owner-created 25-record ChatGPT samples completed successfully
+for specific model/effort settings; CI uses mocked providers. This does not establish
+universal model availability or hosted readiness. See the [Workbench guide](../../docs/workbench.md)
 for endpoints, runtime setup and local/hosted boundaries.
 
 ASP.NET Core .NET 10 API for Feedback Intelligence. It preserves the standard health endpoint, exposes a versioned read journey from metadata to immutable evidence, and provides an opt-in feedback ingestion boundary for private/local runtimes.

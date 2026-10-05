@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import http.cookiejar
 import json
+import os
 import time
 import urllib.error
 import urllib.request
@@ -12,7 +13,7 @@ from pathlib import Path
 from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
-ORIGIN = "http://localhost:8081"
+ORIGIN = os.environ.get("WORKBENCH_TEST_ORIGIN", "http://localhost:8081")
 
 
 def main() -> None:

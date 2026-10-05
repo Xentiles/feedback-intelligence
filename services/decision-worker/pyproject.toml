@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "feedback-intelligence-worker"
-version = "0.1.9"
+version = "0.2.0"
 description = "Decision-worker foundation for Feedback Intelligence"
 readme = "README.md"
 license = "Apache-2.0"
@@ -41,7 +41,7 @@ feedback-workbench = "feedback_intelligence_worker.workbench.server:main"
 [dependency-groups]
 dev = [
   "mypy==1.18.2",
-  "pytest==8.4.2",
+  "pytest==9.1.1",
   "ruff==0.13.2",
 ]
 
@@ -50,6 +50,11 @@ packages = ["src/feedback_intelligence_worker"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.uv]
+# Optional SemIf dependencies; these do not change frozen evaluation identities.
+# SemIf's historical torch==2.10.0 pin conflicts with the fixed-version floor.
+override-dependencies = ["accelerate>=1.15.0", "torch>=2.13.0"]
 
 [tool.mypy]
 python_version = "3.13"

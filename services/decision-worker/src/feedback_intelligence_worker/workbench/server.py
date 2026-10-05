@@ -13,6 +13,8 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -36,11 +38,35 @@ from feedback_intelligence_worker.workbench.analysis import (
     summarize,
     trends,
 )
-from feedback_intelligence_worker.workbench.imports import MAX_BYTES, parse_upload, validate_import
+from feedback_intelligence_worker.workbench.import_process import isolated_parse
+from feedback_intelligence_worker.workbench.imports import (
+    MAX_BYTES,
+    check_preview,
+    json_structure,
+    parse_upload,
+    validate_import,
+)
 from feedback_intelligence_worker.workbench.repository import Repository
 
 UPLOADS: dict[str, tuple[float, dict[str, Any]]] = {}
 UPLOAD_LOCK = threading.Lock()
+UPLOAD_READERS: dict[str, int] = {}
+UPLOAD_REMOVED: set[str] = set()
+PARSER_SLOT = threading.BoundedSemaphore(1)
+COMMAND_SLOTS = threading.BoundedSemaphore(4)
+
+
+class ImportBusy(Exception):
+    """Safe retryable admission failure, before expensive work."""
+
+
+def expire_uploads() -> None:
+    for key in list(UPLOADS):
+        if (UPLOADS[key][0] < time.monotonic() or key in UPLOAD_REMOVED) and not UPLOAD_READERS.get(
+            key
+        ):
+            del UPLOADS[key]
+            UPLOAD_REMOVED.discard(key)
 
 
 def environment(name: str) -> str:
@@ -79,31 +105,49 @@ def fetch_json(url: str, payload: dict[str, Any] | None = None) -> Any:
         raise openai.ProviderFailure("connection_unavailable", True) from None
 
 
-def upload(identity: str) -> dict[str, Any]:
+@contextmanager
+def borrowed_upload(identity: str) -> Iterator[dict[str, Any]]:
     with UPLOAD_LOCK:
+        expire_uploads()
         value = UPLOADS.get(identity)
-        if not value or value[0] < time.monotonic():
-            UPLOADS.pop(identity, None)
+        if not value or value[0] < time.monotonic() or identity in UPLOAD_REMOVED:
             raise ValueError("Upload preview expired; upload again")
-        return value[1]
+        UPLOAD_READERS[identity] = UPLOAD_READERS.get(identity, 0) + 1
+    try:
+        yield value[1]
+    finally:
+        with UPLOAD_LOCK:
+            UPLOAD_READERS[identity] -= 1
+            if not UPLOAD_READERS[identity]:
+                del UPLOAD_READERS[identity]
+            expire_uploads()
 
 
-def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[str]]) -> Any:
-    parts = path.strip("/").split("/")
-    if path == "/imports/preview" and method == "POST":
-        if len(str(data.get("content", ""))) > MAX_BYTES * 4 // 3 + 8:
-            raise ValueError("Upload exceeds 25 MiB")
-        content = base64.b64decode(data["content"], validate=True)
-        value = parse_upload(
-            content, str(data.get("filename", "feedback.txt")), int(data.get("sheet", 0))
-        )
+def preview_upload(data: dict[str, Any]) -> dict[str, Any]:
+    encoded = data.get("content")
+    filename = data.get("filename", "feedback.txt")
+    sheet = data.get("sheet", 0)
+    if not isinstance(encoded, str) or not isinstance(filename, str):
+        raise ValueError("Upload content and filename must be strings")
+    if len(filename) > 512 or not filename:
+        raise ValueError("Use a filename between 1 and 512 characters")
+    if isinstance(sheet, bool) or not isinstance(sheet, int) or sheet < 0:
+        raise ValueError("Select a non-negative sheet index")
+    if len(encoded) > MAX_BYTES * 4 // 3 + 8:
+        raise ValueError("Upload exceeds the configured byte limit")
+    if not PARSER_SLOT.acquire(blocking=False):
+        raise ImportBusy("Another upload is being parsed; retry when it finishes")
+    try:
+        with UPLOAD_LOCK:
+            expire_uploads()
+            if len(UPLOADS) >= 4:
+                raise ImportBusy("Finish an existing upload or wait for its ten-minute expiry")
+        # Single parser admission reserves the only possible new cache slot.
+        content = base64.b64decode(encoded, validate=True)
+        value = isolated_parse(content, filename, sheet)
+        check_preview(value)
         identity = str(uuid4())
         with UPLOAD_LOCK:
-            for key in list(UPLOADS):
-                if UPLOADS[key][0] < time.monotonic():
-                    del UPLOADS[key]
-            if len(UPLOADS) >= 4:
-                raise ValueError("Finish an existing upload or wait for its ten-minute expiry")
             UPLOADS[identity] = (time.monotonic() + 600, value)
         return {
             "uploadId": identity,
@@ -114,8 +158,13 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
             ],
             "total": len(value["rows"]),
         }
-    if path in ("/imports/validate", "/imports/commit") and method == "POST":
-        value = validate_import(upload(data["uploadId"]), data["options"])
+    finally:
+        PARSER_SLOT.release()
+
+
+def import_upload(path: str, data: dict[str, Any]) -> Any:
+    with borrowed_upload(data["uploadId"]) as source:
+        value = validate_import(source, data["options"])
         if path.endswith("validate"):
             prepared: list[dict[str, Any]] = []
             blocked = 0
@@ -138,8 +187,16 @@ def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[s
         with Repository(api_dsn()) as repository:
             result = repository.import_dataset(data["name"], value)
         with UPLOAD_LOCK:
-            UPLOADS.pop(data["uploadId"], None)
+            UPLOAD_REMOVED.add(data["uploadId"])
         return result
+
+
+def handle(method: str, path: str, data: dict[str, Any], query: dict[str, list[str]]) -> Any:
+    parts = path.strip("/").split("/")
+    if path == "/imports/preview" and method == "POST":
+        return preview_upload(data)
+    if path in ("/imports/validate", "/imports/commit") and method == "POST":
+        return import_upload(path, data)
     with Repository(api_dsn()) as repository:
         if path == "/datasets/demo" and method == "POST":
             generated = SyntheticDatasetGenerator(
@@ -422,11 +479,17 @@ class Handler(BaseHTTPRequestHandler):
         if not hmac.compare_digest(self.headers.get("Authorization", ""), expected):
             self.send_error(401)
             return
+        if not COMMAND_SLOTS.acquire(blocking=False):
+            self.reply(429, {"error": "Workbench is busy; retry shortly"})
+            self.close_connection = True
+            return
         try:
             size = int(self.headers.get("Content-Length", "0"))
             if not 0 < size <= 36 * 1024 * 1024:
                 raise ValueError("Request exceeds limit")
-            request = json.loads(self.rfile.read(size))
+            encoded = self.rfile.read(size).decode("utf-8")
+            json_structure(encoded)
+            request = json.loads(encoded)
             value = handle(
                 request["method"],
                 request["path"],
@@ -443,12 +506,16 @@ class Handler(BaseHTTPRequestHandler):
                     else "Invalid request fields"
                 },
             )
+        except ImportBusy as error:
+            self.reply(429, {"error": str(error)})
         except LookupError:
             self.reply(404, {"error": "Resource not found"})
         except openai.ProviderFailure as error:
             self.reply(409, {"error": error.code})
         except Exception:
             self.reply(503, {"error": "Workbench temporarily unavailable"})
+        finally:
+            COMMAND_SLOTS.release()
 
     def reply(self, status: int, value: Any) -> None:
         content = json.dumps(value, default=str, ensure_ascii=False).encode()

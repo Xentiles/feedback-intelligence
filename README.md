@@ -7,7 +7,7 @@ keyword rules or an explicitly connected OpenAI account, and inspect the records
 behind each distribution and trend. The recorded showcase remains available
 without credentials.
 
-Development checkpoint **v0.1.9**, toward v0.2.0. The published **v0.1.0** source
+Interactive local Workbench **v0.2.0**. The published **v0.1.0** source
 release remains unchanged. Local workflow safeguards are implemented and tested;
 hosted multi-user operation and human-calibrated model quality remain later work.
 
@@ -57,13 +57,17 @@ larger cohorts and filtering; it does not expand the frozen model benchmark.
 | Showcase | Overview → Signal Explorer → contributing records → immutable decision evidence; selectable recorded methods and frozen evaluations | No credentials; synthetic data. Live analytical eligibility remains calibration-gated. |
 | Datasets | CSV/TSV, XLSX, JSON arrays, JSONL and pasted lines; sheet selection, mapping, preview, validation and explicit import | Local owner session. Limits: 25 MiB, 10,000 records, 20,000 characters per text; no silent truncation. Missing dates remain missing. |
 | Classification | General/retail templates, editable topics and keywords, immutable revisions, deterministic priority and match explanations | Free local rules. Built-in sentiment supports English/Swedish; unsupported languages return unavailable sentiment. |
-| Connections | ChatGPT sign-in or separately selected API-key billing; account-specific model discovery and automatic refresh | GPT-6/GPT-6.1 and future models appear when listed for that account. Real-account classification verification remains pending. |
+| Connections | ChatGPT sign-in or separately selected API-key billing; account-specific model discovery and automatic refresh | GPT-6/GPT-6.1 and future models appear when listed for that account. Two existing 25-record ChatGPT samples succeeded; availability remains account-specific. |
 | Model controls | Model-specific reasoning effort, Provider default, supported Low/Medium/High/Extra high/Max and None where available | Capability-aware choices; unknown capabilities use provider defaults. No silent model or billing fallback. |
 | Runs | Representative AI samples up to 25 records, explicit expansion, saved settings, durable partial results, cancel/resume and local history | AI requires connection, prepared-text preview and consent. Interrupted requests can consume additional usage when retried. |
 | Results | Coverage, topic/sentiment distributions, ratings, UTC volume, exploratory trends, run-wide filter menus, missing-value filters and pagination | Descriptive/exploratory analysis; missing coverage is unknown. Imported language/product/group metadata is not automatically inferred. |
 | Inspection | Hover/focus previews, pinned detail panels, phone sheets, explicit period/category drill-down and per-record provenance | Counts, denominators, rule matches, redactions and available metadata remain inspectable. |
 | Comparison | Shared-successful-record agreement for compatible dataset/template/protocol snapshots; model and effort shown | Whole-run comparison, independent of Explore filters. Accuracy/F1 require reference labels; agreement is not accuracy. |
 | Export & deletion | Filtered CSV/JSON with provenance; local dataset deletion with durable purge | Prepared text by default; original text requires confirmation. Deletion completes only after operational and analytical stores confirm purge. |
+
+Imports also have parser time, memory and retained-preview budgets. JSON cells must
+be scalar values; nested objects/arrays, ambiguous keys and excessive structures
+are rejected with an actionable error. See the [import limits](docs/workbench.md).
 
 ## A usable workflow
 
@@ -109,7 +113,8 @@ privacy layer, not a guarantee that arbitrary personal data is safe to send.
 ![Recorded showcase and opt-in local Workbench architecture](docs/assets/architecture.svg)
 
 See [architecture](docs/architecture.md), [ADRs](docs/adr/README.md),
-[privacy boundaries](docs/privacy.md) and [verification evidence](docs/quality/model-controls-review.md).
+[privacy boundaries](docs/privacy.md) and [v0.2.0 verification](docs/quality/v0.2.0-release-review.md) and
+[historical model-control evidence](docs/quality/model-controls-review.md).
 
 ## Recorded comparison
 
@@ -122,6 +127,10 @@ See [architecture](docs/architecture.md), [ADRs](docs/adr/README.md),
 
 Agreement with the Sol-medium AI reference on synthetic feedback; **not human gold**. The 192-record LLM subset is not directly comparable to the complete 480-record runs. Rules benefit from template repetition. Local costs exclude hardware and electricity; OpenAI spend is owner-reported. The estimated full LLM run is $0.98, not additional measured spend.
 <!-- benchmark:end -->
+
+The AI reference includes template-assisted label construction. Retained pass files
+prove reproducible assembly, not independently logged per-record provider requests.
+See the [reference construction](evaluation/ai-reference/README.md).
 
 See the [generated benchmark](docs/benchmark.md) for provenance and the
 [model card](MODEL_CARD.md) for intended use and limitations.
@@ -399,8 +408,8 @@ See [privacy boundaries](docs/privacy.md) and [security reporting](SECURITY.md).
 
 ## Next milestones
 
-1. Complete owner-initiated real ChatGPT sign-in/classification acceptance and
-   broader browser/accessibility review; mocked CI does not establish provider admission.
+1. Broaden browser/accessibility and model-configuration coverage. Existing owner-created
+   samples verify specific local connections; mocked CI does not establish all provider admission.
 2. Complete human annotation, adjudication, calibration and locked-test scoring.
    Keep exploratory AI-reference agreement separate from human-validated quality.
 3. Evaluate hosted multi-user boundaries, deployment credentials, TLS, backups,
