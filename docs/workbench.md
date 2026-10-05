@@ -195,3 +195,16 @@ tests alone do not establish real account admission.
 
 See the [v0.1.5 Results review](quality/results-inspection-review.md) for browser,
 recovery, filtering and compatibility evidence and its limitations.
+
+## Expired or revoked ChatGPT sessions
+
+If OpenAI rejects renewal with a terminal code such as `invalid_grant`, the model
+picker stays disabled and offers **Reconnect ChatGPT account**. Open Connections
+and reconnect the existing account; the saved registration/client ID is reused.
+Only unusable access/refresh tokens are cleared. Account identity, registration,
+datasets and completed results remain. Temporary provider failures preserve
+credentials and allow retry; no fallback to API billing occurs.
+
+The app displays only allow-listed error codes and app-owned recovery text. Provider
+response bodies and credentials remain outside UI diagnostics. Reconnecting does
+not start classification or establish that real inference has been verified.

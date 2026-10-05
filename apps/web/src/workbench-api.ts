@@ -52,6 +52,7 @@ export type ModelOption = {
 export type Connection = {
   id: string
   mode: 'api' | 'chatgpt'
+  reconnectRequired?: boolean
   label: string
   planEnabled: boolean
 }
@@ -193,10 +194,12 @@ export type TrendResult = {
 let csrf = ''
 export class WorkbenchError extends Error {
   readonly status: number
-  constructor(message: string, status: number) {
+  readonly reconnectRequired: boolean
+  constructor(message: string, status: number, reconnectRequired = false) {
     super(message)
     this.name = 'WorkbenchError'
     this.status = status
+    this.reconnectRequired = reconnectRequired
   }
 }
 export function setWorkbenchCsrf(value: string) {
@@ -221,12 +224,14 @@ export async function workbench<T>(
     const error = (await response.json().catch(() => ({}))) as {
       error?: string
       detail?: string
+      reconnectRequired?: boolean
     }
     throw new WorkbenchError(
       error.error ??
         error.detail ??
         `Request failed (${response.status}). Unlock the workspace or check the runtime.`,
       response.status,
+      error.reconnectRequired === true,
     )
   }
   return response.json() as Promise<T>

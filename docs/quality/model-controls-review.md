@@ -83,3 +83,20 @@ checks do not establish real provider admission or quality of newly available mo
 Remote CI evidence is linked from the updated draft PR. Real-account classification
 verification remains pending by the owner's documentation choice. Hosted operation,
 human calibration and release promotion remain independent acceptance gates.
+
+## Authentication recovery — v0.1.7, 2026-10-05
+
+The live local picker failure was traced to HTTP 400 `invalid_grant` during
+ChatGPT token renewal, before the model catalog request or inference. The app now
+returns a safe recovery code/message, offers a direct path to the existing account's
+Reconnect control, and records a terminal reconnect requirement. Unusable tokens
+are cleared while the issued client ID and account identity are retained. Temporary
+failures preserve tokens; API billing is never selected automatically.
+
+Mock regressions cover terminal vs temporary failures, no provider-description
+canary in diagnostics, no repeated renewal of invalid tokens, saved-registration
+reuse, successful reauthorization, and disabled processing with the reconnect path.
+Restoring this particular live catalog requires owner-completed reconnection; no
+classification request was made during diagnosis.
+
+Checkpoint checks: frontend format/lint/types/build and 105 tests pass; API format/Release build and 64 tests pass (one optional database test skipped); 143 worker tests pass. Frozen benchmark and publication checks remain unchanged.

@@ -667,6 +667,20 @@ export function Workbench({
                             {models.length > 0 &&
                               'Previously listed models are stale; refresh before starting AI processing.'}
                           </p>
+                          {catalog.reconnectRequired && (
+                            <div className="wb-actions">
+                              <button
+                                className="button--primary"
+                                onClick={() => setView('Connections')}
+                              >
+                                {connections.find(
+                                  (row) => row.id === connectionId,
+                                )?.mode === 'chatgpt'
+                                  ? 'Reconnect ChatGPT account'
+                                  : 'Manage API connection'}
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                       {modelsState === 'empty' && (
@@ -1117,9 +1131,11 @@ export function Workbench({
                         {c.label} ·{' '}
                         {c.mode === 'api'
                           ? 'API billing'
-                          : c.planEnabled
-                            ? 'Using ChatGPT plan'
-                            : 'Plan permission disabled'}
+                          : c.reconnectRequired
+                            ? 'ChatGPT plan · reconnect required'
+                            : c.planEnabled
+                              ? 'Using ChatGPT plan'
+                              : 'Plan permission disabled'}
                       </span>
                       {c.mode === 'chatgpt' && (
                         <button

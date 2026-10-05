@@ -21,7 +21,7 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
     private sealed record Attempt(string Nonce, string Verifier, string? ConnectionId, DateTimeOffset Expires);
 
     public sealed record Profile(string Id, string Mode, string Label, string? Subject, string? ClientId,
-        string AccessToken, string? RefreshToken, string? IdToken, string Scope, DateTimeOffset Expires);
+        string AccessToken, string? RefreshToken, string? IdToken, string Scope, DateTimeOffset Expires, bool ReconnectRequired = false);
 
     public static string Random() => WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(32));
     public static bool Equal(string left, string right) => CryptographicOperations.FixedTimeEquals(SHA256.HashData(Encoding.UTF8.GetBytes(left)), SHA256.HashData(Encoding.UTF8.GetBytes(right)));
@@ -44,7 +44,7 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
     {
         if (!Directory.Exists(_directory)) return [];
         return Directory.GetFiles(_directory, "*.credential").Select(path => Read(Path.GetFileNameWithoutExtension(path)))
-            .Select(p => (object)new { id = p.Id, mode = p.Mode, label = p.Label, planEnabled = p.Mode == "chatgpt" && p.Scope.Split(' ').Contains("chatgpt.tokens.use.direct") }).ToArray();
+            .Select(p => (object)new { id = p.Id, mode = p.Mode, label = p.Label, reconnectRequired = p.ReconnectRequired, planEnabled = p.Mode == "chatgpt" && p.Scope.Split(' ').Contains("chatgpt.tokens.use.direct") }).ToArray();
     }
 
     public async Task<object> ApiKey(string key, string label)
@@ -128,6 +128,7 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
             {
                 Label = identity.Email + " · " + clientId[^6..],
                 Subject = identity.Subject,
+                ReconnectRequired = false,
                 AccessToken = data.TryGetProperty("access_token", out var access) ? access.GetString() ?? "" : "",
                 RefreshToken = data.TryGetProperty("refresh_token", out var refresh) ? refresh.GetString() : null,
                 IdToken = data.GetProperty("id_token").GetString(),
@@ -176,7 +177,22 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
     private async Task<JsonElement> Token(Dictionary<string, string> fields)
     {
         using var response = await _http.PostAsync(Issuer + "/api/accounts/oauth/token", new FormUrlEncodedContent(fields));
-        if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"Connection renewal or sign-in failed (HTTP {(int)response.StatusCode}); reconnect if needed");
+        if (!response.IsSuccessStatusCode)
+        {
+            var code = "unknown";
+            try
+            {
+                var failure = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+                if (failure.TryGetProperty("error", out var error))
+                {
+                    var value = error.ValueKind == JsonValueKind.String ? error.GetString() : error.ValueKind == JsonValueKind.Object && error.TryGetProperty("code", out var nested) && nested.ValueKind == JsonValueKind.String ? nested.GetString() : null;
+                    if (value is "invalid_grant" or "invalid_client" or "invalid_request" or "invalid_target" or "invalid_refresh_token" or "token_expired" or "refresh_token_expired" or "refresh_token_invalidated" or "refresh_token_reused") code = value;
+                }
+            }
+            catch (JsonException) { }
+            var reconnect = code is "invalid_grant" or "invalid_refresh_token" or "token_expired" or "refresh_token_expired" or "refresh_token_invalidated" or "refresh_token_reused";
+            throw new ConnectionFailureException("connection_renewal_" + code, $"OpenAI connection renewal failed (HTTP {(int)response.StatusCode}; {code}). " + (reconnect ? "Reconnect this account in Connections." : "Check the connection configuration or retry a temporary failure."), reconnect);
+        }
         return JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement.Clone();
     }
 
@@ -186,11 +202,21 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
         try
         {
             var profile = Read(id);
+            if (profile.ReconnectRequired) throw new ConnectionFailureException("reconnect_required", "The saved ChatGPT session cannot be renewed. Reconnect this account in Connections.", true);
             if (profile.Mode == "chatgpt" && !profile.Scope.Split(' ').Contains("chatgpt.tokens.use.direct")) throw new InvalidOperationException("ChatGPT plan usage permission is not enabled");
             if (profile.Mode == "chatgpt" && profile.Expires < DateTimeOffset.UtcNow.AddMinutes(1))
             {
-                if (profile.RefreshToken is null) throw new InvalidOperationException("Reconnect your ChatGPT account");
-                var data = await Token(new() { ["grant_type"] = "refresh_token", ["client_id"] = profile.ClientId!, ["refresh_token"] = profile.RefreshToken, ["resource"] = Resource });
+                if (profile.RefreshToken is null) throw new ConnectionFailureException("reconnect_required", "Reconnect your ChatGPT account in Connections.", true);
+                JsonElement data;
+                try
+                {
+                    data = await Token(new() { ["grant_type"] = "refresh_token", ["client_id"] = profile.ClientId!, ["refresh_token"] = profile.RefreshToken, ["resource"] = Resource });
+                }
+                catch (ConnectionFailureException error) when (error.Reconnect)
+                {
+                    Save(profile with { AccessToken = "", RefreshToken = null, Expires = DateTimeOffset.MinValue, ReconnectRequired = true });
+                    throw;
+                }
                 profile = profile with
                 {
                     AccessToken = data.GetProperty("access_token").GetString()!,
@@ -212,8 +238,9 @@ public sealed class Connections(IDataProtectionProvider protection, IConfigurati
         using var request = new HttpRequestMessage(HttpMethod.Get, Resource + "/models");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", profile.AccessToken);
         using var response = await _http.SendAsync(request);
-        if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"Model catalog unavailable (HTTP {(int)response.StatusCode})");
+        if (!response.IsSuccessStatusCode) throw new ConnectionFailureException("catalog_unavailable", $"OpenAI model catalog is unavailable (HTTP {(int)response.StatusCode}). " + (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ? "Reconnect this account in Connections." : response.StatusCode == System.Net.HttpStatusCode.Forbidden ? "Check this account's permissions and eligibility in Connections." : "Try Refresh models again shortly."), response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
         var data = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+        if (profile.Mode == "chatgpt" && !data.TryGetProperty("models", out _)) throw new ConnectionFailureException("catalog_format", "OpenAI returned a model catalog format the local runtime could not read.");
         if (profile.Mode == "chatgpt") return data.GetProperty("models").EnumerateArray().Where(m => m.GetProperty("visibility").GetString() == "list")
             .Select(m => ModelCapabilities.Describe(m.GetProperty("slug").GetString()!, m.GetProperty("display_name").GetString()!, m)).ToArray();
         return data.GetProperty("data").EnumerateArray().Where(m =>

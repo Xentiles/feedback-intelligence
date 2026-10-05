@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { type ModelOption, type workbench } from './workbench-api'
+import {
+  WorkbenchError,
+  type ModelOption,
+  type workbench,
+} from './workbench-api'
 
 type Catalog = {
   connection: string
@@ -10,6 +14,7 @@ type Catalog = {
   model: string
   effort: string
   loaded: boolean
+  reconnectRequired: boolean
 }
 const initial = (connection = ''): Catalog => ({
   connection,
@@ -20,6 +25,7 @@ const initial = (connection = ''): Catalog => ({
   model: '',
   effort: '',
   loaded: false,
+  reconnectRequired: false,
 })
 
 export function useModelCatalog(
@@ -69,6 +75,7 @@ export function useModelCatalog(
             model,
             effort: model === prior.model ? prior.effort : '',
             loaded: true,
+            reconnectRequired: false,
             status: models.length ? 'ready' : 'empty',
             error: '',
             refreshedAt: lastRefresh.current,
@@ -79,6 +86,8 @@ export function useModelCatalog(
           setCatalog((current) => ({
             ...current,
             status: 'error',
+            reconnectRequired:
+              error instanceof WorkbenchError && error.reconnectRequired,
             error:
               error instanceof Error
                 ? error.message

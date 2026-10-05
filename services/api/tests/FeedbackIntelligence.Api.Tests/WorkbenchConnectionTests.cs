@@ -57,13 +57,61 @@ public sealed class WorkbenchConnectionTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => connections.Complete(new QueryCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues> { ["state"] = "wrong-state" })));
     }
 
+    [Theory]
+    [InlineData(HttpStatusCode.BadRequest, "invalid_grant", true)]
+    [InlineData(HttpStatusCode.ServiceUnavailable, "unavailable", false)]
+    public async Task RenewalFailuresExposeSafeRecoveryAndOnlyInvalidateTerminalCredentials(HttpStatusCode status, string code, bool terminal)
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "workbench-renewal-" + Guid.NewGuid());
+        using var handler = new FakeOpenAi { Lifetime = -1, RefreshFailure = status, RefreshCode = code };
+        var protection = DataProtectionProvider.Create(new DirectoryInfo(Path.Combine(directory, "keys")));
+        var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?> { ["Workbench:VaultPath"] = directory }).Build();
+        using var connections = new Connections(protection, config, handler);
+        var start = JsonSerializer.SerializeToElement(await connections.Start(null));
+        var query = QueryHelpers.ParseQuery(new Uri(start.GetProperty("url").GetString()!).Query);
+        handler.Nonce = query["nonce"].ToString();
+        await connections.Complete(new QueryCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues> { ["state"] = query["state"], ["client_id"] = "oaiapp_test", ["code"] = "code" }));
+        var identity = JsonSerializer.SerializeToElement(connections.List())[0].GetProperty("id").GetString()!;
+        var failure = await Assert.ThrowsAsync<ConnectionFailureException>(() => connections.Models(identity));
+        Assert.Equal(terminal, failure.Reconnect);
+        Assert.DoesNotContain("provider-secret-canary", failure.Message);
+        var saved = JsonSerializer.Deserialize<Connections.Profile>(protection.CreateProtector("workbench.credentials.v1").Unprotect(File.ReadAllText(Path.Combine(directory, identity + ".credential"))))!;
+        Assert.Equal("oaiapp_test", saved.ClientId);
+        Assert.Equal(terminal, saved.ReconnectRequired);
+        Assert.Equal(terminal ? "" : "access-secret", saved.AccessToken);
+        Assert.Equal(terminal ? null : "refresh-secret", saved.RefreshToken);
+        if (terminal)
+        {
+            await Assert.ThrowsAsync<ConnectionFailureException>(() => connections.Models(identity));
+            Assert.Equal(1, handler.RefreshCalls);
+            var reconnect = JsonSerializer.SerializeToElement(await connections.Start(identity));
+            Assert.Equal("oaiapp_test", QueryHelpers.ParseQuery(new Uri(reconnect.GetProperty("url").GetString()!).Query)["client_id"]);
+            handler.RefreshFailure = null;
+            handler.Lifetime = 3600;
+            var again = QueryHelpers.ParseQuery(new Uri(reconnect.GetProperty("url").GetString()!).Query);
+            handler.Nonce = again["nonce"].ToString();
+            await connections.Complete(new QueryCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues> { ["state"] = again["state"], ["code"] = "new-code" }));
+            Assert.Equal("access-secret", await connections.Credential(identity));
+            Assert.NotEmpty(await connections.Models(identity));
+        }
+    }
+
     private sealed class FakeOpenAi : HttpMessageHandler
     {
         private readonly RSA _rsa = RSA.Create(2048);
+        public int Lifetime { get; set; } = 3600;
+        public HttpStatusCode? RefreshFailure { get; set; }
+        public string RefreshCode { get; set; } = "invalid_grant";
+        public int RefreshCalls { get; private set; }
         public string Nonce { get; set; } = "";
         public string Scope { get; set; } = "openid profile email offline_access resource.invoke chatgpt.tokens.use.direct";
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            if (request.Content is not null && request.Content.ReadAsStringAsync(cancellationToken).GetAwaiter().GetResult().Contains("grant_type=refresh_token", StringComparison.Ordinal))
+            {
+                RefreshCalls++;
+                if (RefreshFailure is not null) return Task.FromResult(new HttpResponseMessage(RefreshFailure.Value) { Content = new StringContent(JsonSerializer.Serialize(new { error = RefreshCode, error_description = "provider-secret-canary" })) });
+            }
             object response;
             var path = request.RequestUri!.AbsolutePath;
             if (path.EndsWith("jwks.json", StringComparison.Ordinal))
@@ -79,7 +127,7 @@ public sealed class WorkbenchConnectionTests
                 var header = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { alg = "RS256", kid = "key" })));
                 var payload = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { iss = "https://auth.openai.com", aud = "oaiapp_test", nonce = Nonce, sub = "owner", email = "owner@example.test", exp = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds(), iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds() })));
                 var signature = WebEncoders.Base64UrlEncode(_rsa.SignData(Encoding.ASCII.GetBytes(header + "." + payload), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
-                response = new { access_token = "access-secret", refresh_token = "refresh-secret", id_token = header + "." + payload + "." + signature, scope = Scope, expires_in = 3600 };
+                response = new { access_token = "access-secret", refresh_token = "refresh-secret", id_token = header + "." + payload + "." + signature, scope = Scope, expires_in = Lifetime };
             }
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonSerializer.Serialize(response), Encoding.UTF8, "application/json") });
         }

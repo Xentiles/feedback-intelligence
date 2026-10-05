@@ -88,6 +88,10 @@ public static class WorkbenchEndpoints
                 using var response = await clients.CreateClient("workbench").SendAsync(request, context.RequestAborted);
                 return Results.Content(await response.Content.ReadAsStringAsync(context.RequestAborted), "application/json", statusCode: (int)response.StatusCode);
             }
+            catch (ConnectionFailureException error)
+            {
+                return Results.Json(new { error = error.Message, code = error.Code, reconnectRequired = error.Reconnect }, statusCode: 400);
+            }
             catch (Exception error) when (error is InvalidOperationException or FormatException or JsonException or KeyNotFoundException or IOException or HttpRequestException)
             {
                 return Results.Problem(statusCode: 400, title: "Workbench request could not complete", detail: "Check your connection, request fields and local runtime; reconnect if necessary.");

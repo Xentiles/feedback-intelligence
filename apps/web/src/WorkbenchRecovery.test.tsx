@@ -10,7 +10,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 import { Workbench } from './Workbench'
 import { visualDashboard, visualWorkbench } from './visual-fixtures'
-import type { Connection, workbench } from './workbench-api'
+import {
+  WorkbenchError,
+  type Connection,
+  type workbench,
+} from './workbench-api'
 
 afterEach(() => {
   cleanup()
@@ -202,6 +206,41 @@ describe('workbench recovery and prerequisites', () => {
       ),
     )
     expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('explains a terminal ChatGPT renewal failure and opens Connections without enabling processing', async () => {
+    const ready = visualWorkbench()
+    const client: typeof workbench = async <T,>(
+      path: string,
+      body?: unknown,
+      method?: string,
+      signal?: AbortSignal,
+    ) => {
+      if (path.includes('/models'))
+        throw new WorkbenchError(
+          'The saved ChatGPT session cannot be renewed. Reconnect this account in Connections.',
+          400,
+          true,
+        )
+      return ready<T>(path, body, method, signal)
+    }
+    mountApp(client)
+    const sample = await chooseAI()
+    fireEvent.change(screen.getByRole('combobox', { name: 'Connection' }), {
+      target: { value: 'connection' },
+    })
+    const reconnect = await screen.findByRole('button', {
+      name: 'Reconnect ChatGPT account',
+    })
+    expect(sample).toBeDisabled()
+    expect(
+      screen.getByRole('combobox', { name: 'Available model' }),
+    ).toBeDisabled()
+    fireEvent.click(reconnect)
+    await screen.findByRole('heading', { name: 'Connections', level: 1 })
+    expect(
+      screen.getByRole('button', { name: /Reconnect Demonstration account/ }),
+    ).toBeInTheDocument()
   })
 
   it.each(['models-error', 'models-empty'] as const)(
