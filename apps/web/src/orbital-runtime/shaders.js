@@ -1,4 +1,4 @@
-/* Orbital Clarity: shared, approved fluid-sand equations. */
+/* Orbital Clarity: shared, approved fluid-sand equations, tinted for the v0.5 Charcoal palette. */
 export const vertex = `#version 300 es
 in vec2 a; void main(){ gl_Position=vec4(a,0.,1.); }`
 export const fragment = `#version 300 es
@@ -51,5 +51,6 @@ void main(){
   vec2 q3=vec2(q.x*12./13.+q.y*5./13.,-q.x*5./13.+q.y*12./13.)*2.27+71.;
   float fine=(grainNoise(q,11u)+grainNoise(q2,137u)+grainNoise(q3,719u)-1.5)*9.;
   float value=clamp(44.+intensity*(dunes+fine),24.,60.);
-  color=vec4(vec3(value/255.),1.);
+  // v0.5 Charcoal: the same field, warmed so the mid tone lands on charcoal #221e1a.
+  color=vec4((vec3(value)-vec3(10.,14.,18.))/255.,1.);
 }`

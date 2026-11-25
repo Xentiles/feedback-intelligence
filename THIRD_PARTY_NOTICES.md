@@ -7,6 +7,11 @@ Inter (The Inter Project Authors) and IBM Plex Mono (IBM Corp., reserved name
 retain SIL Open Font License 1.1 terms. Copies are included in
 `LICENSES/Inter-OFL-1.1.txt` and `LICENSES/Plex-OFL-1.1.txt`.
 
+Libron (Nico Verbruggen, reserved font name "Libron") is the display face for
+headings. The official, unmodified WOFF2 files are self-hosted in
+`apps/web/public/fonts/libron/` under SIL Open Font License 1.1, with the license
+in `apps/web/public/fonts/libron/OFL.txt`.
+
 This file identifies material that is not relicensed by the repository's
 Apache-2.0 and CC BY 4.0 grants. It is an inventory aid, not a substitute for the
 applicable terms.

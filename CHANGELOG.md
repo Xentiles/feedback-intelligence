@@ -3,6 +3,19 @@
 The initial publication includes the privacy-boundary and CI repairs documented
 in [the pre-publication security review](docs/quality/security-review.md).
 
+## Unreleased — visual refresh
+
+- Orbital Clarity v0.5 Charcoal palette: warm charcoal and walnut surfaces replace
+  the deep-space blue, with paper text and a leaf-orange accent.
+- Self-hosted Libron display face (SIL OFL 1.1, official unmodified files) for
+  headings and legends; Inter and IBM Plex Mono remain for body text and data.
+- Warmed animated sand background and its still poster.
+- Recaptured README and walkthrough screenshots with the new styling.
+
+### Compatibility and limits
+
+Presentation only: no functional, API, contract, data or benchmark changes.
+
 ## 0.2.0 — 2026-10-05
 
 - Opt-in local upload workbench for CSV/XLSX/JSON/JSONL and pasted reviews.
