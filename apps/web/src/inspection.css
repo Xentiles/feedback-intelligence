@@ -8,7 +8,7 @@
   min-height: 44px;
   max-width: 100%;
   background: transparent;
-  color: var(--oc-platinum);
+  color: var(--oc-paper);
   border: 0;
   border-radius: 4px;
   padding: 8px 4px;
@@ -18,7 +18,7 @@
 }
 .inspection-value:hover,
 .wb-shell button.inspection-value:hover {
-  background: var(--oc-deep-space-blue, #28384e);
+  background: var(--oc-walnut, #28384e);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -28,7 +28,7 @@
   min-width: 0;
   padding: 8px 4px;
   background: transparent;
-  color: var(--oc-platinum);
+  color: var(--oc-paper);
   border: 0;
   text-align: left;
   overflow-wrap: anywhere;
@@ -49,7 +49,7 @@
   min-width: 0;
   padding: 12px;
   background: transparent;
-  color: var(--oc-platinum);
+  color: var(--oc-paper);
   border: 1px solid var(--oc-border-divider);
   text-align: left;
   white-space: normal;
@@ -57,7 +57,7 @@
 }
 .wb-shell button.metric-inspect:hover,
 .wb-shell button.result-inspect-row:hover {
-  background: var(--oc-deep-space-blue);
+  background: var(--oc-walnut);
 }
 .wb-shell button.wb-distribution {
   display: grid;
@@ -83,9 +83,9 @@
 }
 .inspection-preview,
 .inspection-panel {
-  background: var(--oc-gunmetal);
-  color: var(--oc-platinum);
-  border: 1px solid var(--oc-platinum);
+  background: var(--oc-charcoal-raised);
+  color: var(--oc-paper);
+  border: 1px solid var(--oc-paper);
   border-radius: 8px;
   overflow-wrap: anywhere;
 }
@@ -171,7 +171,7 @@
   margin: auto;
 }
 .inspection-dialog::backdrop {
-  background: rgb(44 44 44 / 85%);
+  background: rgb(34 30 26 / 85%);
 }
 .wb-volume-chart {
   min-width: 0;
@@ -193,26 +193,26 @@
   overflow: hidden;
 }
 .wb-volume-chart__grid {
-  stroke: var(--oc-platinum);
+  stroke: var(--oc-paper);
   opacity: 0.18;
 }
 .wb-volume-chart text {
-  fill: var(--oc-platinum);
+  fill: var(--oc-paper);
   font:
     12px 'IBM Plex Mono',
     monospace;
 }
 .wb-volume-chart__bar {
-  fill: var(--oc-autumn-leaf);
+  fill: var(--oc-leaf);
 }
 .wb-volume-chart__gap {
-  stroke: var(--oc-platinum);
+  stroke: var(--oc-paper);
   stroke-width: 1;
   stroke-dasharray: 3 3;
   fill: none;
 }
 .wb-volume-chart__selection {
-  stroke: var(--oc-platinum);
+  stroke: var(--oc-paper);
   stroke-width: 2;
   fill: none;
 }

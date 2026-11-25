@@ -11,7 +11,7 @@ Interactive local Workbench **v0.2.0**. The published **v0.1.0** source
 release remains unchanged. Local workflow safeguards are implemented and tested;
 hosted multi-user operation and human-calibrated model quality remain later work.
 
-![Current synthetic showcase in the Orbital Clarity interface](docs/assets/dashboard.jpg)
+![Current synthetic showcase in the Orbital Clarity v0.5 Charcoal interface](docs/assets/dashboard.jpg)
 
 [Interactive workbench guide](docs/workbench.md) · [Demo walkthrough](docs/demo-walkthrough.md) ·
 [Architecture](docs/architecture.md) · [Benchmark](docs/benchmark.md) ·

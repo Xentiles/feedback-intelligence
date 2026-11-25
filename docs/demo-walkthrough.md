@@ -1,6 +1,7 @@
 # A short tour of Feedback Intelligence
 
-Two local entry points share the current Orbital Clarity interface:
+Two local entry points share the current Orbital Clarity v0.5 Charcoal interface
+(warm charcoal surfaces, Libron headings and leaf-orange accents):
 
 - `docker compose up --build` → [localhost:8080](http://localhost:8080): the
   recorded no-key showcase.
@@ -80,9 +81,9 @@ Inspection uses a modal sheet on phones and a nonmodal side panel on desktop.
 
 ## Capture notes
 
-The Workbench Results inspector image was refreshed on 2026-10-05 from the
-development-only dense synthetic fixture at 1440 × 1000. Other images were
-captured on 2026-10-02. Showcase images use the rebuilt local Docker application's
+All seven interface images were recaptured on 2026-11-25 for the Orbital Clarity
+v0.5 Charcoal visual refresh, keeping the earlier content, panels and framing.
+Showcase images use the rebuilt local Docker application's
 recorded synthetic SemIf decisions at 1440 × 1000, with a 390 × 844 phone capture.
 Workbench images use the development-only deterministic 10,000-record Results
 fixture and mock model catalog, not uploaded user data or measured provider output.

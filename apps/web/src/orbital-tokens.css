@@ -1,19 +1,35 @@
-/* Orbital Clarity v0.4: approved palette and semantic roles. */
+/* Orbital Clarity v0.5, Charcoal theme: warm paper on charcoal, walnut for selection, leaf orange as the one accent.
+   Libron by Nico Verbruggen (SIL Open Font License 1.1, Reserved Font Name "Libron"), official files, unmodified:
+   public/fonts/libron/OFL.txt */
+@font-face {
+  font-family: 'Libron';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/libron/Libron-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Libron';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/libron/Libron-Bold.woff2') format('woff2');
+}
 :root {
   color-scheme: dark;
-  --oc-graphite: #2c2c2c;
-  --oc-gunmetal: #404040;
-  --oc-deep-space-blue: #28384e;
-  --oc-autumn-leaf: #e86823;
-  --oc-platinum: #edf0f5;
-  --oc-surface-primary: var(--oc-graphite);
-  --oc-surface-secondary: var(--oc-gunmetal);
-  --oc-surface-complementary: var(--oc-deep-space-blue);
-  --oc-text-primary: var(--oc-platinum);
-  --oc-text-inverse: var(--oc-gunmetal);
-  --oc-accent: var(--oc-autumn-leaf);
-  --oc-border-control: var(--oc-platinum);
-  --oc-border-divider: rgb(237 240 245 / 16%);
+  --oc-charcoal: #221e1a;
+  --oc-charcoal-raised: #2c2723;
+  --oc-walnut: #3a2e25;
+  --oc-leaf: #e86823;
+  --oc-paper: #efe8dc;
+  --oc-surface-primary: var(--oc-charcoal);
+  --oc-surface-secondary: var(--oc-charcoal-raised);
+  --oc-surface-complementary: var(--oc-walnut);
+  --oc-text-primary: var(--oc-paper);
+  --oc-text-inverse: var(--oc-charcoal-raised);
+  --oc-accent: var(--oc-leaf);
+  --oc-border-control: var(--oc-paper);
+  --oc-border-divider: rgb(239 232 220 / 16%);
   --oc-radius-control: 4px;
   --oc-radius-surface: 8px;
   --oc-space-4: 4px;
@@ -26,17 +42,18 @@
   --oc-space-64: 64px;
   --oc-font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
   --oc-font-mono: 'IBM Plex Mono', monospace;
+  --oc-font-display: 'Libron', Georgia, serif;
   --oc-feedback: 120ms;
   --oc-disclosure: 180ms;
   --oc-content-max: 1280px;
   --oc-page-padding: 32px;
   --fi-rail-width: 184px;
-  --fi-color-background-canvas: var(--oc-graphite);
-  --fi-color-background-surface: var(--oc-gunmetal);
-  --fi-color-background-subtle: var(--oc-deep-space-blue);
-  --fi-color-text-primary: var(--oc-platinum);
-  --fi-color-text-secondary: var(--oc-platinum);
-  --fi-color-accent-default: var(--oc-autumn-leaf);
+  --fi-color-background-canvas: var(--oc-charcoal);
+  --fi-color-background-surface: var(--oc-charcoal-raised);
+  --fi-color-background-subtle: var(--oc-walnut);
+  --fi-color-text-primary: var(--oc-paper);
+  --fi-color-text-secondary: var(--oc-paper);
+  --fi-color-accent-default: var(--oc-leaf);
   --fi-color-border: var(--oc-border-divider);
 }
 @media (max-width: 1199px) {
